@@ -1,0 +1,47 @@
+Manifest-Version: 1.0
+Export-Package: org.ofbiz.entityext.synchronization;uses:="javolution.
+ util,org.ofbiz.entity.model,javax.xml.parsers,org.ofbiz.entity.transa
+ ction,org.ofbiz.entity.serialize,org.ofbiz.service,org.w3c.dom,org.xm
+ l.sax,org.ofbiz.base.util,org.ofbiz.entity,org.ofbiz.entity.util,org.
+ ofbiz.entityext,org.ofbiz.entity.condition",org.ofbiz.entityext.permi
+ ssion;uses:="javolution.util,org.ofbiz.base.util.string,org.ofbiz.ent
+ ity.model,org.ofbiz.security,org.ofbiz.service,org.w3c.dom,org.ofbiz.
+ base.util,org.ofbiz.entity,org.ofbiz.entity.util,javax.servlet.http,o
+ rg.ofbiz.entity.condition",org.ofbiz.entityext.cache;uses:="org.ofbiz
+ .base.util,org.ofbiz.entity,org.ofbiz.entity.util,org.ofbiz.service,o
+ rg.ofbiz.entityext,org.ofbiz.entity.condition",org.ofbiz.entityext.ec
+ a;uses:="javolution.util,org.ofbiz.entity.eca,org.ofbiz.base.util.str
+ ing,org.ofbiz.entity.config,org.ofbiz.entity.model,org.ofbiz.entity.t
+ ransaction,org.ofbiz.service,org.w3c.dom,org.ofbiz.base.util,org.ofbi
+ z.entity,org.ofbiz.base.util.cache,org.ofbiz.base.config,org.ofbiz.ba
+ se.component,org.ofbiz.entityext",org.ofbiz.entityext.data;uses:="jav
+ olution.util,org.ofbiz.entity.model,org.ofbiz.security,org.ofbiz.serv
+ ice,org.ofbiz.base.util,org.ofbiz.entity.jdbc,org.ofbiz.entity,org.of
+ biz.base.container,org.ofbiz.entity.util,org.ofbiz.entity.condition",
+ org.ofbiz.entityext;uses:="javolution.util,org.ofbiz.base.util,org.of
+ biz.entity,org.ofbiz.entity.model,org.ofbiz.service"
+Private-Package: data,entitydef,script.org.ofbiz.entityext.synchroniza
+ tion,servicedef
+Built-By: oandreyev
+Tool: Bnd-0.0.255
+Bundle-Name: org.opentaps.ofbiz.framework.entityext [org.ofbiz.entitye
+ xt]
+Created-By: Apache Maven Bundle Plugin
+Build-Jdk: 1.6.0_20
+Bundle-Version: 0.0.1.SNAPSHOT
+Bnd-LastModified: 1282591914162
+Bundle-ManifestVersion: 2
+Bundle-Description: Generated using Pax-Construct
+Import-Package: javax.servlet.http;version="2.5",javax.xml.parsers;ver
+ sion="0.0.0",javolution.util,org.ofbiz.base.component,org.ofbiz.base.
+ config,org.ofbiz.base.container,org.ofbiz.base.util,org.ofbiz.base.ut
+ il.cache,org.ofbiz.base.util.string,org.ofbiz.entity,org.ofbiz.entity
+ .condition,org.ofbiz.entity.config,org.ofbiz.entity.eca,org.ofbiz.ent
+ ity.jdbc,org.ofbiz.entity.model,org.ofbiz.entity.serialize,org.ofbiz.
+ entity.transaction,org.ofbiz.entity.util,org.ofbiz.entityext,org.ofbi
+ z.entityext.cache,org.ofbiz.entityext.data,org.ofbiz.entityext.eca,or
+ g.ofbiz.entityext.permission,org.ofbiz.entityext.synchronization,org.
+ ofbiz.security,org.ofbiz.service,org.w3c.dom;version="0.0.0",org.xml.
+ sax;version="0.0.0"
+Bundle-SymbolicName: org.opentaps.ofbiz.framework.entityext
+

@@ -1,0 +1,41 @@
+<classpath>
+  <classpathentry excluding="**/*.java" including="plugin.xml|plugin.properties|icons/**" path="." kind="src"/>
+  <classpathentry path="src/main/java" kind="src"/>
+  <classpathentry excluding="**/*.java" path="src/main/resources" kind="src"/>
+  <classpathentry path="target/classes" kind="output"/>
+  <classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+  <classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con"/>
+  <classpathentry path="M2_REPO/org/apache/avalon/framework/avalon-framework-api/4.3.1/avalon-framework-api-4.3.1.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-anim/1.7/batik-anim-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-awt-util/1.7/batik-awt-util-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-bridge/1.7/batik-bridge-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-css/1.7/batik-css-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-dom/1.7/batik-dom-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-ext/1.7/batik-ext-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-extension/1.7/batik-extension-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-gvt/1.7/batik-gvt-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-parser/1.7/batik-parser-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-script/1.7/batik-script-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-svg-dom/1.7/batik-svg-dom-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-svggen/1.7/batik-svggen-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-transcoder/1.7/batik-transcoder-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-util/1.7/batik-util-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/batik-xml/1.7/batik-xml-1.7.jar" kind="var"/>
+  <classpathentry path="M2_REPO/javax/mail/com.springsource.javax.mail/1.4.0/com.springsource.javax.mail-1.4.0.jar" kind="var"/>
+  <classpathentry path="M2_REPO/javax/servlet/com.springsource.javax.servlet/2.5.0/com.springsource.javax.servlet-2.5.0.jar" kind="var"/>
+  <classpathentry path="M2_REPO/javax/transaction/com.springsource.javax.transaction/1.1.0/com.springsource.javax.transaction-1.1.0.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/commons/com.springsource.org.apache.commons.net/1.4.1/com.springsource.org.apache.commons.net-1.4.1.jar" kind="var"/>
+  <classpathentry path="M2_REPO/commons-io/commons-io/1.3.1/commons-io-1.3.1.jar" kind="var"/>
+  <classpathentry path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/fop/0.95/fop-0.95.jar" kind="var"/>
+  <classpathentry path="M2_REPO/javolution/javolution/5.5.1/javolution-5.5.1.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/opentaps/ofbiz.framework.base/1.0.0-SNAPSHOT/ofbiz.framework.base-1.0.0-SNAPSHOT.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/opentaps/ofbiz.framework.entity/0.0.1-SNAPSHOT/ofbiz.framework.entity-0.0.1-SNAPSHOT.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/opentaps/ofbiz.framework.security/0.0.1-SNAPSHOT/ofbiz.framework.security-0.0.1-SNAPSHOT.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/opentaps/ofbiz.framework.service/0.0.1-SNAPSHOT/ofbiz.framework.service-0.0.1-SNAPSHOT.jar" kind="var"/>
+  <classpathentry path="M2_REPO/xalan/xalan/2.6.0/xalan-2.6.0.jar" kind="var"/>
+  <classpathentry path="M2_REPO/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.jar" kind="var"/>
+  <classpathentry path="M2_REPO/xml-apis/xml-apis-ext/1.3.04/xml-apis-ext-1.3.04.jar" kind="var"/>
+  <classpathentry path="M2_REPO/org/apache/xmlgraphics/xmlgraphics-commons/1.3.1/xmlgraphics-commons-1.3.1.jar" kind="var"/>
+  <classpathentry path="target/pax-eclipse" exported="true" kind="lib"/>
+</classpath>

@@ -1,0 +1,37 @@
+Manifest-Version: 1.0
+Export-Package: org.owasp.validator.css;uses:="org.owasp.validator.htm
+ l,org.apache.batik.css.parser,org.w3c.css.sac,org.owasp.validator.htm
+ l.util,org.w3c.dom,org.owasp.validator.html.model,org.apache.commons.
+ httpclient,org.apache.commons.httpclient.methods,org.apache.commons.h
+ ttpclient.params",org.owasp.validator.html.scan;uses:="org.owasp.vali
+ dator.html,org.apache.batik.css.parser,org.owasp.validator.html.util,
+ org.cyberneko.html.parsers,org.w3c.dom,org.xml.sax,org.owasp.validato
+ r.html.model,org.owasp.validator.css,org.apache.xml.serialize,org.apa
+ che.xerces.dom",org.owasp.validator.html;uses:="org.owasp.validator.h
+ tml.util,javax.xml.parsers,javax.xml.transform.dom,org.w3c.dom,org.ow
+ asp.validator.html.model,org.xml.sax,org.owasp.validator.html.scan,ja
+ vax.xml.transform,javax.xml.transform.stream,javax.xml.validation",or
+ g.owasp.validator.html.util;uses:="org.w3c.dom",org.owasp.validator.h
+ tml.model
+Private-Package: !*
+Bundle-ClassPath: .,target/pax-eclipse
+Built-By: oandreyev
+Tool: Bnd-0.0.255
+Bundle-Name: org.owasp.antisamy 1.4 [osgi]
+Created-By: Apache Maven Bundle Plugin
+Build-Jdk: 1.6.0_20
+Bundle-Version: 1.4
+Bnd-LastModified: 1282591916855
+Bundle-ManifestVersion: 2
+Bundle-Description: Simple OSGi wrapper around third-party jar(s)
+Import-Package: javax.xml.parsers,javax.xml.transform,javax.xml.transf
+ orm.dom,javax.xml.transform.stream,javax.xml.validation,org.apache.ba
+ tik.css.parser,org.apache.commons.httpclient,org.apache.commons.httpc
+ lient.methods,org.apache.commons.httpclient.params,org.apache.xerces.
+ dom,org.apache.xml.serialize,org.cyberneko.html.parsers,org.owasp.val
+ idator.css,org.owasp.validator.html,org.owasp.validator.html.model,or
+ g.owasp.validator.html.scan,org.owasp.validator.html.util,org.w3c.css
+ .sac,org.w3c.dom,org.xml.sax
+Bundle-SymbolicName: org.owasp.antisamy
+Embed-Dependency: *;scope=compile|runtime;type=!pom;inline=true
+

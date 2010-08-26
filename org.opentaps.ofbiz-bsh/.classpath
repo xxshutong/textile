@@ -1,0 +1,7 @@
+<classpath>
+  <classpathentry path="target/classes" kind="output"/>
+  <classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+  <classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con"/>
+  <classpathentry path="M2_REPO/org/opentaps/ofbiz-bsh/2.0.0.b4/ofbiz-bsh-2.0.0.b4.jar" kind="var"/>
+  <classpathentry path="target/pax-eclipse" exported="true" kind="lib"/>
+</classpath>

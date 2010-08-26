@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Export-Package: bsh.org.objectweb.asm,bsh.reflect;uses:=bsh,bsh.util;u
+ ses:="javax.swing.text,javax.swing.plaf.basic,javax.swing.border,java
+ x.swing.tree,javax.swing,javax.swing.plaf,javax.swing.event,bsh.class
+ path,bsh",bsh.util.lib,bsh.collection;uses:=bsh,bsh.classpath;uses:=b
+ sh,bsh.servlet;uses:="javax.servlet,bsh,javax.servlet.http",bsh.comma
+ nds;uses:=bsh,bsh;uses:="bsh.org.objectweb.asm,bsh.util,bsh.classpath
+ "
+Private-Package: !*
+Bundle-ClassPath: .,target/pax-eclipse
+Built-By: oandreyev
+Tool: Bnd-0.0.255
+Bundle-Name: org.opentaps.ofbiz-bsh 2.0.0.b4 [osgi]
+Created-By: Apache Maven Bundle Plugin
+Build-Jdk: 1.6.0_20
+Bundle-Version: 2.0.0.b4
+Bnd-LastModified: 1282658270086
+Bundle-ManifestVersion: 2
+Bundle-Description: Simple OSGi wrapper around third-party jar(s)
+Import-Package: bsh,bsh.classpath,bsh.collection,bsh.commands,bsh.org.
+ objectweb.asm,bsh.reflect,bsh.servlet,bsh.util,bsh.util.lib,javax.ser
+ vlet,javax.servlet.http,javax.swing,javax.swing.border,javax.swing.ev
+ ent,javax.swing.plaf,javax.swing.plaf.basic,javax.swing.text,javax.sw
+ ing.tree
+Bundle-SymbolicName: org.opentaps.ofbiz-bsh
+Embed-Dependency: *;scope=compile|runtime;type=!pom;inline=true
+

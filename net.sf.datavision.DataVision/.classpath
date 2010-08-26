@@ -1,0 +1,9 @@
+<classpath>
+  <classpathentry path="target/classes" kind="output"/>
+  <classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+  <classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con"/>
+  <classpathentry path="M2_REPO/bsf/bsf/2.3.0-rc1/bsf-2.3.0-rc1.jar" kind="var"/>
+  <classpathentry path="M2_REPO/net/sf/datavision/DataVision/1.0.0/DataVision-1.0.0.jar" kind="var"/>
+  <classpathentry path="M2_REPO/com/lowagie/itext/1.3/itext-1.3.jar" kind="var"/>
+  <classpathentry path="target/pax-eclipse" exported="true" kind="lib"/>
+</classpath>

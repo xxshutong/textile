@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Private-Package: config,config.barcode,data,entitydef,script.org.ofbiz
+ .common,script.org.ofbiz.common.datasource,script.org.ofbiz.common.em
+ ail,script.org.ofbiz.common.olap,script.org.ofbiz.common.period,scrip
+ t.org.ofbiz.common.permission,servicedef,webcommon,webcommon.WEB-INF,
+ webcommon.WEB-INF.actions.includes,webcommon.includes,webcommon.inclu
+ des.fo,webcommon.portal,widget
+Bundle-ClassPath: .,target/pax-eclipse
+Built-By: oandreyev
+Tool: Bnd-0.0.255
+Bundle-Name: org.opentaps.ofbiz.framework.common
+Created-By: Apache Maven Bundle Plugin
+Bundle-Version: 0.0.1.SNAPSHOT
+Build-Jdk: 1.6.0_20
+Bnd-LastModified: 1282606732413
+Bundle-ManifestVersion: 2
+Bundle-Description: Generated using Pax-Construct
+Bundle-SymbolicName: org.opentaps.ofbiz.framework.common
+
