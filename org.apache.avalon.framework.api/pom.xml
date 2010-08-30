@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <relativePath>../poms/wrappers/</relativePath>
+    <groupId>org.opentaps.opentaps2.build</groupId>
+    <artifactId>wrapper-bundle-settings</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <properties>
+    <bundle.symbolicName>org.apache.avalon.framework.api</bundle.symbolicName>
+    <wrapped.groupId>org.apache.avalon.framework</wrapped.groupId>
+    <wrapped.artifactId>avalon-framework-api</wrapped.artifactId>
+    <wrapped.version>4.3.1</wrapped.version>
+  </properties>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.opentaps.opentaps2</groupId>
+  <artifactId>org.apache.avalon.framework.api</artifactId>
+  <version>4.3.1-001-SNAPSHOT</version>
+
+  <name>${bundle.symbolicName} ${wrapped.version} [osgi]</name>
+
+  <packaging>bundle</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>${wrapped.groupId}</groupId>
+      <artifactId>${wrapped.artifactId}</artifactId>
+      <version>${wrapped.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.avalon.logkit</groupId>
+    	<artifactId>avalon-logkit</artifactId>
+    	<version>2.2.1</version>
+    </dependency>
+  </dependencies>
+
+</project>

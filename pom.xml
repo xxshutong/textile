@@ -70,6 +70,7 @@
     <module>org.apache.xmlgraphics.commons</module>
     <module>org.apache.xmlgraphics.fop</module>
     <module>net.sf.datavision.DataVision</module>
+    <module>org.apache.avalon.framework.api</module>
   </modules>
 
   <build>
