@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <parent>
-    <relativePath>../poms/wrappers/</relativePath>
-    <groupId>org.opentaps.opentaps2.build</groupId>
-    <artifactId>wrapper-bundle-settings</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
+    <parent>
+        <relativePath>../poms/wrappers/</relativePath>
+        <groupId>org.opentaps.opentaps2.build</groupId>
+        <artifactId>wrapper-bundle-settings</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-  <properties>
-    <bundle.symbolicName>org.apache.xmlgraphics.commons</bundle.symbolicName>
-    <wrapped.groupId>org.apache.xmlgraphics</wrapped.groupId>
-    <wrapped.artifactId>xmlgraphics-commons</wrapped.artifactId>
-    <wrapped.version>1.3.1</wrapped.version>
-  </properties>
+    <properties>
+        <bundle.symbolicName>org.apache.xmlgraphics.commons</bundle.symbolicName>
+        <wrapped.groupId>org.apache.xmlgraphics</wrapped.groupId>
+        <wrapped.artifactId>xmlgraphics-commons</wrapped.artifactId>
+        <wrapped.version>1.2</wrapped.version>
+    </properties>
 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.opentaps.opentaps2</groupId>
-  <artifactId>org.apache.xmlgraphics.commons</artifactId>
-  <version>1.3.1</version>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.opentaps.opentaps2</groupId>
+    <artifactId>org.apache.xmlgraphics.commons</artifactId>
+    <version>1.2</version>
 
-  <name>${bundle.symbolicName} ${wrapped.version} [osgi]</name>
+    <name>${bundle.symbolicName} ${wrapped.version} [osgi]</name>
 
-  <packaging>bundle</packaging>
+    <packaging>bundle</packaging>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
-            <Bundle-Version>${pom.version}</Bundle-Version>
-            <Import-Package>
-                com.sun.image.codec.jpeg;resolution:=optional,
-                org.apache.xmlgraphics.*,
-                *
-            </Import-Package>
-          </instructions>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+                        <Bundle-Version>${pom.version}</Bundle-Version>
+                        <Import-Package>
+                            com.sun.image.codec.jpeg;resolution:=optional,
+                            org.apache.xmlgraphics.*,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-  <dependencies>
-    <dependency>
-      <groupId>${wrapped.groupId}</groupId>
-      <artifactId>${wrapped.artifactId}</artifactId>
-      <version>${wrapped.version}</version>
-      <optional>true</optional>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>${wrapped.groupId}</groupId>
+            <artifactId>${wrapped.artifactId}</artifactId>
+            <version>${wrapped.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
 </project>

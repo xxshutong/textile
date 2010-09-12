@@ -12,13 +12,13 @@
     <bundle.symbolicName>org.apache.xmlgraphics.fop</bundle.symbolicName>
     <wrapped.groupId>org.apache.xmlgraphics</wrapped.groupId>
     <wrapped.artifactId>fop</wrapped.artifactId>
-    <wrapped.version>0.95</wrapped.version>
+    <wrapped.version>0.94</wrapped.version>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.opentaps.opentaps2</groupId>
   <artifactId>org.apache.xmlgraphics.fop</artifactId>
-  <version>0.95</version>
+  <version>0.94</version>
 
   <name>${bundle.symbolicName} ${wrapped.version} [osgi]</name>
 
@@ -34,6 +34,10 @@
             <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
             <Bundle-Version>${pom.version}</Bundle-Version>
             <Import-Package>
+                com.sun.jimi.core;resolution:=optional,
+                org.w3c.dom.svg;resolution:=optional,
+                org.apache.batik.extension.svg;resolution:=optional,
+                org.apache.batik.transcoder*;resolution:=optional,
                 org.apache.fop.*,
                 *
             </Import-Package>

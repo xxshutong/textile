@@ -1,5 +1,5 @@
 <projectDescription>
-  <name>org.apache.xmlgraphics.fop [0.95]</name>
+  <name>org.apache.xmlgraphics.fop [0.94]</name>
   <comment>Simple OSGi wrapper around third-party jar(s)</comment>
   <projects/>
   <buildSpec>
@@ -15,11 +15,15 @@
     <buildCommand>
       <name>org.eclipse.pde.SchemaBuilder</name>
     </buildCommand>
+    <buildCommand>
+      <name>org.eclipse.babel.editor.rbeBuilder</name>
+    </buildCommand>
   </buildSpec>
   <natures>
     <nature>org.eclipse.jdt.core.javanature</nature>
     <nature>org.maven.ide.eclipse.maven2Nature</nature>
     <nature>org.eclipse.pde.PluginNature</nature>
+    <nature>org.eclipse.babel.editor.rbeNature</nature>
   </natures>
   <linkedResources/>
 </projectDescription>

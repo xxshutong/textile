@@ -26,7 +26,7 @@
     <dependency>
       <groupId>org.opentaps.opentaps2</groupId>
       <artifactId>org.apache.xmlgraphics.fop</artifactId>
-      <version>0.95</version>
+      <version>0.94</version>
     </dependency>
     <dependency>
       <groupId>org.opentaps</groupId>
@@ -101,17 +101,25 @@
       <groupId>javax.wsdl</groupId>
       <artifactId>com.springsource.javax.wsdl</artifactId>
       <version>1.6.1</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.axis</groupId>
       <artifactId>com.springsource.org.apache.axis</artifactId>
       <version>1.4.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.velocity</groupId>
       <artifactId>com.springsource.org.apache.velocity</artifactId>
       <version>1.6.2</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.opentaps.opentaps2</groupId>
+    	<artifactId>org.apache.avalon.framework.api</artifactId>
+    	<version>4.3.1-001-SNAPSHOT</version>
+    	<scope>provided</scope>
     </dependency>
   </dependencies>
 

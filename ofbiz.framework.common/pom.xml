@@ -76,8 +76,9 @@
     <dependency>
     	<groupId>org.opentaps.opentaps2</groupId>
     	<artifactId>org.apache.xmlgraphics.fop</artifactId>
-    	<version>0.95-001-SNAPSHOT</version>
-    	<scope>provided</scope>
+    	<version>0.94</version>
+    	<type>bundle</type>
+    	<scope>compile</scope>
     </dependency>
   </dependencies>
 
