@@ -61,7 +61,6 @@
     <module>ofbiz.framework.security</module>
     <module>ofbiz.framework.minilang</module>
     <module>ofbiz.framework.webapp</module>
-    <module>ofbiz.framework.webslinger</module>
     <module>ofbiz.framework.webtools</module>
     <module>ofbiz.framework.widget</module>
     <module>org.owasp.antisamy</module>
