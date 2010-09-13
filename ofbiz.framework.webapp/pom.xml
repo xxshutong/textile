@@ -137,8 +137,14 @@
             <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
             <Bundle-Version>${pom.version}</Bundle-Version>
             <Export-Package>org.ofbiz.webapp.*</Export-Package>
-            <Import-Package>org.ofbiz.webapp.*,
-                *</Import-Package>
+            <Import-Package>
+                org.w3c.dom;version="0.0.0",
+                org.xml.sax.*;version="0.0.0",
+                javax.xml.parsers;version="0.0.0",
+                javax.xml.transform*;version="0.0.0",
+                org.ofbiz.webapp.*,
+                *
+            </Import-Package>
           </instructions>
         </configuration>
       </plugin>

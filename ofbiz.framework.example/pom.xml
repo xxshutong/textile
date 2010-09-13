@@ -14,6 +14,45 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
+  <dependencies>
+  	<dependency>
+  		<groupId>org.opentaps</groupId>
+  		<artifactId>ofbiz.framework.base</artifactId>
+  		<version>1.0.0-SNAPSHOT</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.opentaps</groupId>
+  		<artifactId>ofbiz.framework.service</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.opentaps</groupId>
+  		<artifactId>ofbiz.framework.webapp</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.opentaps</groupId>
+  		<artifactId>ofbiz.framework.widget</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  		<scope>provided</scope>
+  	</dependency>
+    <dependency>
+        <groupId>javolution</groupId>
+        <artifactId>javolution</artifactId>
+        <version>5.5.1</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.opentaps.opentaps2</groupId>
+    	<artifactId>org.apache.xmlgraphics.fop</artifactId>
+    	<version>0.94</version>
+    	<scope>provided</scope>
+    </dependency>
+  </dependencies>
+
   <properties>
     <bundle.symbolicName>org.opentaps.ofbiz.framework.example</bundle.symbolicName>
   </properties>
