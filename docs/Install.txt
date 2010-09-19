@@ -1,0 +1,23 @@
+BRIEF INSTALLATION GUIDE
+========================
+
+As starting point for further work this project has most framework components transformed
+to OSGi bundles with all dependencies resolved.
+
+1. Clone repository
+   git clone ssh://earth.opentaps.org/home/git/opentaps-osgi-proj.git
+
+2. Install thirdparty libraries into local repository
+   Go to thirdparty directory and run install.sh
+
+3. Build project, from project root
+   mvn install
+
+4. At this point Eclipse users may import code as Maven or PDE projects.
+
+5. Run pax-provision (a script from Pax Construct http://wiki.ops4j.org/display/ops4j/Open+Participation+Software+for+Java )
+   to start system.
+   
+Right now Equinox started and you can inspect bundles state from console. Try help on osgi> prompt first.
+Also, may:) work Web console at http://localhost:8181/system/console
+

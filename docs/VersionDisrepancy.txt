@@ -1,2 +1,0 @@
-commons-dbcp-1.3					com.springsource.org.apache.commons.dbcp 1.2.2.osgi (Spring)
-commons-pool-1.3 					com.springsource.org.apache.commons.pool 1.5.3 (Spring)
