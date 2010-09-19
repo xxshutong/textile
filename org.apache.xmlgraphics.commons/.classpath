@@ -1,8 +1,0 @@
-<classpath>
-  <classpathentry path="target/classes" kind="output"/>
-  <classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
-  <classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con"/>
-  <classpathentry path="M2_REPO/commons-io/commons-io/1.1/commons-io-1.1.jar" kind="var"/>
-  <classpathentry path="M2_REPO/org/apache/xmlgraphics/xmlgraphics-commons/1.2/xmlgraphics-commons-1.2.jar" kind="var"/>
-  <classpathentry path="target/pax-eclipse" exported="true" kind="lib"/>
-</classpath>
