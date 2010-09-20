@@ -38,7 +38,7 @@
     <org.osgi.service.http.port>8080</org.osgi.service.http.port>
     <org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
     <spring.dm.version>2.0.0.M1</spring.dm.version>
-    <spring.version>3.0.1.RELEASE-A</spring.version>
+    <spring.version>3.0.2.RELEASE</spring.version>
     <servlet.api>2.5.0</servlet.api>
     <felix.version>2.0.5</felix.version>
   </properties>
@@ -119,6 +119,10 @@
       <id>spring-maven-milestone</id>
       <name>Springframework Maven Repository</name>
       <url>http://maven.springframework.org/milestone</url>
+    </repository>
+    <repository>
+        <id>spring-maven-osgi</id>
+        <url>http://maven.springframework.org/osgi</url>
     </repository>
     <repository>
       <id>OPS4J</id>
