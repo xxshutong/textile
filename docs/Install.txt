@@ -19,5 +19,5 @@ to OSGi bundles with all dependencies resolved.
    to start system.
    
 Right now Equinox started and you can inspect bundles state from console. Try help on osgi> prompt first.
-Also, may:) work Web console at http://localhost:8181/system/console
+Also, Web console at http://localhost:8181/system/console. Username & password: admin
 
