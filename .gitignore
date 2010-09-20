@@ -1,0 +1,10 @@
+target/
+/runner
+$*
+
+# Eclipse stuff
+.settings/
+.project
+.classpath
+build.properties
+*/META-INF/
