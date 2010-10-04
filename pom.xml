@@ -70,6 +70,8 @@
     <module>org.apache.xmlgraphics.fop</module>
     <module>net.sf.datavision.DataVision</module>
     <module>org.apache.avalon.framework.api</module>
+    <module>ofbiz.framework.webtools.webapp.webtools</module>
+    <module>ofbiz.framework.example.webapp.example</module>
   </modules>
 
   <build>
@@ -121,8 +123,8 @@
       <url>http://maven.springframework.org/milestone</url>
     </repository>
     <repository>
-        <id>spring-maven-osgi</id>
-        <url>http://maven.springframework.org/osgi</url>
+      <id>spring-maven-osgi</id>
+      <url>http://maven.springframework.org/osgi</url>
     </repository>
     <repository>
       <id>OPS4J</id>
