@@ -1,0 +1,16 @@
+KARAF SETUP GUIDE
+=================
+
+1. Currently we should use latest 2.99.99-SNAPSHOT as release do not contain enterprise
+   features (jpa/jndi/transaction)
+
+Before first run
+================
+
+1. Modify etc/org.apache.karaf.features
+   Supplement featuresRepositories with:
+     mvn:org.opentaps.features/example/2.0.1-SNAPSHOT/xml/features
+   Supplement featuresBoot with webconsole, war, jpa, jndi, transaction features. 
+
+Configuration at runtime
+========================
