@@ -41,6 +41,7 @@
     <spring.version>3.0.2.RELEASE</spring.version>
     <servlet.api>2.5.0</servlet.api>
     <felix.version>2.0.5</felix.version>
+    <opentaps.version>2.0.0-SNAPSHOT</opentaps.version>
   </properties>
 
   <packaging>pom</packaging>
@@ -72,6 +73,8 @@
     <module>org.apache.avalon.framework.api</module>
     <module>ofbiz.framework.webtools.webapp.webtools</module>
     <module>ofbiz.framework.example.webapp.example</module>
+    <module>example.entity</module>
+    <module>features</module>
   </modules>
 
   <build>
