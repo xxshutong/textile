@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<futures name="opentaps-${pom.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+    <feature name="opentaps-example" version="${pom.version}">
+    </feature>
+
+</futures>
