@@ -1,10 +1,13 @@
 target/
+*/target/
 /runner
 $*
 
 # Eclipse stuff
 .settings/
+*/.settings/
 .project
 .classpath
 build.properties
 */META-INF/
+*/OSGI-INF/
