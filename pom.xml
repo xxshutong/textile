@@ -49,31 +49,8 @@
   <modules>
     <module>poms</module>
     <module>provision</module>
-    <module>ofbiz.framework.base</module>
-    <module>ofbiz.framework.bi</module>
-    <module>ofbiz.framework.common</module>
-    <module>ofbiz.framework.datafile</module>
-    <module>ofbiz.framework.start</module>
-    <module>ofbiz.framework.entity</module>
-    <module>ofbiz.framework.entityext</module>
-    <module>ofbiz.framework.example</module>
-    <module>ofbiz.framework.exampleext</module>
-    <module>ofbiz.framework.service</module>
-    <module>ofbiz.framework.security</module>
-    <module>ofbiz.framework.minilang</module>
-    <module>ofbiz.framework.webapp</module>
-    <module>ofbiz.framework.webtools</module>
-    <module>ofbiz.framework.widget</module>
-    <module>org.owasp.antisamy</module>
-    <module>org.owasp.esapi</module>
-    <module>org.opentaps.ofbiz-bsh</module>
-    <module>org.apache.xmlgraphics.commons</module>
-    <module>org.apache.xmlgraphics.fop</module>
-    <module>net.sf.datavision.DataVision</module>
-    <module>org.apache.avalon.framework.api</module>
-    <module>ofbiz.framework.webtools.webapp.webtools</module>
-    <module>ofbiz.framework.example.webapp.example</module>
     <module>example.entity</module>
+    <module>example.ui.jsp</module>
     <module>features</module>
   </modules>
 
