@@ -5,17 +5,17 @@
         <relativePath>../poms/compiled/</relativePath>
         <groupId>org.opentaps.opentaps2.build</groupId>
         <artifactId>compiled-bundle-settings</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>2.0.1-SNAPSHOT</version>
     </parent>
 
     <properties>
-    	<bundle.symbolicName>org.opentaps.ofbiz.framework.example.webapp.example</bundle.symbolicName>
+    	<bundle.symbolicName>org.opentaps.example.ui.jsp</bundle.symbolicName>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentaps</groupId>
-    <artifactId>ofbiz.framework.example.webapp.example</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>example.ui.jsp</artifactId>
+    <version>2.0.1-SNAPSHOT</version>
 
     <packaging>war</packaging>
     <name>${bundle.symbolicName}</name>
@@ -44,8 +44,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
                         <Bundle-Version>${pom.version}</Bundle-Version>
-                        <Require-Bundle>org.opentaps.ofbiz.framework.webapp,org.opentaps.ofbiz.framework.base</Require-Bundle>
-                        <Web-ContextPath>example</Web-ContextPath>
+                        <Web-ContextPath>example-jsp</Web-ContextPath>
                     </instructions>
                 </configuration>
     		</plugin>
