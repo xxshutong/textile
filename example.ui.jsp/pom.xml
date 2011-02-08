@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <relativePath>../poms/compiled/</relativePath>
+        <groupId>org.opentaps.opentaps2.build</groupId>
+        <artifactId>compiled-bundle-settings</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+    	<bundle.symbolicName>org.opentaps.ofbiz.framework.example.webapp.example</bundle.symbolicName>
+    </properties>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.opentaps</groupId>
+    <artifactId>ofbiz.framework.example.webapp.example</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <packaging>war</packaging>
+    <name>${bundle.symbolicName}</name>
+
+
+    <build>
+    	<plugins>
+    		<plugin>
+    			<groupId>org.apache.felix</groupId>
+    			<artifactId>maven-bundle-plugin</artifactId>
+    			<executions>
+    				<execution>
+    					<id>bundle-manifest</id>
+    					<phase>process-classes</phase>
+    					<goals>
+    						<goal>manifest</goal>
+    					</goals>
+    				</execution>
+    			</executions>
+                <configuration>
+                    <supportedProjectTypes>
+                        <supportedProjectTypes>jar</supportedProjectTypes>
+                        <supportedProjectTypes>bundle</supportedProjectTypes>
+                        <supportedProjectTypes>war</supportedProjectTypes>
+                    </supportedProjectTypes>
+                    <instructions>
+                        <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+                        <Bundle-Version>${pom.version}</Bundle-Version>
+                        <Require-Bundle>org.opentaps.ofbiz.framework.webapp,org.opentaps.ofbiz.framework.base</Require-Bundle>
+                        <Web-ContextPath>example</Web-ContextPath>
+                    </instructions>
+                </configuration>
+    		</plugin>
+    		<plugin>
+    			<groupId>org.apache.maven.plugins</groupId>
+    			<artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                   <archive>
+                       <manifestFile>
+                           ${project.build.outputDirectory}/META-INF/MANIFEST.MF
+                       </manifestFile>
+                   </archive>
+                </configuration>
+    		</plugin>
+    	</plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi_R4_core</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi_R4_compendium</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>
