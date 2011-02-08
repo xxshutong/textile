@@ -58,9 +58,9 @@
         <version>1.4</version>
         <configuration>
           <provision>
-            <param>--platform=equinox</param>
+            <param>--platform=felix</param>
             <param>--profiles=minimal</param>
-            <param>--vmOptions=-Dorg.osgi.service.http.port=8181</param>
+            <param>--vmOptions=-Dorg.osgi.service.http.port=${org.osgi.service.http.port}</param>
           </provision>
         </configuration>
         <executions>
