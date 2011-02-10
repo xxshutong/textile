@@ -22,6 +22,7 @@
 
 
     <build>
+        <finalName>${bundle.symbolicName}-${project.version}</finalName>
     	<plugins>
     		<plugin>
     			<groupId>org.apache.felix</groupId>
@@ -43,7 +44,7 @@
                     </supportedProjectTypes>
                     <instructions>
                         <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
-                        <Bundle-Version>${pom.version}</Bundle-Version>
+                        <Bundle-Version>${project.version}</Bundle-Version>
                         <Web-ContextPath>example-jsp</Web-ContextPath>
                     </instructions>
                 </configuration>

@@ -113,6 +113,11 @@
     	<artifactId>pax-logging-service</artifactId>
     	<version>1.5.3</version>
     </dependency>
+    <dependency>
+    	<groupId>org.apache.servicemix.bundles</groupId>
+    	<artifactId>org.apache.servicemix.bundles.serp</artifactId>
+    	<version>1.13.1_3</version>
+    </dependency>
   </dependencies>
 
 </project>
