@@ -46,6 +46,7 @@
     <module>poms</module>
     <module>provision</module>
     <module>example.entity</module>
+    <module>example.entity.model</module>
     <module>example.ui.jsp</module>
     <module>features</module>
   </modules>
@@ -55,7 +56,6 @@
       <plugin>
         <groupId>org.ops4j</groupId>
         <artifactId>maven-pax-plugin</artifactId>
-        <version>1.4</version>
         <configuration>
           <provision>
             <param>--platform=felix</param>

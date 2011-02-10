@@ -23,12 +23,18 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
-                        <Bundle-Version>${pom.version}</Bundle-Version>
+                        <Bundle-Version>${project.version}</Bundle-Version>
                         <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+                        <Private-Package>
+                            org.opentaps.example.entity,
+                            org.opentaps.example.entity.impl
+                        </Private-Package>
+                        <Bundle-Activator>org.opentaps.example.entity.ExampleEntityActivator</Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>${bundle.symbolicName}-${project.version}</finalName>
     </build>
 
     <dependencies>
@@ -44,6 +50,24 @@
     		<version>0.3</version>
     		<scope>provided</scope>
     	</dependency>
+    	<dependency>
+    		<groupId>org.osgi</groupId>
+    		<artifactId>org.osgi.core</artifactId>
+    		<version>4.2.0</version>
+            <optional>true</optional>
+    	</dependency>
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+        	<groupId>org.opentaps</groupId>
+        	<artifactId>example.entity.model</artifactId>
+        	<version>2.0.1-SNAPSHOT</version>
+        	<scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <properties>
