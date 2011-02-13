@@ -4,13 +4,29 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 default-activation="eager">
 
-    <bean id="postgresDataSource" class="org.postgresql.jdbc2.optional.PoolingDataSource">
-        <property name="databaseName" value="opentaps"/>
-        <!-- This creates the database on the fly. -->
-        <!-- property name="createDatabase" value="create" /-->
+    <bean id="postgresXaDataSource" class="org.postgresql.xa.PGXADataSource">
+        <property name="databaseName" value="opentaps-1.5"/>
+        <property name="serverName" value="localhost"/>
+        <property name="portNumber" value="5433"/>
+        <property name="user" value="opentaps"/>
+        <property name="password" value="opentaps"/>
     </bean>
 
-    <service id="ExampleDataSource" ref="postgresDataSource" interface="javax.sql.XADataSource">
+    <service id="ExampleXADataSource" ref="postgresXaDataSource" interface="javax.sql.XADataSource">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="jdbc/ExampleXADataSource"/>
+        </service-properties>
+    </service>
+
+    <bean id="postgresDataSource" class="org.postgresql.jdbc3.Jdbc3SimpleDataSource">
+        <property name="databaseName" value="opentaps-1.5"/>
+        <property name="serverName" value="localhost"/>
+        <property name="portNumber" value="5433"/>
+        <property name="user" value="opentaps"/>
+        <property name="password" value="opentaps"/>
+    </bean>
+
+    <service id="ExampleDataSource" ref="postgresDataSource" interface="javax.sql.DataSource">
         <service-properties>
             <entry key="osgi.jndi.service.name" value="jdbc/ExampleDataSource"/>
         </service-properties>
