@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<futures name="opentaps-${pom.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+<features name="opentaps-${pom.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
 
-    <feature name="opentaps-example" version="${pom.version}">
+    <feature name="opentaps-openjpa-dist" version="${project.version}">
+        <bundle>mvn:org.apache.openjpa/openjpa/2.0.1</bundle>
+        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.serp/1.13.1_3</bundle>
+        <bundle>mvn:commons-collections/commons-collections/3.2.1</bundle>
+        <bundle>mvn:commons-lang/commons-lang/2.6</bundle>
+        <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.pool/1.5.3</bundle>
     </feature>
 
-</futures>
+    <feature name="opentaps-example" version="${project.version}">
+        <feature version="${project.version}">opentaps-openjpa-dist</feature>
+        <bundle>mvn:org.opentaps/example.entity.model/${project.version}</bundle>
+        <bundle>mvn:org.opentaps/example.entity/${project.version}</bundle>
+        <bundle>mvn:org.postgresql/com.springsource.org.postgresql.jdbc3/8.3.603</bundle>
+    </feature>
+
+</features>
