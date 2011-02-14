@@ -17,9 +17,10 @@
 -->
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
 
-    <persistence-unit transaction-type="JTA" name="exampleDB">
+    <persistence-unit transaction-type="JTA" name="example">
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/ExampleDataSource)</jta-data-source>
+        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/ExampleXADataSource)</jta-data-source>
+        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/ExampleDataSource)</non-jta-data-source>
 
         <class>org.opentaps.example.entity.impl.ExampleImpl</class>
         <class>org.opentaps.example.entity.impl.ExampleItemImpl</class>
@@ -29,8 +30,6 @@
 
         <properties>
             <property name="openjpa.BrokerImpl" value="non-finalizing" /> 
-            <property name="openjpa.Sequence" value="table(Table=OPENJPASEQ, Increment=100)"/>
-            <property name="openjpa.jdbc.UpdateManager" value="org.apache.openjpa.jdbc.kernel.BatchingConstraintUpdateManager"/>
         </properties>
     </persistence-unit>
 
