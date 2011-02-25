@@ -15,10 +15,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentaps</groupId>
     <artifactId>example.ui.jsp</artifactId>
+    <name>Example JSP Application</name>
     <version>2.0.1-SNAPSHOT</version>
-
     <packaging>war</packaging>
-    <name>${bundle.symbolicName}</name>
 
 
     <build>
