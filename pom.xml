@@ -33,6 +33,14 @@
   -->
 
 
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.8.2</version>
+  	</dependency>
+  </dependencies>
+
   <dependencyManagement>
   	<dependencies>
   		<dependency>
@@ -47,6 +55,7 @@
   		</dependency>
   	</dependencies>
   </dependencyManagement>
+
   <properties>
     <org.osgi.service.http.port>8181</org.osgi.service.http.port>
     <org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
