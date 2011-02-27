@@ -44,7 +44,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
-                        <Web-ContextPath>example-jsp</Web-ContextPath>
+                        <Web-ContextPath>/exampleitems</Web-ContextPath>
                     </instructions>
                 </configuration>
     		</plugin>
