@@ -23,4 +23,11 @@
         <bundle>mvn:org.opentaps/example.ui.wicket/${project.version}</bundle>
     </feature>
 
+    <feature name="opentaps-poc" version="${project.version}">
+        <feature version="${project.version}">opentaps-openjpa-dist</feature>
+        <feature version="${project.version}">opentaps-wicket-dist</feature>
+        <bundle>mvn:org.opentaps/ui.widget/${project.version}</bundle>
+        <bundle>mvn:org.opentaps/webapp.poc.leads/${project.version}</bundle>
+    </feature>
+
 </features>
