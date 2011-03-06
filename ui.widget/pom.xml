@@ -21,10 +21,16 @@
     		<groupId>org.opentaps</groupId>
     		<artifactId>wicket</artifactId>
     		<version>2.0.1-SNAPSHOT</version>
-    		<type>bundle</type>
-    		<scope>compile</scope>
+    		<scope>provided</scope>
     	</dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-auth-roles</artifactId>
+            <version>1.5-rc2</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
+
     <properties>
         <bundle.symbolicName>org.opentaps.ui.widget</bundle.symbolicName>
     </properties>
