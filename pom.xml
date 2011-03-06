@@ -67,6 +67,7 @@
     <module>org.apache.wicket</module>
     <module>webapp.poc.leads</module>
     <module>ui.widget</module>
+    <module>ui.widget_ru</module>
   </modules>
 
   <build>
