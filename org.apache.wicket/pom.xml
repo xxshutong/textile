@@ -48,7 +48,8 @@
                 sun.reflect;resolution:=optional,
                 *
             </Import-Package>
-            <Embed-Dependency>wicket-core;groupId=org.apache.wicket;inline=true,wicket-request;groupId=org.apache.wicket;inline=true,wicket-util;groupId=org.apache.wicket;inline=true</Embed-Dependency>
+            <!-- Embed-Dependency>wicket-core;groupId=org.apache.wicket;inline=true,wicket-request;groupId=org.apache.wicket;inline=true,wicket-util;groupId=org.apache.wicket;inline=true</Embed-Dependency-->
+            <Embed-Dependency>wicket-core;groupId=org.apache.wicket;inline=true,wicket-request;groupId=org.apache.wicket;inline=true</Embed-Dependency>
           </instructions>
         </configuration>
       </plugin>
@@ -74,8 +75,7 @@
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-util</artifactId>
       <version>1.5-rc2</version>
-      <scope>compile</scope>
-      <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
