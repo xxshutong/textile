@@ -68,6 +68,7 @@
     <module>webapp.poc.leads</module>
     <module>ui.widget</module>
     <module>ui.widget_ru</module>
+    <module>core</module>
   </modules>
 
   <build>
