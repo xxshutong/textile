@@ -64,6 +64,7 @@
                         </Export-Package>
                         <_wab>src/main/webapp</_wab>
                         <Import-Package>com.sun.security.auth;resolution:=optional,org.apache.wicket.protocol.http,*</Import-Package>
+                        <Private-Package>org.opentaps.webapp.poc.leads.bundle</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -93,6 +94,18 @@
         	<groupId>org.osgi</groupId>
         	<artifactId>org.osgi.core</artifactId>
         	<version>4.2.0</version>
+        	<scope>provided</scope>
+        </dependency>
+        <dependency>
+        	<groupId>org.opentaps</groupId>
+        	<artifactId>core</artifactId>
+        	<version>2.0.1-SNAPSHOT</version>
+        	<scope>provided</scope>
+        </dependency>
+        <dependency>
+        	<groupId>org.opentaps</groupId>
+        	<artifactId>core</artifactId>
+        	<version>2.0.1-SNAPSHOT</version>
         	<scope>provided</scope>
         </dependency>
     </dependencies>
