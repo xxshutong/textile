@@ -18,6 +18,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
+import org.opentaps.webapp.poc.leads.bundle.LeadsActivator;
 
 import com.sun.security.auth.UserPrincipal;
 
@@ -74,8 +75,7 @@ public class LeadsSession extends AuthenticatedWebSession {
             return true;
 
         } catch (LoginException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LeadsActivator.getInstance().logError(e.getMessage());
         }
 
         return false;
