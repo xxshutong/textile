@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>modules</artifactId>
+        <groupId>org.opentaps</groupId>
+        <version>2.0.1-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.opentaps</groupId>
+    <artifactId>core</artifactId>
+    <version>2.0.1-SNAPSHOT</version>
+    <name>Core</name>
+
+    <packaging>bundle</packaging>
+
+    <build>
+        <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.4</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>org.opentaps.core</Bundle-SymbolicName>
+                        <Bundle-Copyright>Copyright (c) 2010-2011 Open Source Strategies, Inc.</Bundle-Copyright>
+                        <Export-Package>
+                            org.opentaps.core.bundle,
+                            org.opentaps.core.service.customizer
+                        </Export-Package>
+                        <Private-Package>
+                            org.opentaps.core,
+                            org.opentaps.core.locale
+                        </Private-Package>
+                        <Bundle-Activator>org.opentaps.core.Activator</Bundle-Activator>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+        	<groupId>org.osgi</groupId>
+        	<artifactId>org.osgi.compendium</artifactId>
+        	<version>4.2.0</version>
+        	<scope>provided</scope>
+        </dependency>
+        <dependency>
+        	<groupId>org.osgi</groupId>
+        	<artifactId>org.osgi.core</artifactId>
+        	<version>4.2.0</version>
+        	<scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>

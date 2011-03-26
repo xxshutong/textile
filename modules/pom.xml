@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>opentaps2</artifactId>
+        <groupId>org.opentaps</groupId>
+        <version>2.0.1-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.opentaps</groupId>
+    <artifactId>modules</artifactId>
+    <packaging>pom</packaging>
+    <version>2.0.1-SNAPSHOT</version>
+
+    <build>
+    	<pluginManagement>
+    		<plugins>
+    			<plugin>
+    				<groupId>org.apache.felix</groupId>
+    				<artifactId>maven-bundle-plugin</artifactId>
+    				<version>2.3.4</version>
+    				<extensions>true</extensions>
+    			</plugin>
+    		</plugins>
+    	</pluginManagement>
+    	<plugins>
+    		<plugin>
+    			<groupId>org.apache.felix</groupId>
+    			<artifactId>maven-bundle-plugin</artifactId>
+    			<extensions>true</extensions>
+    		</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <optimize>true</optimize>
+                </configuration>
+            </plugin>
+    	</plugins>
+    </build>
+
+    <modules>
+    	<module>core</module>
+    	<module>org.apache.wicket</module>
+    	<module>ui.widget</module>
+    	<module>ui.widget_ru</module>
+    	<module>webapp.poc.leads</module>
+    	<module>entity</module>
+    	<module>entity.model</module>
+    </modules>
+
+</project>

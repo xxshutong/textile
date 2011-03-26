@@ -41,11 +41,6 @@
   	</dependency>
   </dependencies>
 
-  <dependencyManagement>
-  	<dependencies>
-  	</dependencies>
-  </dependencyManagement>
-
   <properties>
     <org.osgi.service.http.port>8181</org.osgi.service.http.port>
     <org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
@@ -57,49 +52,12 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>poms</module>
-    <module>provision</module>
-    <module>example.entity</module>
-    <module>example.entity.model</module>
-    <module>example.ui.jsp</module>
-    <module>example.ui.wicket</module>
     <module>features</module>
-    <module>org.apache.wicket</module>
-    <module>webapp.poc.leads</module>
-    <module>ui.widget</module>
-    <module>ui.widget_ru</module>
-    <module>core</module>
+    <module>modules</module>
   </modules>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.ops4j</groupId>
-        <artifactId>maven-pax-plugin</artifactId>
-        <configuration>
-          <provision>
-            <param>--platform=felix</param>
-            <param>--profiles=minimal</param>
-            <param>--vmOptions=-Dorg.osgi.service.http.port=${org.osgi.service.http.port}</param>
-          </provision>
-        </configuration>
-        <executions>
-          <execution>
-            <id>ide-support</id>
-            <goals>
-              <goal>eclipse</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-          <optimize>true</optimize>
-        </configuration>
-      </plugin>
     </plugins>
     <pluginManagement>
     	<plugins>
@@ -107,6 +65,12 @@
     			<groupId>org.apache.felix</groupId>
     			<artifactId>maven-bundle-plugin</artifactId>
     			<version>2.3.4</version>
+    			<extensions>true</extensions>
+    		</plugin>
+    		<plugin>
+    			<groupId>org.apache.maven.plugins</groupId>
+    			<artifactId>maven-compiler-plugin</artifactId>
+    			<version>2.3.2</version>
     		</plugin>
     	</plugins>
     </pluginManagement>

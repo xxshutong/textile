@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <artifactId>modules</artifactId>
+    <groupId>org.opentaps</groupId>
+    <version>2.0.1-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.opentaps</groupId>
+  <artifactId>wicket</artifactId>
+  <version>2.0.1-SNAPSHOT</version>
+
+  <packaging>bundle</packaging>
+
+  <name>Wicket Re-pack</name>
+
+  <properties>
+    <bundle.symbolicName>org.apache.wicket</bundle.symbolicName>
+  </properties>
+
+  <build>
+    <finalName>${bundle.symbolicName}-1.5.rc2</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.3.4</version>
+        <executions>
+          <execution>
+            <id>bundle-manifest</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+            <Bundle-Version>1.5.rc2</Bundle-Version>
+            <Export-Package>org.apache.wicket.*</Export-Package>
+            <Import-Package>
+                junit.framework;resolution:=optional,
+                sun.misc;resolution:=optional,
+                sun.reflect;resolution:=optional,
+                *
+            </Import-Package>
+            <!-- Embed-Dependency>wicket-core;groupId=org.apache.wicket;inline=true,wicket-request;groupId=org.apache.wicket;inline=true,wicket-util;groupId=org.apache.wicket;inline=true</Embed-Dependency-->
+            <Embed-Dependency>wicket-core;groupId=org.apache.wicket;inline=true,wicket-request;groupId=org.apache.wicket;inline=true</Embed-Dependency>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-core</artifactId>
+      <version>1.5-rc2</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-request</artifactId>
+      <version>1.5-rc2</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-util</artifactId>
+      <version>1.5-rc2</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+</project>

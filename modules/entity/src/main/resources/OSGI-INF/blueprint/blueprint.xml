@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                default-activation="eager">
+
+    <bean id="postgresXaDataSource" class="org.postgresql.xa.PGXADataSource">
+        <property name="databaseName" value="opentaps-1.5"/>
+        <property name="serverName" value="localhost"/>
+        <property name="portNumber" value="5433"/>
+        <property name="user" value="opentaps"/>
+        <property name="password" value="opentaps"/>
+    </bean>
+
+    <service id="DefaultXADataSource" ref="postgresXaDataSource" interface="javax.sql.XADataSource">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="jdbc/DefaultXADataSource"/>
+        </service-properties>
+    </service>
+
+    <bean id="postgresDataSource" class="org.postgresql.jdbc3.Jdbc3SimpleDataSource">
+        <property name="databaseName" value="opentaps-1.5"/>
+        <property name="serverName" value="localhost"/>
+        <property name="portNumber" value="5433"/>
+        <property name="user" value="opentaps"/>
+        <property name="password" value="opentaps"/>
+    </bean>
+
+    <service id="DefaultDataSource" ref="postgresDataSource" interface="javax.sql.DataSource">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="jdbc/DefaultDataSource"/>
+        </service-properties>
+    </service>
+
+</blueprint>
