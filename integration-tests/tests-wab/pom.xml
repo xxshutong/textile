@@ -22,7 +22,7 @@
                 <configuration>
                     <instructions>
                         <Web-ContextPath>/itest</Web-ContextPath>
-                        <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}.${project.version}</Bundle-SymbolicName>
                     </instructions>
                 </configuration>
             </plugin>
