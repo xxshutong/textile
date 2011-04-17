@@ -9,8 +9,7 @@
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tests-wab</artifactId>
-    <name>Test Run Servlet</name>
+    <artifactId>tests-app</artifactId>
     <packaging>bundle</packaging>
 
     <build>
@@ -21,8 +20,10 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Web-ContextPath>/itest</Web-ContextPath>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+                        <Export-Package>org.opentaps.testsuit.jpa</Export-Package>
+                        <Private-Package>org.opentaps.testsuit.jpa.impl</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -32,16 +33,10 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-servlet_3.0_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.opentaps.testsuit</groupId>
-            <artifactId>tests-app</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
-            <type>bundle</type>
+            <artifactId>geronimo-jpa_2.0_spec</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
 
+    <name>Tests Application Code</name>
 </project>

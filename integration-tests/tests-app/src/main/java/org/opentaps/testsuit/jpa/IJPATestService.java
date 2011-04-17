@@ -16,27 +16,9 @@
  */
 package org.opentaps.testsuit.jpa;
 
-import java.net.URL;
+public interface IJPATestService {
 
-import org.junit.Assert;
-import org.junit.Test;
+    public void insertTestEntityWithJTA() throws Exception;
 
-
-public class JPATests {
-
-    @Test
-    public void testGeneralJPA() throws Exception {
-        checkReply("/JPATests");
-    }
-
-    private void checkReply(String address) throws Exception {
-        URL url = new URL("http://localhost:8080/itest" + address);
-        String reply = doGET(url, 6, 10 * 1000);
-    }
-
-    private String doGET(URL url, int repeat, long delay) {
-        Assert.assertTrue(false);
-        return null;
-    }
-
+    public void updateTestEntityWithJTA() throws Exception;
 }

@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5" metadata-complete="true">
 
-    <display-name>Integration Tests Servlet</display-name>
+    <display-name>Integration Tests Servlets - Framework Services</display-name>
+
+    <servlet>
+        <display-name>JPATestsServlet</display-name>
+        <servlet-name>JPATestsServlet</servlet-name>
+        <servlet-class>org.opentaps.testsuit.web.jpa.JPATestServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JPATestsServlet</servlet-name>
+        <url-pattern>/JPATests/*</url-pattern>
+    </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>

@@ -17,6 +17,7 @@
     <modules>
         <module>tests-run</module>
         <module>tests-wab</module>
+        <module>tests-app</module>
     </modules>
 
 </project>

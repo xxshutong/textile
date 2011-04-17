@@ -14,29 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Opentaps.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.opentaps.testsuit.jpa;
+package org.opentaps.testsuit.jpa.impl;
 
-import java.net.URL;
+import javax.persistence.EntityManager;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.opentaps.testsuit.jpa.IJPATestService;
 
+public class JPATestService implements IJPATestService {
 
-public class JPATests {
+    private EntityManager em;
 
-    @Test
-    public void testGeneralJPA() throws Exception {
-        checkReply("/JPATests");
+    public void insertTestEntityWithJTA() throws Exception {
+        // TODO implement method
+        for (int i = 0; i < 20; i++) {
+            System.out.print(">>>>>>>>>>>>>>>>>>>" + i + "<<<<<<<<<<<<<<<<<<<<");
+        }
     }
 
-    private void checkReply(String address) throws Exception {
-        URL url = new URL("http://localhost:8080/itest" + address);
-        String reply = doGET(url, 6, 10 * 1000);
+    public void updateTestEntityWithJTA() throws Exception {
+        // TODO implement method
     }
 
-    private String doGET(URL url, int repeat, long delay) {
-        Assert.assertTrue(false);
-        return null;
+    public void setEntityManager(EntityManager em) {
+        this.em = em;
     }
-
 }
