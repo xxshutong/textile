@@ -68,7 +68,26 @@
                         <groupId>org.apache.geronimo.buildsupport</groupId>
                         <artifactId>geronimo-maven-plugin</artifactId>
                         <configuration>
-                            <geronimoHome>/opt/geronimo-tomcat7-javaee6-3.0-M1</geronimoHome>
+                            <assemblies>
+                                <assembly>
+                                    <id>tomcat7</id>
+                                    <groupId>org.apache.geronimo.assemblies</groupId>
+                                    <artifactId>geronimo-tomcat7-javaee6</artifactId>
+                                    <version>3.0-M1</version>
+                                    <classifier>bin</classifier>
+                                    <type>zip</type>
+                                </assembly>
+                                <assembly>
+                                    <id>jetty8</id>
+                                    <groupId>org.apache.geronimo.assemblies</groupId>
+                                    <artifactId>geronimo-jetty8-javaee6</artifactId>
+                                    <version>3.0-M1</version>
+                                    <classifier>bin</classifier>
+                                    <type>zip</type>
+                                </assembly>
+                            </assemblies>
+
+                            <defaultAssemblyId>tomcat7</defaultAssemblyId>
                         </configuration>
                         <executions>
                             <execution>
