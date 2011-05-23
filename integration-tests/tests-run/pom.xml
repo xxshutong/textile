@@ -101,6 +101,56 @@
                                 </configuration>
                             </execution>
                             <execution>
+                                <id>deploy-db-connector</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy-module</goal>
+                                </goals>
+                                <configuration>
+                                    <modules>
+                                        <module>
+                                            <groupId>mysql</groupId>
+                                            <artifactId>mysql-connector-java</artifactId>
+                                            <version>5.1.10</version>
+                                            <type>jar</type>
+                                        </module>
+                                    </modules>
+                                    <moduleArchive>tranql-connector-mysql-xa-1.3.rar</moduleArchive>
+                                    <modulePlan>default-mysql-ra.xml</modulePlan>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>deploy-tests</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy-module</goal>
+                                </goals>
+                                <configuration>
+                                    <moduleArchive>${project.build.directory}/${project.artifactId}-${project.version}.eba</moduleArchive>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>undeploy-tests</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>undeploy-module</goal>
+                                </goals>
+                                <configuration>
+                                    <moduleId>application/${project.groupId}.${project.artifactId}/1.0.0/eba</moduleId>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>undeploy-db-connector</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>undeploy-module</goal>
+                                </goals>
+                                <configuration>
+                                    <moduleId>org.tranql/tranql-connector-mysql-xa/1.3/rar</moduleId>
+                                    <moduleId>mysql/mysql-connector-java/5.1.10/jar</moduleId>
+                                </configuration>
+                            </execution>
+                            <execution>
                                 <id>stop-server</id>
                                 <phase>post-integration-test</phase>
                                 <goals>
