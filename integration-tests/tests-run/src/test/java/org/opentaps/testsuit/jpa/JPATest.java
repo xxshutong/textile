@@ -18,11 +18,14 @@ package org.opentaps.testsuit.jpa;
 
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.junit.Assert;
 import org.junit.Test;
+//import org.testng.annotations.Test;
 
 
-public class JPATests {
+public class JPATest extends TestCase {
 
     @Test
     public void testGeneralJPA() throws Exception {
