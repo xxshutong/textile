@@ -16,30 +16,74 @@
  */
 package org.opentaps.testsuit.jpa;
 
+import java.io.IOException;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.apache.geronimo.testsupport.HttpUtils;
 import org.junit.Assert;
 import org.junit.Test;
-//import org.testng.annotations.Test;
 
 
 public class JPATest extends TestCase {
 
     @Test
-    public void testGeneralJPA() throws Exception {
-        checkReply("/JPATests");
+    public void testInsertTestEntity() throws Exception {
+        checkReply("/JPATests?test=InsertTestEntity");
+    }
+
+    @Test
+    public void testUpdateTestEntity() throws Exception {
+        checkReply("/JPATests?test=UpdateTestEntity");
+    }
+
+    @Test
+    public void testInsertTestEntityWithJTA() throws Exception {
+        checkReply("/JPATests?test=InsertTestEntityWithJTA");
+    }
+
+    @Test
+    public void testUpdateTestEntityWithJTA() throws Exception {
+        checkReply("/JPATests?test=UpdateTestEntityWithJTA");
+    }
+
+    @Test
+    public void testRemoveTestEntity() throws Exception {
+        checkReply("/JPATests?test=RemoveTestEntity");
+    }
+
+    @Test
+    public void testAllMajorFieldTypes() throws Exception {
+        checkReply("/JPATests?test=AllMajorFieldTypes");
+    }
+
+    @Test
+    public void testIdentifierGenerator() throws Exception {
+        checkReply("/JPATests?test=IdentifierGenerator");
     }
 
     private void checkReply(String address) throws Exception {
         URL url = new URL("http://localhost:8080/itest" + address);
         String reply = doGET(url, 6, 10 * 1000);
+        assertTrue("TODO: add a message", reply.contains(""));
     }
 
     private String doGET(URL url, int repeat, long delay) {
-        Assert.assertTrue(false);
-        return null;
+        for (int i = 0; i < repeat; i++) {
+            try {
+                return HttpUtils.doGET(url); 
+            } catch (IOException e) {
+                // do nothing
+                try {
+                    Thread.sleep(delay);
+                } catch (Exception ee) {
+                    break;
+                }
+            }
+        }
+        fail("Did not get servlet response in time");
+        return "";
     }
 
 }

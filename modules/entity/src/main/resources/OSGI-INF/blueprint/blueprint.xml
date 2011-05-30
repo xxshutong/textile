@@ -4,29 +4,27 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 default-activation="eager">
 
-    <bean id="postgresXaDataSource" class="org.postgresql.xa.PGXADataSource">
-        <property name="databaseName" value="opentaps-1.5"/>
+    <bean id="MysqlXaDataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource">
+        <property name="databaseName" value="opentaps"/>
         <property name="serverName" value="localhost"/>
-        <property name="portNumber" value="5433"/>
         <property name="user" value="opentaps"/>
         <property name="password" value="opentaps"/>
     </bean>
 
-    <service id="DefaultXADataSource" ref="postgresXaDataSource" interface="javax.sql.XADataSource">
+    <service id="DefaultXADataSource" ref="MysqlXaDataSource" interface="javax.sql.XADataSource">
         <service-properties>
             <entry key="osgi.jndi.service.name" value="jdbc/DefaultXADataSource"/>
         </service-properties>
     </service>
 
-    <bean id="postgresDataSource" class="org.postgresql.jdbc3.Jdbc3SimpleDataSource">
-        <property name="databaseName" value="opentaps-1.5"/>
+    <bean id="MysqlDataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
+        <property name="databaseName" value="opentaps"/>
         <property name="serverName" value="localhost"/>
-        <property name="portNumber" value="5433"/>
         <property name="user" value="opentaps"/>
         <property name="password" value="opentaps"/>
     </bean>
 
-    <service id="DefaultDataSource" ref="postgresDataSource" interface="javax.sql.DataSource">
+    <service id="DefaultDataSource" ref="MysqlDataSource" interface="javax.sql.DataSource">
         <service-properties>
             <entry key="osgi.jndi.service.name" value="jdbc/DefaultDataSource"/>
         </service-properties>

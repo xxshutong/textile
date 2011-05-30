@@ -18,6 +18,7 @@ package org.opentaps.testsuit.web.jpa;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -46,7 +47,24 @@ public class JPATestServlet extends HttpServlet {
                 //TODO: report service unavailable
             }
 
-            testSrvc.insertTestEntityWithJTA();
+            String testName = request.getParameter("test");
+            if (testName != null) {
+                if ("InsertTestEntity".equals(testName)) {
+                    testSrvc.insertTestEntity();
+                } else if ("UpdateTestEntity".equals(testName)) {
+                    testSrvc.updateTestEntity();
+                } else if ("InsertTestEntityWithJTA".equals(testName)) {
+                    testSrvc.insertTestEntityWithJTA();
+                } else if ("UpdateTestEntityWithJTA".equals(testName)) {
+                    testSrvc.updateTestEntityWithJTA();
+                } else if ("RemoveTestEntity".equals(testName)) {
+                    testSrvc.removeTestEntity();
+                } else if ("AllMajorFieldTypes".equals(testName)) {
+                    testSrvc.allMajorFieldTypes();
+                } else if ("IdentifierGenerator".equals(testName)) {
+                    testSrvc.identifierGenerator();
+                }
+            }
 
             PrintWriter out = response.getWriter();
             out.println("<html><head><title>OSGi JPA Test Application</title></head></html>");

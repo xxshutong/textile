@@ -24,18 +24,43 @@ public class JPATestService implements IJPATestService {
 
     private EntityManager em;
 
+    /* {@inheritDoc} */
     public void insertTestEntityWithJTA() throws Exception {
-        // TODO implement method
-        for (int i = 0; i < 20; i++) {
-            System.out.print(">>>>>>>>>>>>>>>>>>>" + i + "<<<<<<<<<<<<<<<<<<<<");
-        }
+        System.out.print("Test InsertTestEntityWithJTA is not implemented.");
     }
 
+    /* {@inheritDoc} */
     public void updateTestEntityWithJTA() throws Exception {
-        // TODO implement method
+        System.out.print("Test UpdateTestEntityWithJTA is not implemented.");
+    }
+
+    /* {@inheritDoc} */
+    public void insertTestEntity() throws Exception {
+        System.out.print("Test InsertTestEntity is not implemented.");
+    }
+
+    /* {@inheritDoc} */
+    public void updateTestEntity() throws Exception {
+        System.out.print("Test UpdateTestEntity is not implemented.");
+    }
+
+    /* {@inheritDoc} */
+    public void removeTestEntity() throws Exception {
+        System.out.print("Test RemoveTestEntity is not implemented.");
+    }
+
+    /* {@inheritDoc} */
+    public void allMajorFieldTypes() throws Exception {
+        System.out.print("Test AllMajorFieldTypes is not implemented.");
+    }
+
+    /* {@inheritDoc} */
+    public void identifierGenerator() throws Exception {
+        System.out.print("Test IdentifierGenerator is not implemented.");
     }
 
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
+
 }

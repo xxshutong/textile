@@ -52,6 +52,12 @@
             <version>2.0.1-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.testsupport</groupId>
+            <artifactId>testsupport-common</artifactId>
+            <version>3.0-M1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
