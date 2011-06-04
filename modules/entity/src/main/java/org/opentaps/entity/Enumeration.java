@@ -60,7 +60,7 @@ public class Enumeration implements IEnumeration, Serializable {
     @JoinColumn(name="parent_enum_id")
     private IEnumeration enumeration;
 
-    @OneToMany(mappedBy="enumeration")
+    @OneToMany(fetch=FetchType.LAZY)
     private Set<IEnumeration> enumerations;
 
     @ManyToOne(fetch=FetchType.LAZY)

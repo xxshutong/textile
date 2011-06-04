@@ -32,6 +32,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 import org.opentaps.entity.model.ITestEntity;
 import org.opentaps.entity.model.ITestEntityItem;
@@ -43,6 +45,7 @@ public class TestEntity implements ITestEntity, Serializable {
     private static final long serialVersionUID = -4144678701591091589L;
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-string")
     @Column(name = "TEST_ID", nullable = false)
     private String testId;
 
@@ -78,7 +81,7 @@ public class TestEntity implements ITestEntity, Serializable {
     @Column(name = "TEST_URL_FIELD")
     private String testUrlField;
 
-    @Column(name = "TEST_TELEPHONE_FIELD")
+    @Column(name = "TEST_TELPHONE_FIELD")
     private String testTelphoneField;
 
     @Column(name = "TEST_ENCRYPT")
@@ -88,7 +91,7 @@ public class TestEntity implements ITestEntity, Serializable {
     @JoinColumn(name="ENUM_ID")
     private Enumeration testEnum;
 
-    @OneToMany(mappedBy="testEntity")
+    @OneToMany(fetch = FetchType.LAZY)
     private Set<ITestEntityItem> items;
 
     public TestEntity() {}

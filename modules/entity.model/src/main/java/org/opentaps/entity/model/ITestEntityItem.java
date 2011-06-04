@@ -19,9 +19,13 @@ package org.opentaps.entity.model;
 
 public interface ITestEntityItem {
 
-    public ITestEntityItemPK getId();
+//    public String getTestEntityId();
 
-    public void setId(ITestEntityItemPK id);
+//    public void setTestEntityId(String id);
+
+    public String getTestEntityItemSeqId();
+
+    public void setTestEntityItemSeqId(String seqId);
     
     public String getItemValue();
 
