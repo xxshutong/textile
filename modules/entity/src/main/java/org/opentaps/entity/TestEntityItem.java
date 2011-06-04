@@ -29,10 +29,11 @@ import javax.persistence.Table;
 
 import org.opentaps.entity.model.ITestEntity;
 import org.opentaps.entity.model.ITestEntityItem;
+import org.opentaps.entity.model.ITestEntityItemPK;
 
 
 @Entity
-@IdClass(TestEntityItem.TestEntityItemPK.class)
+@IdClass(TestEntityItemPK.class)
 @Table(name="TEST_ENTITY_ITEM")
 public class TestEntityItem implements ITestEntityItem, Serializable {
 
@@ -53,61 +54,17 @@ public class TestEntityItem implements ITestEntityItem, Serializable {
     @JoinColumn(name = "TEST_ENTITY_ID", referencedColumnName = "TEST_ENTITY_ID")
     private ITestEntity testEntity;
 
-    public static class TestEntityItemPK {
+    public ITestEntityItemPK getId() {
+        return new TestEntityItemPK(testEntityId, testEntityItemSeqId);
+    }
 
-        private static final long serialVersionUID = 1L;
-
-        public String testEntityItemSeqId;
-        public String testEntityId;
-
-        public TestEntityItemPK() {};
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result
-                    + ((testEntityId == null) ? 0 : testEntityId.hashCode());
-            result = prime
-                    * result
-                    + ((testEntityItemSeqId == null) ? 0 : testEntityItemSeqId
-                            .hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            TestEntityItemPK other = (TestEntityItemPK) obj;
-            if (testEntityId == null) {
-                if (other.testEntityId != null)
-                    return false;
-            } else if (!testEntityId.equals(other.testEntityId))
-                return false;
-            if (testEntityItemSeqId == null) {
-                if (other.testEntityItemSeqId != null)
-                    return false;
-            } else if (!testEntityItemSeqId.equals(other.testEntityItemSeqId))
-                return false;
-            return true;
-        }
-
+    public void setId(ITestEntityItemPK pk) {
+        this.testEntityId = pk.getTestEntityId();
+        this.testEntityItemSeqId = pk.getTestEntityItemSeqId();
     }
 
     public TestEntityItem() {}
 
-//    public String getTestEntityId() {
-//        return this.testEntityId;
-//    }
-//
-//    public void setTestEntityId(String id) {
-//        this.testEntityId = id;
-//    }
 
     public String getTestEntityItemSeqId() {
         return this.testEntityItemSeqId;
