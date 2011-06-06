@@ -18,7 +18,10 @@ package org.opentaps.testsuit.jpa.impl;
 
 import javax.persistence.EntityManager;
 
+import org.opentaps.entity.TestEntity;
+import org.opentaps.entity.model.ITestEntity;
 import org.opentaps.testsuit.jpa.IJPATestService;
+
 
 public class JPATestService implements IJPATestService {
 
@@ -26,41 +29,65 @@ public class JPATestService implements IJPATestService {
 
     /* {@inheritDoc} */
     public void insertTestEntityWithJTA() throws Exception {
-        System.out.print("Test InsertTestEntityWithJTA is not implemented.");
+        System.out.println("Test InsertTestEntityWithJTA is not implemented.");
     }
 
     /* {@inheritDoc} */
     public void updateTestEntityWithJTA() throws Exception {
-        System.out.print("Test UpdateTestEntityWithJTA is not implemented.");
+        System.out.println("Test UpdateTestEntityWithJTA is not implemented.");
     }
 
     /* {@inheritDoc} */
     public void insertTestEntity() throws Exception {
-        System.out.print("Test InsertTestEntity is not implemented.");
+
+        // 1. Create a TestEntity
+        ITestEntity e = new TestEntity();
+        e.setTestStringField("insertTestEntity string field");
+        em.persist(e);
+        em.flush();
+
+        // 2. Clear persistence context
+        em.clear();
+
+        // 3. Ensure it was really created
+        ITestEntity testEntity = em.find(TestEntity.class, e.getTestId());
+        if (testEntity == null) {
+            fail(String.format("Test entity with PK %1$s is not exist.", e.getTestId()), null);
+        }
     }
 
     /* {@inheritDoc} */
     public void updateTestEntity() throws Exception {
-        System.out.print("Test UpdateTestEntity is not implemented.");
+        // 1. Create a TestsEntity, assign some value to the string property.
+        // 2. Change the string property value and update entity.
+        // 3. Clear persistence context
+        // 4. Find the entity and verify string property equals to last value.
+        System.out.println("Test UpdateTestEntity is not implemented.");
     }
 
     /* {@inheritDoc} */
     public void removeTestEntity() throws Exception {
-        System.out.print("Test RemoveTestEntity is not implemented.");
+        // 1. Create a TestEntity
+        // 2. Remove created entity.
+        // 3. Try to find to be sure it does not exist.
+        System.out.println("Test RemoveTestEntity is not implemented.");
     }
 
     /* {@inheritDoc} */
     public void allMajorFieldTypes() throws Exception {
-        System.out.print("Test AllMajorFieldTypes is not implemented.");
+        System.out.println("Test AllMajorFieldTypes is not implemented.");
     }
 
     /* {@inheritDoc} */
     public void identifierGenerator() throws Exception {
-        System.out.print("Test IdentifierGenerator is not implemented.");
+        System.out.println("Test IdentifierGenerator is not implemented.");
     }
 
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
 
+    protected void fail(String msg, Throwable cause) throws Exception {
+        throw new IllegalStateException(msg, cause);
+    }
 }

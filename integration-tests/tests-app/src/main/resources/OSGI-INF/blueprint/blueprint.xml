@@ -7,7 +7,7 @@
 
     <bean id="jpaTestImpl" class="org.opentaps.testsuit.jpa.impl.JPATestService">
         <tx:transaction method="*" value="Required" />
-        <jpa:context property="entityManager" unitname="TestsSuite" />
+        <jpa:context property="entityManager" unitname="default" />
     </bean>
 
     <service ref="jpaTestImpl" interface="org.opentaps.testsuit.jpa.IJPATestService">
