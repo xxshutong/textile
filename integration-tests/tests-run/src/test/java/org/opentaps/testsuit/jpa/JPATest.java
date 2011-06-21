@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.apache.geronimo.testsupport.HttpUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.opentaps.tests.BaseTestCase;
 
 
 public class JPATest extends TestCase {
@@ -66,7 +67,7 @@ public class JPATest extends TestCase {
     private void checkReply(String address) throws Exception {
         URL url = new URL("http://localhost:8080/itest" + address);
         String reply = doGET(url, 6, 10 * 1000);
-        assertTrue("TODO: add a message", reply.contains(""));
+        assertTrue(reply, reply.contains(BaseTestCase.SUCCESS_RET_CODE));
     }
 
     private String doGET(URL url, int repeat, long delay) {

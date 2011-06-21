@@ -39,7 +39,12 @@
             <groupId>org.opentaps.testsuit</groupId>
             <artifactId>tests-app</artifactId>
             <version>2.0.1-SNAPSHOT</version>
-            <type>bundle</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opentaps</groupId>
+            <artifactId>tests</artifactId>
+            <version>2.0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

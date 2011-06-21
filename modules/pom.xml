@@ -26,6 +26,7 @@
     	</pluginManagement>
     	<plugins>
     		<plugin>
+                <!-- TODO: remove -->
     			<groupId>org.apache.felix</groupId>
     			<artifactId>maven-bundle-plugin</artifactId>
     			<extensions>true</extensions>
@@ -43,6 +44,7 @@
     </build>
 
     <modules>
+        <module>tests</module>
     	<module>core</module>
     	<module>org.apache.wicket</module>
     	<module>ui.widget</module>

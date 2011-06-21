@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentaps.tests.AssertionException;
+import org.opentaps.tests.BaseTestCase;
 import org.opentaps.testsuit.jpa.IJPATestService;
 
 public class JPATestServlet extends HttpServlet {
@@ -45,30 +47,34 @@ public class JPATestServlet extends HttpServlet {
                 //TODO: report service unavailable
             }
 
-            String testName = request.getParameter("test");
-            if (testName != null) {
-                if ("InsertTestEntity".equals(testName)) {
-                    testSrvc.insertTestEntity();
-                } else if ("UpdateTestEntity".equals(testName)) {
-                    testSrvc.updateTestEntity();
-                } else if ("InsertTestEntityWithJTA".equals(testName)) {
-                    testSrvc.insertTestEntityWithJTA();
-                } else if ("UpdateTestEntityWithJTA".equals(testName)) {
-                    testSrvc.updateTestEntityWithJTA();
-                } else if ("RemoveTestEntity".equals(testName)) {
-                    testSrvc.removeTestEntity();
-                } else if ("AllMajorFieldTypes".equals(testName)) {
-                    testSrvc.allMajorFieldTypes();
-                } else if ("IdentifierGenerator".equals(testName)) {
-                    testSrvc.identifierGenerator();
-                }
-            }
-
             PrintWriter out = response.getWriter();
-            out.println("<html><head><title>OSGi JPA Test Application</title></head></html>");
-            out.println("<body><h1>");
-            out.println("Hello World!");
-            out.println("</h1></body></html>");
+
+            try {
+                String testName = request.getParameter("test");
+                if (testName != null) {
+                    if ("InsertTestEntity".equals(testName)) {
+                        testSrvc.insertTestEntity();
+                    } else if ("UpdateTestEntity".equals(testName)) {
+                        testSrvc.updateTestEntity();
+                    } else if ("InsertTestEntityWithJTA".equals(testName)) {
+                        testSrvc.insertTestEntityWithJTA();
+                    } else if ("UpdateTestEntityWithJTA".equals(testName)) {
+                        testSrvc.updateTestEntityWithJTA();
+                    } else if ("RemoveTestEntity".equals(testName)) {
+                        testSrvc.removeTestEntity();
+                    } else if ("AllMajorFieldTypes".equals(testName)) {
+                        testSrvc.allMajorFieldTypes();
+                    } else if ("IdentifierGenerator".equals(testName)) {
+                        testSrvc.identifierGenerator();
+                    }
+                }
+
+                out.println(BaseTestCase.SUCCESS_RET_CODE);
+
+            } catch (AssertionException e) {
+                out.println(e.getLocalizedMessage());
+                return;
+            }
 
         } catch (NamingException e) {
             throw new ServletException(e);
