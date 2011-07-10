@@ -19,8 +19,8 @@
 
     <persistence-unit transaction-type="JTA" name="default">
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-        <jta-data-source>osgi:service/javax.sql.XADataSource/(osgi.jndi.service.name=jdbc/DefaultXADataSource)</jta-data-source>
-        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/DefaultDataSource)</non-jta-data-source>
+        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps-db-xa)</jta-data-source>
+        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps-db-none)</non-jta-data-source>
 
         <class>org.opentaps.entity.Enumeration</class>
         <class>org.opentaps.entity.EnumerationType</class>
