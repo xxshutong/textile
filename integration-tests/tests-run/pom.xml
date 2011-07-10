@@ -104,6 +104,15 @@
                             </assemblies>
 
                             <defaultAssemblyId>tomcat7</defaultAssemblyId>
+
+                            <optionSets>
+                                <optionSet>
+                                    <id>memory</id>
+                                    <options>
+                                        <option>-XX:MaxPermSize=128m</option>
+                                    </options>
+                                </optionSet>
+                            </optionSets>
                         </configuration>
                         <executions>
                             <execution>
@@ -114,6 +123,7 @@
                                 </goals>
                                 <configuration>
                                     <background>true</background>
+                                    <options>memory</options>
                                 </configuration>
                             </execution>
                             <!-- 
