@@ -52,6 +52,7 @@
     	<module>webapp.poc.leads</module>
     	<module>entity</module>
     	<module>entity.model</module>
+        <module>entity.util</module>
     </modules>
 
 </project>

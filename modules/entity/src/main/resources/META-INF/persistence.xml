@@ -27,6 +27,7 @@
         <class>org.opentaps.entity.TestEntity</class>
         <class>org.opentaps.entity.TestEntityItem</class>
         <class>org.opentaps.entity.UserLogin</class>
+        <class>org.opentaps.entity.SequenceValueItem</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
