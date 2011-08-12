@@ -1,8 +1,9 @@
 INTEGRATION TESTS
 =================
 
-Currently we should use Geronimo 3.0-M1 with Tomcat 7 release.
-The binaries can be downloaded from http://geronimo.apache.org/apache-geronimo-v30-m1-release.html
+Currently we should use Geronimo 3.0-SNAPSHOT. The binaries can be downloaded from 
+https://repository.apache.org/content/groups/snapshots/org/apache/geronimo/assemblies
+Last tested is geronimo-tomcat7-javaee6-3.0-20110812.163533-270-bin.tar.gz
 
 Setup testing instance
 =======================
@@ -12,16 +13,15 @@ Setup testing instance
 2. Create a MySQL database and load demo data using opentaps './ant run-install' command. 
    Preferred database name is 'opentaps'. Both username and password are 'opentaps' as well.
    If you want other names please correct corresponding entries in integration-tests/tests-run/default-mysql-ra.xml
-3. Deploy MySQL JDBC driver. Just copy it into <geronimo_home>/deploy directory. We use
-   mysql-connector-java-5.1.10-bin.jar but later releases should work as well. The driver may be
-   downloaded from http://www.mysql.com/downloads/connector/j/
-4. Go to geronimo_home directory and type bin/geronimo run to start the instance.
-   Seeing 'Geronimo Application Server started' open Web console at http://localhost:8080/console
-   Default username: system, password: manager. Get in and install TranGL connector at next step.
-5. Select Applications/Deployer. In Install Application formlet select integration-tests/tests-run/tranql-connector-mysql-xa-1.3.rar
-   for Archive and integration-tests/tests-run/default-mysql-ra.xml for Plan field. Click Install.
-6. Shutdown Geronimo. 
+3. Deploy MySQL JDBC driver. Just copy it into <geronimo_home>/hotbundles directory. We use
+   mysql-connector-java-5.1.16-bin.jar. The driver may be downloaded from http://www.mysql.com/downloads/connector/j/
 
 Run tests
 =========
 Go to project directory and run 'mvn -Dit -DgeronimoHome=/path/to/geronimo_home verify'
+
+Debug tests
+===========
+Since Geronimo is Karaf based information from http://karaf.apache.org/manual/2.2.2/developers-guide/debugging.html cover
+our case but with some peculiarities. Testing instance is run by geronimo-maven-plugin and we have to enable debug
+mode in "it" profile. See configuration for "start-server" execution in integration-tests/tests-run/pom.xml.
