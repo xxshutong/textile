@@ -53,7 +53,7 @@ public class ServiceUtil {
      * @see org.osgi.framework.BundleContext#getServiceReferences(String, String) BundleContext.getServiceReferences
      */
     public static final Object getService(String serviceName, String filter) {
-        StringBuilder name = new StringBuilder(serviceName).append("/").append(OSGI_SERVICE_PREFIX);
+        StringBuilder name = new StringBuilder(OSGI_SERVICE_PREFIX).append("/").append(serviceName);
         if (filter != null) {
             name.append("/").append(filter);
         }
