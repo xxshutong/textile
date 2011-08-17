@@ -18,16 +18,15 @@ package org.opentaps.entity;
 
 import java.io.Serializable;
 
-import org.opentaps.entity.model.ISequenceValueItem;
-import javax.persistence.Id;
-import javax.persistence.Entity;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
 @Entity
-public class SequenceValueItem implements ISequenceValueItem, Serializable {
+public class SequenceValueItem implements Serializable {
 
-    private static final long serialVersionUID = -4280979431741154783L;
+    private static final long serialVersionUID = -4280979431741154782L;
 
     @Id
     @Column(name = "SEQ_NAME", nullable = false)

@@ -27,14 +27,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.opentaps.entity.model.IEnumeration;
-import org.opentaps.entity.model.IEnumerationType;
-
 
 @Entity
-public class Enumeration implements IEnumeration, Serializable {
+public class Enumeration implements Serializable {
 
-    private static final long serialVersionUID = -4314958909722739985L;
+    private static final long serialVersionUID = -4314958909722739986L;
 
     @Id
     @Column(name = "ENUM_ID", nullable = false)
@@ -58,14 +55,14 @@ public class Enumeration implements IEnumeration, Serializable {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="parent_enum_id")
-    private IEnumeration enumeration;
+    private Enumeration enumeration;
 
     @OneToMany(fetch=FetchType.LAZY)
-    private Set<IEnumeration> enumerations;
+    private Set<Enumeration> enumerations;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="enum_type_id")
-    private IEnumerationType enumerationType;
+    private EnumerationType enumerationType;
 
     public Enumeration() {}
 
@@ -125,23 +122,23 @@ public class Enumeration implements IEnumeration, Serializable {
         this.parentEnumId = parentEnumId;
     }
 
-    public IEnumeration getParentEnumeration() {
+    public Enumeration getParentEnumeration() {
         return enumeration;
     }
 
-    public void setParentEnumeration(IEnumeration enumeration) {
+    public void setParentEnumeration(Enumeration enumeration) {
         this.enumeration = enumeration;
     }
 
-    public IEnumerationType getEnumerationType() {
+    public EnumerationType getEnumerationType() {
         return enumerationType;
     }
 
-    public void setEnumerationType(IEnumerationType enumerationType) {
+    public void setEnumerationType(EnumerationType enumerationType) {
         this.enumerationType = enumerationType;
     }
 
-    public Set<IEnumeration> getChildEnumerations() {
+    public Set<Enumeration> getChildEnumerations() {
         return enumerations;
     }
 }

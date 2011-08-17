@@ -19,9 +19,7 @@ package org.opentaps.entity;
 
 import java.io.Serializable;
 
-import org.opentaps.entity.model.ITestEntityItemPK;
-
-public class TestEntityItemPK implements Serializable, ITestEntityItemPK {
+public class TestEntityItemPK implements Serializable {
 
     private static final long serialVersionUID = 3352769862107536974L;
 

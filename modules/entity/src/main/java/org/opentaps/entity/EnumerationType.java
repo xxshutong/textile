@@ -29,15 +29,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.opentaps.entity.model.IEnumeration;
-import org.opentaps.entity.model.IEnumerationType;
-
 
 @Entity
 @Table(name = "ENUMERATION_TYPE")
-public class EnumerationType implements IEnumerationType, Serializable {
+public class EnumerationType implements Serializable {
 
-    private static final long serialVersionUID = 6806002176794105977L;
+    private static final long serialVersionUID = 6806002176794105978L;
 
     @Id
     @Column(name = "ENUM_TYPE_ID", nullable = false)
@@ -50,13 +47,13 @@ public class EnumerationType implements IEnumerationType, Serializable {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="PARENT_TYPE_ID")
-    private IEnumerationType enumerationType;
+    private EnumerationType enumerationType;
 
     @OneToMany(mappedBy="enumerationType")
-    private Set<IEnumerationType> enumerationTypes;
+    private Set<EnumerationType> enumerationTypes;
 
     @OneToMany(mappedBy="enumerationType")
-    private Set<IEnumeration> enumerations;
+    private Set<Enumeration> enumerations;
 
 
     public EnumerationType() {}
@@ -85,19 +82,19 @@ public class EnumerationType implements IEnumerationType, Serializable {
         this.description = description;
     }
 
-    public IEnumerationType getParentEnumerationType() {
+    public EnumerationType getParentEnumerationType() {
         return this.enumerationType;
     }
 
-    public void setParentEnumerationType(IEnumerationType enumerationType) {
+    public void setParentEnumerationType(EnumerationType enumerationType) {
         this.enumerationType = enumerationType;
     }
 
-    public Set<IEnumerationType> getChildEnumerationTypes() {
+    public Set<EnumerationType> getChildEnumerationTypes() {
         return enumerationTypes;
     }
 
-    public Collection<IEnumeration> getEnumerations() {
+    public Collection<Enumeration> getEnumerations() {
         return enumerations;
     }
 

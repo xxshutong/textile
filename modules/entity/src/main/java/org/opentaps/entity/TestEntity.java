@@ -19,11 +19,14 @@ package org.opentaps.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -32,20 +35,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.CascadeType;
 
-import org.opentaps.entity.model.ITestEntity;
-import org.opentaps.entity.model.ITestEntityItem;
 
 @Entity
 @Table(name = "TEST_ENTITY")
-public class TestEntity implements ITestEntity, Serializable {
+public class TestEntity implements Serializable {
 
     private static final long serialVersionUID = -4144678701591091589L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-string")
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-string")
     @Column(name = "TEST_ID", nullable = false)
     private String testId;
 
@@ -91,8 +91,8 @@ public class TestEntity implements ITestEntity, Serializable {
     @JoinColumn(name="ENUM_ID")
     private Enumeration testEnum;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<ITestEntityItem> items;
+    @OneToMany(targetEntity=org.opentaps.entity.TestEntityItem.class, mappedBy="testEntity", cascade=CascadeType.MERGE)
+    private Set<TestEntityItem> items = new HashSet<TestEntityItem>();
 
     public TestEntity() {}
 
@@ -200,11 +200,11 @@ public class TestEntity implements ITestEntity, Serializable {
         this.testEncrypt = testEncrypt;
     }
 
-    public Set<ITestEntityItem> getItems() {
+    public Set<TestEntityItem> getItems() {
         return items;
     }
 
-    public void setItems(Set<ITestEntityItem> items) {
+    public void setItems(Set<TestEntityItem> items) {
         this.items = items;
     }
 

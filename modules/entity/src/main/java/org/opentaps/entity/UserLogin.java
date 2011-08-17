@@ -26,12 +26,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.opentaps.entity.model.IUserLogin;
-
 
 @Entity
 @Table(name = "USER_LOGIN")
-public class UserLogin implements IUserLogin, Serializable {
+public class UserLogin implements Serializable {
 
     private static final long serialVersionUID = 8052896502794586732L;
 

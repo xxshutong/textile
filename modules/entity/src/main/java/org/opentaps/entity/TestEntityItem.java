@@ -27,15 +27,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.opentaps.entity.model.ITestEntity;
-import org.opentaps.entity.model.ITestEntityItem;
-import org.opentaps.entity.model.ITestEntityItemPK;
-
 
 @Entity
 @IdClass(TestEntityItemPK.class)
 @Table(name="TEST_ENTITY_ITEM")
-public class TestEntityItem implements ITestEntityItem, Serializable {
+public class TestEntityItem implements Serializable {
 
     private static final long serialVersionUID = 3596944152636118951L;
 
@@ -51,14 +47,14 @@ public class TestEntityItem implements ITestEntityItem, Serializable {
     private String itemValue;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "TEST_ENTITY_ID", referencedColumnName = "TEST_ENTITY_ID")
-    private ITestEntity testEntity;
+    @JoinColumn(name = "TEST_ENTITY_ID")
+    private TestEntity testEntity;
 
-    public ITestEntityItemPK getId() {
+    public TestEntityItemPK getId() {
         return new TestEntityItemPK(testEntityId, testEntityItemSeqId);
     }
 
-    public void setId(ITestEntityItemPK pk) {
+    public void setId(TestEntityItemPK pk) {
         this.testEntityId = pk.getTestEntityId();
         this.testEntityItemSeqId = pk.getTestEntityItemSeqId();
     }
@@ -82,11 +78,11 @@ public class TestEntityItem implements ITestEntityItem, Serializable {
         this.itemValue = itemValue;
     }
 
-    public ITestEntity getTestEntity() {
+    public TestEntity getTestEntity() {
         return this.testEntity;
     }
 
-    public void setTestEntity(ITestEntity testEntity) {
+    public void setTestEntity(TestEntity testEntity) {
         this.testEntity = testEntity;
     }
 
