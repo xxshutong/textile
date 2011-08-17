@@ -7,6 +7,8 @@
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
+    <name>Modules</name>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentaps</groupId>
     <artifactId>modules</artifactId>
