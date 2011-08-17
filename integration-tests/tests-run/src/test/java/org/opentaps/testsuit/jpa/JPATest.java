@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.opentaps.tests.BaseTestCase;
 
 
+@SuppressWarnings("unused")
 public class JPATest extends TestCase {
 
     @Test
@@ -40,16 +41,6 @@ public class JPATest extends TestCase {
     }
 
     @Test
-    public void testInsertTestEntityWithJTA() throws Exception {
-        checkReply("/JPATests?test=InsertTestEntityWithJTA");
-    }
-
-    @Test
-    public void testUpdateTestEntityWithJTA() throws Exception {
-        checkReply("/JPATests?test=UpdateTestEntityWithJTA");
-    }
-
-    @Test
     public void testRemoveTestEntity() throws Exception {
         checkReply("/JPATests?test=RemoveTestEntity");
     }
@@ -59,14 +50,9 @@ public class JPATest extends TestCase {
         checkReply("/JPATests?test=AllMajorFieldTypes");
     }
 
-    @Test
-    public void testIdentifierGenerator() throws Exception {
-        checkReply("/JPATests?test=IdentifierGenerator");
-    }
-
     private void checkReply(String address) throws Exception {
         URL url = new URL("http://localhost:8080/itest" + address);
-        String reply = doGET(url, 6, 10 * 1000);
+        String reply = doGET(url, 3, 10 * 1000);
         assertTrue(reply, reply.contains(BaseTestCase.SUCCESS_RET_CODE));
     }
 

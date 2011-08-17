@@ -56,16 +56,10 @@ public class JPATestServlet extends HttpServlet {
                         testSrvc.insertTestEntity();
                     } else if ("UpdateTestEntity".equals(testName)) {
                         testSrvc.updateTestEntity();
-                    } else if ("InsertTestEntityWithJTA".equals(testName)) {
-                        testSrvc.insertTestEntityWithJTA();
-                    } else if ("UpdateTestEntityWithJTA".equals(testName)) {
-                        testSrvc.updateTestEntityWithJTA();
                     } else if ("RemoveTestEntity".equals(testName)) {
                         testSrvc.removeTestEntity();
                     } else if ("AllMajorFieldTypes".equals(testName)) {
                         testSrvc.allMajorFieldTypes();
-                    } else if ("IdentifierGenerator".equals(testName)) {
-                        testSrvc.identifierGenerator();
                     }
                 }
 

@@ -31,18 +31,6 @@ public interface IJPATestService {
     public void updateTestEntity() throws Exception;
 
     /**
-     * Insert and then searches a <code>TestEntity</code> under JTA control.
-     * @throws Exception
-     */
-    public void insertTestEntityWithJTA() throws Exception;
-
-    /**
-     * Update an existing <code>TestEntity</code> under JTA control.
-     * @throws Exception
-     */
-    public void updateTestEntityWithJTA() throws Exception;
-
-    /**
      * Remove a <code>TestEntity</code>.
      * @throws Exception
      */
@@ -54,10 +42,4 @@ public interface IJPATestService {
      */
     public void allMajorFieldTypes() throws Exception;
 
-    /**
-     * Test opentaps ID generator works correctly and meets OfBiz entity engine
-     * identifier practice.
-     * @throws Exception
-     */
-    public void identifierGenerator() throws Exception;
 }

@@ -16,6 +16,42 @@
  */
 package org.opentaps.tests;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+
 public class OpentapsTestCase extends BaseTestCase {
+
+    // Since financial amounts and most business values are rounded to 2 decimal places this way,
+    // we set these as the universal rounding settings for all tests.  Create your own rounding settings
+    // if you need something different.
+    public static final int DECIMALS = 2;
+    public static final int ROUNDING = BigDecimal.ROUND_HALF_EVEN;
+
+    /**
+     * Helper method to get byte[] from a file.
+     *
+     * @param f a <code>File</code> value
+     * @return a <code>byte[]</code> value
+     * @throws IOException if an error occurs
+     */
+    public static byte[] getBytesFromFile(File f) throws IOException {
+        if (f == null) {
+            return null;
+        }
+
+        FileInputStream stream = new FileInputStream(f);
+        ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+        byte[] b = new byte[1024];
+        int n;
+        while ((n = stream.read(b)) != -1) {
+            out.write(b, 0, n);
+        }
+        stream.close();
+        out.close();
+        return out.toByteArray();
+    }
 
 }
