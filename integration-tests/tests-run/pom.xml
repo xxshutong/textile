@@ -33,7 +33,7 @@
     <dependencies>
         <dependency>
             <groupId>org.opentaps</groupId>
-            <artifactId>entity.model</artifactId>
+            <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -132,7 +132,7 @@
                                 </goals>
                                 <configuration>
                                     <background>true</background>
-                                    <options>memory<!-- ,debug--></options>
+                                    <options>memory<!--,debug--></options>
                                 </configuration>
                             </execution>
                             <!-- 
