@@ -143,7 +143,7 @@ public class JPATestService extends OpentapsTestCase implements IJPATestService 
         testEntity = (TestEntity) em.find(TestEntity.class, testEntity.getTestId());
 
         // verify we can retrieve blob field from entity
-        String newCRCCode = getCRCCode(testEntity.getTestBlobField());
+        //String newCRCCode = getCRCCode(testEntity.getTestBlobField());
 
         // verify values
         //assertEquals("Blob value is incorrect, crc32 code : " + oldCRCCode, oldCRCCode, newCRCCode);
