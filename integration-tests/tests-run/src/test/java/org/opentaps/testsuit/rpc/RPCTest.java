@@ -14,37 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Opentaps.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.opentaps.testsuit.jpa;
+package org.opentaps.testsuit.rpc;
 
-
-import junit.framework.TestCase;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.opentaps.testsuit.RemoteTestCase;
 
 
-@SuppressWarnings("unused")
-public class JPATest extends RemoteTestCase {
+public class RPCTest extends RemoteTestCase {
 
     @Test
-    public void testInsertTestEntity() throws Exception {
-        checkReply("/runTests?service=JPATestService&test=insertTestEntity");
+    public void testPing() throws Exception {
+        checkReply("/runTests?service=XMLRPCTestService&test=ofbizPing");
     }
-
-    @Test
-    public void testUpdateTestEntity() throws Exception {
-        checkReply("/runTests?service=JPATestService&test=updateTestEntity");
-    }
-
-    @Test
-    public void testRemoveTestEntity() throws Exception {
-        checkReply("/runTests?service=JPATestService&test=removeTestEntity");
-    }
-
-    @Test
-    public void testAllMajorFieldTypes() throws Exception {
-        checkReply("/runTests?service=JPATestService&test=allMajorFieldTypes");
-    }
-
 }

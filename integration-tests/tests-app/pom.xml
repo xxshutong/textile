@@ -22,8 +22,8 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
-                        <Export-Package>org.opentaps.testsuit.jpa</Export-Package>
-                        <Private-Package>org.opentaps.testsuit.jpa.impl</Private-Package>
+                        <Export-Package>org.opentaps.testsuit.jpa,org.opentaps.testsuit.rpc</Export-Package>
+                        <Private-Package>org.opentaps.testsuit.jpa.impl,org.opentaps.testsuit.rpc.impl</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

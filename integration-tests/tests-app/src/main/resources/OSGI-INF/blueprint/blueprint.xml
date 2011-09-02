@@ -16,4 +16,13 @@
         </service-properties>
     </service>
 
+    <bean id="xmlrpcTestImpl" class="org.opentaps.testsuit.rpc.impl.XMLRPCTests">
+    </bean>
+
+    <service ref="xmlrpcTestImpl" interface="org.opentaps.testsuit.rpc.IXMLRPCTests">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="XMLRPCTestService"/>
+        </service-properties>
+    </service>
+
 </blueprint>

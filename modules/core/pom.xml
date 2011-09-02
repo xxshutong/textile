@@ -28,7 +28,6 @@
                         <Bundle-Copyright>Copyright (c) 2010-2011 Open Source Strategies, Inc.</Bundle-Copyright>
                         <Export-Package>
                             org.opentaps.core.bundle,
-                            org.opentaps.core.service.customizer,
                             org.opentaps.core.service
                         </Export-Package>
                         <Private-Package>
@@ -54,6 +53,12 @@
         	<artifactId>org.osgi.core</artifactId>
         	<version>4.2.0</version>
         	<scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opentaps</groupId>
+            <artifactId>org.apache.xmlrpc</artifactId>
+            <version>3.0.0-v20100427-1100</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
