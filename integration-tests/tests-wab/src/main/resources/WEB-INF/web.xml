@@ -4,14 +4,14 @@
     <display-name>Integration Tests Servlets - Framework Services</display-name>
 
     <servlet>
-        <display-name>JPATestsServlet</display-name>
-        <servlet-name>JPATestsServlet</servlet-name>
-        <servlet-class>org.opentaps.testsuit.web.jpa.JPATestServlet</servlet-class>
+        <display-name>IntegrationTestsServlet</display-name>
+        <servlet-name>IntegrationTestsServlet</servlet-name>
+        <servlet-class>org.opentaps.testsuit.web.IntegrTestsServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>JPATestsServlet</servlet-name>
-        <url-pattern>/JPATests/*</url-pattern>
+        <servlet-name>IntegrationTestsServlet</servlet-name>
+        <url-pattern>/runTests/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Opentaps.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.opentaps.testsuit.web.jpa;
+package org.opentaps.testsuit.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -25,13 +27,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.validator.GenericValidator;
 import org.opentaps.tests.AssertionException;
 import org.opentaps.tests.BaseTestCase;
 import org.opentaps.testsuit.jpa.IJPATestService;
 
-public class JPATestServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+/**
+ *
+ */
+@SuppressWarnings("serial")
+public class IntegrTestsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,41 +48,34 @@ public class JPATestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            String serviceName = request.getParameter("service");
+            String testName = request.getParameter("test");
+            if (GenericValidator.isBlankOrNull(serviceName) || GenericValidator.isBlankOrNull(testName)) {
+                throw new ServletException("Missing required parameters.");
+            }
+
             InitialContext context = new InitialContext();
-            IJPATestService testSrvc = (IJPATestService) context.lookup("osgi:service/JPATestService");
+            Object testSrvc = context.lookup(String.format("osgi:service/%1$s", serviceName));
             if (testSrvc == null) {
-                //TODO: report service unavailable
+                throw new ServletException("Test service is unavailable.");
             }
 
             PrintWriter out = response.getWriter();
 
             try {
-                String testName = request.getParameter("test");
-                if (testName != null) {
-                    if ("InsertTestEntity".equals(testName)) {
-                        testSrvc.insertTestEntity();
-                    } else if ("UpdateTestEntity".equals(testName)) {
-                        testSrvc.updateTestEntity();
-                    } else if ("RemoveTestEntity".equals(testName)) {
-                        testSrvc.removeTestEntity();
-                    } else if ("AllMajorFieldTypes".equals(testName)) {
-                        testSrvc.allMajorFieldTypes();
-                    }
-                }
+                Method testCase = ClassUtils.getPublicMethod(testSrvc.getClass(), testName, new Class[0]);
+                testCase.invoke(testSrvc, new Object[]{});
 
                 out.println(BaseTestCase.SUCCESS_RET_CODE);
 
-            } catch (AssertionException e) {
+            } catch (Exception e) {
                 out.println(e.getLocalizedMessage());
                 return;
             }
 
         } catch (NamingException e) {
             throw new ServletException(e);
-        } catch (Exception e) {
-            throw new ServletException(e);
         }
-        
     }
 
 }
