@@ -18,6 +18,7 @@ package org.opentaps.testsuit.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.naming.InitialContext;
@@ -68,12 +69,20 @@ public class IntegrTestsServlet extends HttpServlet {
 
                 out.println(BaseTestCase.SUCCESS_RET_CODE);
 
-            } catch (Exception e) {
-                out.println(e.getLocalizedMessage());
+            } catch (InvocationTargetException e) {
+                out.println(e.getTargetException().getLocalizedMessage());
                 return;
             }
 
         } catch (NamingException e) {
+            throw new ServletException(e);
+        } catch (IllegalArgumentException e) {
+            throw new ServletException(e);
+        } catch (IllegalAccessException e) {
+            throw new ServletException(e);
+        } catch (SecurityException e) {
+            throw new ServletException(e);
+        } catch (NoSuchMethodException e) {
             throw new ServletException(e);
         }
     }
