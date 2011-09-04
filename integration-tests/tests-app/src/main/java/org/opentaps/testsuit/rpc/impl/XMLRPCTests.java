@@ -16,13 +16,28 @@
  */
 package org.opentaps.testsuit.rpc.impl;
 
-import org.opentaps.tests.AssertionException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.opentaps.core.service.ServiceUtil;
+import org.opentaps.core.service.XMLRPCService;
+import org.opentaps.tests.OpentapsTestCase;
 import org.opentaps.testsuit.rpc.IXMLRPCTests;
 
-public class XMLRPCTests implements IXMLRPCTests {
+
+public class XMLRPCTests extends OpentapsTestCase implements IXMLRPCTests {
 
     public void ofbizPing() throws Exception {
-        throw new AssertionException("ofbizPing is not implemented yet!");
+        final String MSG = "PING";
+
+        XMLRPCService service = (XMLRPCService) ServiceUtil.getService(XMLRPCService.class.getName());
+        assertNotNull(String.format("Service %1$s is unavailable.", XMLRPCService.class.getName()), service);
+
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put("message", MSG);
+
+        Map<String, ?> results = service.execute("ping", context);
+        assertEquals("Wrong response from the remote service.", MSG, results.get("message"));
     }
 
 }
