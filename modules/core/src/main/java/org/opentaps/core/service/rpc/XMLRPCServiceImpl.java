@@ -16,71 +16,121 @@
  */
 package org.opentaps.core.service.rpc;
 
-import java.net.URL;
-import java.util.TimeZone;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.validator.GenericValidator;
+import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.client.AsyncCallback;
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfig;
 import org.opentaps.core.service.XMLRPCService;
 
+
 public class XMLRPCServiceImpl implements XMLRPCService {
+    XmlRpcClientConfig config;
+    XmlRpcClient client;
 
-    public URL getServerURL() {
-        // TODO Auto-generated method stub
-        return null;
+    /** {@inheritDoc} */
+    public Object execute(String methodName, List<?> params) throws XmlRpcException {
+        return execute(null, methodName, params);
     }
 
-    public String getBasicPassword() {
-        // TODO Auto-generated method stub
-        return null;
+    /** {@inheritDoc} */
+    public Object execute(XmlRpcClientConfig config, String methodName, List<?> params) throws XmlRpcException {
+        return execute(config, methodName, params, null);
     }
 
-    public String getBasicUserName() {
-        // TODO Auto-generated method stub
-        return null;
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
+    public Map<String, ?> execute(String serviceName, Map<String, Object> context) throws XmlRpcException {
+        Map<String, Object> callCtx = context;
+        if (callCtx == null) {
+            callCtx = new HashMap<String, Object>();
+        }
+
+        return (Map<String, ?>) execute(serviceName, Arrays.asList(context));
     }
 
-    public int getConnectionTimeout() {
-        // TODO Auto-generated method stub
-        return 0;
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
+    public Map<String, ?> execute(XmlRpcClientConfig config, String serviceName, Map<String, Object> context) throws XmlRpcException {
+        return (Map<String, ?>) execute(config, serviceName, Arrays.asList(context));
     }
 
-    public int getReplyTimeout() {
-        // TODO Auto-generated method stub
-        return 0;
+    /** {@inheritDoc} */
+    public void executeAsync(String methodName, List<?> params, AsyncCallback callback) throws XmlRpcException {
+        executeAsync(null, methodName, params, callback);
     }
 
-    public boolean isGzipCompressing() {
-        // TODO Auto-generated method stub
-        return false;
+    /** {@inheritDoc} */
+    public void executeAsync(XmlRpcClientConfig config, String methodName, List<?> params, AsyncCallback callback) throws XmlRpcException {
+        execute(config, methodName, params, callback);
     }
 
-    public boolean isGzipRequesting() {
-        // TODO Auto-generated method stub
-        return false;
+    /** {@inheritDoc} */
+    public void setConfig(XmlRpcClientConfig config) {
+        this.config = config;
+        if (client != null) {
+            client.setConfig(this.config);
+        }
     }
 
-    public String getEncoding() {
-        // TODO Auto-generated method stub
-        return null;
+    /** {@inheritDoc} */
+    public XmlRpcClientConfig getConfig() {
+        return config;
     }
 
-    public TimeZone getTimeZone() {
-        // TODO Auto-generated method stub
-        return null;
+    /**
+     * Performs actual request selecting configuration and sync/async patter according to
+     * arguments.
+     * 
+     * @param config The request configuration. Use default if it is <code>null</code>.
+     * @param methodName The method being performed.
+     * @param params The parameters.
+     * @param callback The callback being notified when the request is finished. Perform sync request if it is <code>null</code>.
+     * @return The result object or <code>null</code> in case async request.
+     * @throws XmlRpcException
+     */
+    private Object execute(XmlRpcClientConfig config, String methodName, List<?> params, AsyncCallback callback) throws XmlRpcException {
+        if (GenericValidator.isBlankOrNull(methodName)) {
+            throw new IllegalArgumentException("Missing required argument \"methodName\".");
+        }
+        if (GenericValidator.isBlankOrNull(methodName)) {
+            throw new IllegalArgumentException("Missing parameters to call remote method \"methodName\".");
+        }
+        if (config == null && this.config == null) {
+            throw new IllegalArgumentException("Not present any configuration in argument or default config.");
+        }
+
+        if (client == null) {
+            client = new XmlRpcClient();
+            if (this.config != null) {
+                client.setConfig(this.config);
+            }
+        }
+
+        XmlRpcClientConfig oldConfig = null;
+        if (config != null) {
+            oldConfig = getConfig();
+            client.setConfig(config);
+        };
+
+        Object result = null;
+        if (callback == null) {
+            result = client.execute(methodName, params);
+        } else {
+            client.executeAsync(methodName, params, callback);
+        }
+
+        if (oldConfig != null) {
+            client.setConfig(oldConfig);
+        }
+
+        return result;
     }
 
-    public boolean isEnabledForExtensions() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public String getBasicEncoding() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public boolean isContentLengthOptional() {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
 }

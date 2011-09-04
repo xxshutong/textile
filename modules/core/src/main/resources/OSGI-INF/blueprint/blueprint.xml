@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                default-activation="eager">
+
+    <bean id="defaultClientConfig" class="org.apache.xmlrpc.client.XmlRpcClientConfigImpl" >
+        <property name="basicUserName" value="admin" />
+        <property name="basicPassword" value="opentaps" />
+        <property name="serverURL">
+            <bean class="java.net.URL">
+                <argument value="http://demo1.opentaps.org/webtools/control/xmlrpc"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="xmlRpcServiceInstance" class="org.opentaps.core.service.rpc.XMLRPCServiceImpl">
+        <property name="config" ref="defaultClientConfig" />
+    </bean>
+
+    <service id="genericXmlRpcService" ref="xmlRpcServiceInstance" interface="org.opentaps.core.service.XMLRPCService">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.core.service.XMLRPCService"/>
+        </service-properties>
+    </service>
+
+</blueprint>
