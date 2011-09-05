@@ -30,9 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.validator.GenericValidator;
-import org.opentaps.tests.AssertionException;
 import org.opentaps.tests.BaseTestCase;
-import org.opentaps.testsuit.jpa.IJPATestService;
 
 
 /**

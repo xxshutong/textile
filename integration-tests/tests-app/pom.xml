@@ -20,7 +20,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>org.opentaps.testsuit.jpa,org.opentaps.testsuit.rpc</Export-Package>
                         <Private-Package>org.opentaps.testsuit.jpa.impl,org.opentaps.testsuit.rpc.impl</Private-Package>
                     </instructions>

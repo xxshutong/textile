@@ -3,11 +3,10 @@
     xmlns="http://maven.apache.org/POM/4.0.0"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <!-- | put company details here <organization> <name>...</name> <url>http://...</url> 
-        </organization> -->
-
-    <!-- | put license details here <licenses> <license> <name>...</name> 
-        <url>http://...</url> <comments> </comments> </license> </licenses> -->
+    <organization>
+        <name>Open Source Strategies</name>
+        <url>http://www.opensourcestrategies.com/</url>
+    </organization>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.opentaps</groupId>
@@ -15,9 +14,6 @@
     <version>2.0.1-SNAPSHOT</version>
 
     <name>opentaps OSGi Research Project</name>
-
-    <!-- | describe your project here -->
-
 
     <dependencies>
         <dependency>
@@ -34,6 +30,7 @@
         <servlet.api>2.5.0</servlet.api>
         <felix.version>2.0.5</felix.version>
         <wicket.version>1.5-rc2</wicket.version>
+        <bundle.symbolicName>${project.groupId}.${project.artifactId}</bundle.symbolicName>
     </properties>
 
     <packaging>pom</packaging>
@@ -45,6 +42,7 @@
     </modules>
 
     <build>
+        <finalName>${bundle.symbolicName}-${version}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -52,6 +50,12 @@
                     <artifactId>maven-bundle-plugin</artifactId>
                     <version>2.3.4</version>
                     <extensions>true</extensions>
+                    <configuration>
+                        <instructions>
+                            <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+                            <Bundle-Copyright>Copyright (c) 2010-2011 Open Source Strategies, Inc.</Bundle-Copyright>
+                        </instructions>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -117,4 +121,9 @@
             <url>http://repository.apache.org/snapshots/</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <scm>
+        <connection>scm:git:git@gitorious.org:opentaps/opentaps-osgi.git</connection>
+        <developerConnection>scm:git:ssh://earth.opentaps.org/home/git/opentaps-osgi-proj.git</developerConnection>
+    </scm>
 </project>

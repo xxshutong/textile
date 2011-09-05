@@ -16,12 +16,7 @@
     <description>A Proof Of Concept</description>
     <packaging>bundle</packaging>
 
-    <properties>
-        <bundle.symbolicName>org.opentaps.webapp.poc.leads</bundle.symbolicName>
-    </properties>
-
     <build>
-        <finalName>${bundle.symbolicName}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -55,7 +50,6 @@
                     </supportedProjectTypes>
                     <instructions>
                         <Web-ContextPath>/leads</Web-ContextPath>
-                        <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>
                             org.opentaps.webapp.poc.leads,

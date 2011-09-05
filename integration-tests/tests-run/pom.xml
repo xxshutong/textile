@@ -13,6 +13,10 @@
     <artifactId>tests-run</artifactId>
     <packaging>eba</packaging>
 
+    <properties>
+        <version.testRunApp>1.0.0</version.testRunApp>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -23,7 +27,7 @@
                 <configuration>
                     <generateManifest>true</generateManifest>
                     <instructions>
-                        <Application-Version>1.0.0</Application-Version>
+                        <Application-Version>${version.testRunApp}</Application-Version>
                     </instructions>
                 </configuration>
             </plugin>
@@ -191,7 +195,7 @@
                                     <goal>deploy-module</goal>
                                 </goals>
                                 <configuration>
-                                    <moduleArchive>${project.build.directory}/${project.artifactId}-${project.version}.eba</moduleArchive>
+                                    <moduleArchive>${project.build.directory}/${bundle.symbolicName}-${project.version}.eba</moduleArchive>
                                 </configuration>
                             </execution>
                             <execution>
@@ -201,7 +205,7 @@
                                     <goal>undeploy-module</goal>
                                 </goals>
                                 <configuration>
-                                    <moduleId>application/${project.groupId}.${project.artifactId}/1.0.0/eba</moduleId>
+                                    <moduleId>application/${bundle.symbolicName}/${version.testRunApp}/eba</moduleId>
                                 </configuration>
                             </execution>
                             <!-- 

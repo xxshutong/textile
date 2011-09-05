@@ -29,12 +29,7 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <bundle.symbolicName>org.opentaps.ui.widget</bundle.symbolicName>
-    </properties>
-
     <build>
-        <finalName>${bundle.symbolicName}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>

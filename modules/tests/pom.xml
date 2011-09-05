@@ -36,7 +36,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>org.opentaps.tests</Export-Package>
                     </instructions>
                 </configuration>

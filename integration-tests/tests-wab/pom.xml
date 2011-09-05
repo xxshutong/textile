@@ -22,7 +22,6 @@
                 <configuration>
                     <instructions>
                         <Web-ContextPath>/itest</Web-ContextPath>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>org.opentaps.testsuit.web</Export-Package>
                     </instructions>
                 </configuration>
