@@ -22,7 +22,6 @@
             <plugin>
                 <groupId>org.apache.aries</groupId>
                 <artifactId>eba-maven-plugin</artifactId>
-                <version>0.3</version>
                 <extensions>true</extensions>
                 <configuration>
                     <generateManifest>true</generateManifest>

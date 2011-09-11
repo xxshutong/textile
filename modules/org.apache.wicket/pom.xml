@@ -8,9 +8,8 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.opentaps</groupId>
-  <artifactId>wicket</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
+  <artifactId>org.apache.wicket</artifactId>
+  <version>1.5.0-rc2</version>
 
   <packaging>bundle</packaging>
 
@@ -26,7 +25,6 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.3.4</version>
         <executions>
           <execution>
             <id>bundle-manifest</id>
@@ -39,7 +37,6 @@
         <configuration>
           <instructions>
             <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
-            <Bundle-Version>1.5.rc2</Bundle-Version>
             <Export-Package>org.apache.wicket.*</Export-Package>
             <Import-Package>
                 junit.framework;resolution:=optional,

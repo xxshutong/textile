@@ -7,9 +7,7 @@
     </parent>
 
 	<modelVersion>4.0.0</modelVersion>
-    <groupId>org.opentaps</groupId>
     <artifactId>ui.widget</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
     <name>Widgets</name>
     <description>Reusable code fragments for UI</description>
     <packaging>bundle</packaging>
@@ -17,14 +15,20 @@
     <dependencies>
     	<dependency>
     		<groupId>org.opentaps</groupId>
-    		<artifactId>wicket</artifactId>
-    		<version>2.0.1-SNAPSHOT</version>
+    		<artifactId>org.apache.wicket</artifactId>
+    		<version>1.5.0-rc2</version>
     		<scope>provided</scope>
     	</dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-auth-roles</artifactId>
             <version>1.5-rc2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opentaps</groupId>
+            <artifactId>org.apache.wicket</artifactId>
+            <version>1.5.0-rc2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
