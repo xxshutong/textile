@@ -91,6 +91,12 @@
             <version>2.0.8</version>
             <scope>bundle</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>com.springsource.org.apache.commons.httpclient</artifactId>
+            <version>3.1.0</version>
+            <scope>bundle</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
