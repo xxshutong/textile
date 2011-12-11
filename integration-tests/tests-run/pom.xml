@@ -97,6 +97,12 @@
             <version>3.1.0</version>
             <scope>bundle</scope>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.18</version>
+            <scope>bundle</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -122,7 +128,7 @@
                                     <id>tomcat7</id>
                                     <groupId>org.apache.geronimo.assemblies</groupId>
                                     <artifactId>geronimo-tomcat7-javaee6</artifactId>
-                                    <version>3.0-M1</version>
+                                    <version>3.0-beta-1</version>
                                     <classifier>bin</classifier>
                                     <type>zip</type>
                                 </assembly>
@@ -130,7 +136,7 @@
                                     <id>jetty8</id>
                                     <groupId>org.apache.geronimo.assemblies</groupId>
                                     <artifactId>geronimo-jetty8-javaee6</artifactId>
-                                    <version>3.0-M1</version>
+                                    <version>3.0-beta-1</version>
                                     <classifier>bin</classifier>
                                     <type>zip</type>
                                 </assembly>
