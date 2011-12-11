@@ -1,24 +1,34 @@
 INTEGRATION TESTS
 =================
 
-Currently we should use Geronimo 3.0-SNAPSHOT. The binaries can be downloaded from 
-https://repository.apache.org/content/groups/snapshots/org/apache/geronimo/assemblies
-Last tested is geronimo-tomcat7-javaee6-3.0-20110812.163533-270-bin.tar.gz
+Currently we should use Geronimo 3.0-beta-1. The binaries can be downloaded from 
+http://geronimo.apache.org/apache-geronimo-v30-beta-1-release.html. Use Web Profile
+releases.
+
+Build Caution: Project use a few bundled Apache libraries from Eclipse Orbit project.
+Since they unavailable in Maven repositories you have to install them into local repository
+to get build working. Go to thirdparty directory and run install.sh before building 
+project.
 
 Setup testing instance
 =======================
-1. Unpack the .zip (Windows) or tar.gz (Unix) file containing Geronimo to a convenient directory
+1. (optional) Unpack the .zip (Windows) or tar.gz (Unix) file containing Geronimo to a convenient directory
    (we'll refer to it as geronimo home) and read the attached README.TXT file for information 
    about further installation and configuration steps.
 2. Create a MySQL database and load demo data using opentaps './ant run-install' command. 
    Preferred database name is 'opentaps'. Both username and password are 'opentaps' as well.
-   If you want other names please correct corresponding entries in integration-tests/tests-run/default-mysql-ra.xml
-3. Deploy MySQL JDBC driver. Just copy it into <geronimo_home>/hotbundles directory. We use
-   mysql-connector-java-5.1.16-bin.jar. The driver may be downloaded from http://www.mysql.com/downloads/connector/j/
+   If you want other names please correct corresponding entries in 
+   /modules/entity/src/main/resources/OSGI-INF/blueprint/blueprint.xml
+3. RPC tests call a service running on demo1.opentaps.org. It should be constantly available. 
+   If you want to use another instance adjust URL and credentials in
+   /modules/core/src/main/resources/OSGI-INF/blueprint/blueprint.xml
 
 Run tests
 =========
-Go to project directory and run 'mvn -Dit -DgeronimoHome=/path/to/geronimo_home verify'
+Go to project directory and run 'mvn -Dit -DgeronimoHome=/path/to/geronimo_home verify' or
+'mvn -Dit verify'. Please note the difference. In second case geronimo binaries is downloaded
+automatically and installed into target directory and you do not need install geronimo separately.
+Both cases have advantages and disadvantages, use any of your choice. 
 
 Debug tests
 ===========
