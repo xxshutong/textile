@@ -13,7 +13,7 @@
     <artifactId>opentaps2</artifactId>
     <version>2.0.1-SNAPSHOT</version>
 
-    <name>opentaps OSGi Research Project</name>
+    <name>opentaps v2 Project</name>
 
     <dependencies>
         <dependency>
@@ -135,7 +135,7 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:git:git@gitorious.org:opentaps/opentaps-osgi.git</connection>
-        <developerConnection>scm:git:ssh://earth.opentaps.org/home/git/opentaps-osgi-proj.git</developerConnection>
+        <connection>scm:git:git@gitorious.org:opentaps/opentaps-2.git</connection>
+        <developerConnection>scm:git:ssh://svn.opentaps.org/home/git/opentaps-2.git</developerConnection>
     </scm>
 </project>
