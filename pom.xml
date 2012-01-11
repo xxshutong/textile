@@ -43,7 +43,7 @@
     </modules>
 
     <build>
-        <finalName>${bundle.symbolicName}-${version}</finalName>
+        <finalName>${bundle.symbolicName}-${project.version}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
