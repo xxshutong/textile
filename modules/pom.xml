@@ -75,6 +75,9 @@
     	<module>ui.widget_ru</module>
     	<module>webapp.poc.leads</module>
     	<module>entity</module>
+    	<module>notes.api</module>
+    	<module>notes.repository</module>
+    	<module>notes.services</module>
     </modules>
 
 </project>
