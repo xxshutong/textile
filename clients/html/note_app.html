@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Notes Application</title>
+
+<style type="text/css">
+
+#content {
+  margin-left: 20px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 80%;
+}
+
+#content h1 {
+  font-size: 100%;
+  padding: 5px 0px 2px 4px;
+}
+
+#navbar {
+  float: left;
+  width: 200px;
+}
+
+#vertmenu {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 100%;
+  width: 160px;
+  padding: 0px;
+  margin: 0px;
+}
+
+#vertmenu h1 {
+  display: block;
+  background-color:#5492BB;
+  font-size: 90%;
+  padding: 3px 0 5px 3px;
+  border: 1px solid #FFFFFF;
+  color: #FFFFFF;
+  margin: 0px;
+  width:159px;
+}
+
+#vertmenu ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  border: none;
+}
+
+#vertmenu ul li {
+  margin: 0px;
+  padding: 0px;
+}
+
+#vertmenu ul li a {
+  font-size: 80%;
+  display: block;
+  border-bottom: 1px dashed #C39C4E;
+  padding: 5px 0px 2px 4px;
+  text-decoration: none;
+  color: #666666;
+  width:160px;
+}
+
+#vertmenu ul li a:hover, #vertmenu ul li a:focus {
+  color: #000000;
+  background-color: #eeeeee;
+}
+
+</style>
+
+<script language="javascript" type="text/javascript">
+
+function createRequest() {
+  var result = null;
+  if (window.XMLHttpRequest) {
+    // FireFox, Safari, etc.
+    result = new XMLHttpRequest();
+    if (typeof xmlhttp.overrideMimeType != 'undefined') {
+      result.overrideMimeType('text/xml'); 
+    }
+  }
+  else if (window.ActiveXObject) {
+    // MSIE
+    result = new ActiveXObject("Microsoft.XMLHTTP");
+  } 
+
+  return result;
+}
+
+function saveNote(form){
+  var req = createRequest(); 
+
+  // Create the callback:
+  req.onreadystatechange = function() {
+    if (req.readyState != 4) return; // Not there yet
+    if (req.status != 200) {
+      // Handle request failure here...
+      return;
+    }
+    // Request successful, read the response
+    var resp = req.responseText;
+    
+  }
+
+ 
+}
+
+</script>
+
+</head>
+
+<body>
+<div id="container">
+  <div id="navbar">
+  <div id="vertmenu">
+    <h1>Notes Application</h1>
+    <ul>
+        <li><a href="#" tabindex="1">Create Note</a></li>
+        <li><a href="#" tabindex="2">Get Note</a></li>
+        <li><a href="#" tabindex="3">Find Notes</a></li>
+    </ul>
+    </div>
+  </div>
+  <div id="content">
+    <h1>Create Note<h1>
+
+    <form name="createNote" id="createNote" action="createNote" method="post">
+    <table>
+      <tr><td>
+      <textarea name="noteText" id="noteText" rows="20" cols="100"></textarea> 
+      </br>
+      </td></tr>
+      <tr><td>
+      <input type="button" value="Save" onClick="saveNote(this)"/>
+      </td></tr>
+    </table>
+    </form>
+
+   </div>
+</div>
+
+</body>
+</html>
