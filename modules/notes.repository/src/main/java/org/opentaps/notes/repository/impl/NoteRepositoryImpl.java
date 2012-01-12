@@ -5,6 +5,7 @@ import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.repository.NoteRepository;
 
 import javax.persistence.EntityManager;
+import java.sql.Timestamp;
 
 /**
  * The implementation of the NoteRepository using the javax.persistence.EntityManager.
@@ -31,6 +32,8 @@ public class NoteRepositoryImpl implements NoteRepository {
         note.setAttribute8(noteData.getAttribute8());
         note.setAttribute9(noteData.getAttribute9());
         note.setAttribute10(noteData.getAttribute10());
+        note.setDateTimeCreated(noteData.getDateTimeCreated());
+        note.setCreatedByUserId(noteData.getCreatedByUserId());
         return note;
     }
 
@@ -48,6 +51,8 @@ public class NoteRepositoryImpl implements NoteRepository {
         noteData.setAttribute8(note.getAttribute8());
         noteData.setAttribute9(note.getAttribute9());
         noteData.setAttribute10(note.getAttribute10());
+        noteData.setDateTimeCreated(note.getDateTimeCreated());
+        noteData.setCreatedByUserId(note.getCreatedByUserId());
         return noteData;
     }
 
@@ -60,6 +65,12 @@ public class NoteRepositoryImpl implements NoteRepository {
     /* {@inheritDoc} */
     public void persist(Note note) {
         NoteData noteData = makeNoteData(note);
+
+        // for creation set the created date
+        if (noteData.getDateTimeCreated() == null) {
+            noteData.setDateTimeCreated(new Timestamp(System.currentTimeMillis()));
+        }
+
         em.persist(noteData);
         em.flush();
         em.clear();

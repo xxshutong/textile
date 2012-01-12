@@ -44,6 +44,14 @@ public class Note {
         this.text = text;
     }
 
+    public Timestamp getDateTimeCreated() {
+        return dateTimeCreated;
+    }
+
+    public void setDateTimeCreated(Timestamp dateTimeCreated) {
+        this.dateTimeCreated = dateTimeCreated;
+    }
+
     public String getCreatedByUserId() {
         return createdByUserId;
     }

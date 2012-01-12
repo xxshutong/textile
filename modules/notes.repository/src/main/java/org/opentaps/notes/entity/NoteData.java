@@ -88,6 +88,14 @@ public class NoteData implements Serializable {
         this.noteText = noteText;
     }
 
+    public Timestamp getDateTimeCreated() {
+        return dateTimeCreated;
+    }
+
+    public void setDateTimeCreated(Timestamp dateTimeCreated) {
+        this.dateTimeCreated = dateTimeCreated;
+    }
+
     public String getCreatedByUserId() {
         return createdByUserId;
     }
