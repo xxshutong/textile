@@ -53,7 +53,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         this.attribute7 = value;
     }
     public void setAttribute8(String value) {
-        this.attribute9 = value;
+        this.attribute8 = value;
     }
     public void setAttribute9(String value) {
         this.attribute9 = value;
