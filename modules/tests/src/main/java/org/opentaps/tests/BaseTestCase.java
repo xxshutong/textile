@@ -45,11 +45,26 @@ public class BaseTestCase {
 
     public void setUp() throws Exception {
         InitialContext context = new InitialContext();
-        log = (LogService) context.lookup("osgi:service/LogService");
+        try {
+            System.err.println("look for osgi:service/LogService");
+            log = (LogService) context.lookup("osgi:service/LogService");
+        } catch (Exception e) {
+            System.err.println("Could not get the log service from context, looked up value was osgi:service/LogService");
+            throw e;
+        }
+
     }
 
     public void tearDown() throws Exception {
         log = null;
+    }
+
+    public void log(String msg) {
+        if (log == null) {
+            System.err.println("[NO LOGGER] " + msg);
+        } else {
+            log.log(LogService.LOG_INFO, msg);
+        }
     }
 
     /*************************************************************************/
