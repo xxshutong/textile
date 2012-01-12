@@ -42,7 +42,7 @@
                 <configuration>
                     <instructions>
                         <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
-                        <Export-Package>org.opentaps.notes.repository</Export-Package>
+                        <Export-Package>org.opentaps.notes.entity,org.opentaps.notes.repository</Export-Package>
                         <Private-Package>org.opentaps.notes.repository.impl</Private-Package>
                     </instructions>
                 </configuration>

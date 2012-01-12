@@ -17,7 +17,7 @@
 -->
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
 
-    <persistence-unit transaction-type="JTA" name="default">
+    <persistence-unit transaction-type="JTA" name="notes">
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
         <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps-db-xa)</jta-data-source>
         <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps-db-none)</non-jta-data-source>
@@ -26,6 +26,7 @@
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
             <property name="openjpa.BrokerImpl" value="non-finalizing" /> 
         </properties>
     </persistence-unit>

@@ -73,37 +73,44 @@
 <script language="javascript" type="text/javascript">
 
 function createRequest() {
-  var result = null;
-  if (window.XMLHttpRequest) {
-    // FireFox, Safari, etc.
-    result = new XMLHttpRequest();
-    if (typeof xmlhttp.overrideMimeType != 'undefined') {
-      result.overrideMimeType('text/xml'); 
+  var xmlhttp;
+  try {
+    xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+  } catch (e) {
+    try {
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } catch (E) {
+      xmlhttp = false;
     }
   }
-  else if (window.ActiveXObject) {
-    // MSIE
-    result = new ActiveXObject("Microsoft.XMLHTTP");
-  } 
-
-  return result;
+  if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+    xmlhttp = new XMLHttpRequest();
+  }
+  return xmlhttp
 }
 
 function saveNote(form){
   var req = createRequest(); 
-
+  
   // Create the callback:
-  req.onreadystatechange = function() {
+  req.onreadystatechange = function() {    
     if (req.readyState != 4) return; // Not there yet
     if (req.status != 200) {
       // Handle request failure here...
       return;
     }
+
     // Request successful, read the response
     var resp = req.responseText;
-    
+
   }
 
+  var params = 'note=' + encodeURIComponent(form["noteText"].value);
+
+  req.open("POST", "http://localhost:8080/note/", true);
+  req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+  req.send(params);
  
 }
 
@@ -133,7 +140,7 @@ function saveNote(form){
       </br>
       </td></tr>
       <tr><td>
-      <input type="button" value="Save" onClick="saveNote(this)"/>
+      <input type="button" value="Save" onClick="saveNote(this.form)"/>
       </td></tr>
     </table>
     </form>

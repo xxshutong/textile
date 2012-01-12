@@ -8,11 +8,19 @@
     <bean id="createNoteServiceImpl" class="org.opentaps.notes.services.impl.CreateNoteServiceImpl">
         <property name="noteRepository" ref="noteRepositoryService"/>
     </bean>
-    <service ref="createNoteServiceImpl" interface="org.opentaps.notes.services.CreateNoteService"/>
+    <service id="notes.createNoteService" ref="createNoteServiceImpl" interface="org.opentaps.notes.services.CreateNoteService">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.services.CreateNoteService"/>
+        </service-properties>
+    </service>
 
-    <bean id="createNoteServiceImpl" class="org.opentaps.notes.services.impl.GetNoteByIdServiceImpl">
+    <bean id="getNoteByIdServiceImpl" class="org.opentaps.notes.services.impl.GetNoteByIdServiceImpl">
         <property name="noteRepository" ref="noteRepositoryService"/>
     </bean>
-    <service ref="getNoteByIdServiceImpl" interface="org.opentaps.notes.services.GetNoteByIdService"/>
+    <service id="notes.getNoteByIdService" ref="getNoteByIdServiceImpl" interface="org.opentaps.notes.services.GetNoteByIdService">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.services.GetNoteByIdService"/>
+        </service-properties>
+    </service>
 
 </blueprint>

@@ -7,10 +7,13 @@
 
     <bean id="noteRepositoryImpl" class="org.opentaps.notes.repository.impl.NoteRepositoryImpl">
         <tx:transaction method="*" value="Required" />
-        <jpa:context property="entityManager" unitname="default" />
+        <jpa:context property="entityManager" unitname="notes" />
     </bean>
 
     <service id="noteRepositoryService" ref="noteRepositoryImpl" interface="org.opentaps.notes.repository.NoteRepository">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.repository.NoteRepository"/>
+        </service-properties>
     </service>
 
 </blueprint>
