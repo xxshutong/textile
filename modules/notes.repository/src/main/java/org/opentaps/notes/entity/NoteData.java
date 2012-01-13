@@ -23,11 +23,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * The persisted NoteData entity.
  */
 @Entity
+@Table(name="NOTE_DATA")
 public class NoteData implements Serializable {
 
     private static final long serialVersionUID = -4314958909722739985L;
