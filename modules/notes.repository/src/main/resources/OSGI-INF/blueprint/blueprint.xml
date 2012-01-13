@@ -5,6 +5,36 @@
     xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0"
     xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.0.0">
 
+    <!-- database connection, opentaps 2 DB -->
+
+    <bean id="MysqlXaDataSource2" class="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource">
+        <property name="databaseName" value="opentaps2"/>
+        <property name="serverName" value="localhost"/>
+        <property name="user" value="opentaps"/>
+        <property name="password" value="opentaps"/>
+    </bean>
+
+    <service id="opentaps-db-xa" ref="MysqlXaDataSource2" interface="javax.sql.DataSource">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="jdbc/opentaps2-db-xa"/>
+        </service-properties>
+    </service>
+
+    <bean id="MysqlDataSource2" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
+        <property name="databaseName" value="opentaps2"/>
+        <property name="serverName" value="localhost"/>
+        <property name="user" value="opentaps"/>
+        <property name="password" value="opentaps"/>
+    </bean>
+
+    <service id="opentaps-db-none" ref="MysqlDataSource2" interface="javax.sql.DataSource">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="jdbc/opentaps2-db-none"/>
+        </service-properties>
+    </service>
+
+    <!-- repository service -->
+
     <bean id="noteRepositoryImpl" class="org.opentaps.notes.repository.impl.NoteRepositoryImpl">
         <tx:transaction method="*" value="Required" />
         <jpa:context property="entityManager" unitname="notes" />

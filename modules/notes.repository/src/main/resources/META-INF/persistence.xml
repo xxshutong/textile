@@ -19,8 +19,8 @@
 
     <persistence-unit transaction-type="JTA" name="notes">
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps-db-xa)</jta-data-source>
-        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps-db-none)</non-jta-data-source>
+        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps2-db-xa)</jta-data-source>
+        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps2-db-none)</non-jta-data-source>
 
         <class>org.opentaps.notes.entity.NoteData</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
