@@ -18,6 +18,5 @@
     <name>opentaps Assemblies</name>
 
     <modules>
-        <module>leads-demo</module>
     </modules>
 </project>
