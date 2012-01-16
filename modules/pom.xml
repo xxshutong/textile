@@ -74,6 +74,7 @@
     	<module>notes.api</module>
     	<module>notes.repository</module>
     	<module>notes.services</module>
+    	<module>notes.tests</module>
     </modules>
 
 </project>
