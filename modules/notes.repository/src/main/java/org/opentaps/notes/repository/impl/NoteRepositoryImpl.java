@@ -1,11 +1,13 @@
 package org.opentaps.notes.repository.impl;
 
-import org.opentaps.notes.entity.NoteData;
-import org.opentaps.notes.domain.Note;
-import org.opentaps.notes.repository.NoteRepository;
-
-import javax.persistence.EntityManager;
 import java.sql.Timestamp;
+import java.util.List;
+import javax.persistence.EntityManager;
+
+import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.entity.NoteData;
+import org.opentaps.notes.repository.NoteRepository;
+import java.util.ArrayList;
 
 /**
  * The implementation of the NoteRepository using the javax.persistence.EntityManager.
@@ -56,13 +58,13 @@ public class NoteRepositoryImpl implements NoteRepository {
         return noteData;
     }
 
-    /* {@inheritDoc} */
+    /** {@inheritDoc} */
     public Note getNoteById(String noteId) {
         NoteData noteData = em.find(NoteData.class, noteId);
         return makeNote(noteData);
     }
 
-    /* {@inheritDoc} */
+    /** {@inheritDoc} */
     public void persist(Note note) {
         NoteData noteData = makeNoteData(note);
 
@@ -78,6 +80,28 @@ public class NoteRepositoryImpl implements NoteRepository {
         // for creation the id was not set and is now available in noteData
         note.setId(noteData.getNoteId());
     }
-    
+
+    /** {@inheritDoc} */
+    public void persist(List<Note> notes) {
+        List<NoteData> noteDatas = new ArrayList<NoteData>();
+        for (Note note : notes) {
+            NoteData noteData = makeNoteData(note);
+
+            // for creation set the created date
+            if (noteData.getDateTimeCreated() == null) {
+                noteData.setDateTimeCreated(new Timestamp(System.currentTimeMillis()));
+            }
+            noteDatas.add(noteData);
+        }
+
+        em.persist(noteDatas);
+        em.flush();
+        em.clear();
+
+        // for creation the id was not set and is now available in noteData
+        for (int i = 0; i < notes.size(); i++) {
+            notes.get(i).setId(noteDatas.get(i).getNoteId());
+        }
+    }
 
 }

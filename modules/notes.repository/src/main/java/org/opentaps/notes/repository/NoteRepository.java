@@ -1,5 +1,6 @@
 package org.opentaps.notes.repository;
 
+import java.util.List;
 import org.opentaps.notes.domain.Note;
 
 public interface NoteRepository {
@@ -16,5 +17,11 @@ public interface NoteRepository {
      * @param note a <code>Note</code> value
      */
     public void persist(Note note);
+
+    /**
+     * Persists a list of Note.
+     * @param notes a <code>List<Note></code> value
+     */
+    public void persist(List<Note> notes);
 
 }
