@@ -71,10 +71,7 @@
         <module>tests</module>
     	<module>core</module>
     	<module>entity</module>
-    	<module>notes.api</module>
-    	<module>notes.repository</module>
-    	<module>notes.services</module>
-    	<module>notes.tests</module>
+    	<module>notes</module>
     </modules>
 
 </project>

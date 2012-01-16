@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>opentaps2</artifactId>
+        <groupId>org.opentaps</groupId>
+        <version>2.0.1-SNAPSHOT</version>
+    </parent>
+
+    <name>notes</name>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>notes</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+    	<module>notes.api</module>
+    	<module>notes.repository</module>
+    	<module>notes.services</module>
+    	<module>notes.tests</module>
+    </modules>
+
+</project>
