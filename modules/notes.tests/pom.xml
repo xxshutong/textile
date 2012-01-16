@@ -17,7 +17,7 @@
 
     <artifactId>notes.tests</artifactId>
     <name>Notes Application Tests</name>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
       <dependency>
