@@ -18,6 +18,7 @@
     	<module>notes.repository</module>
     	<module>notes.services</module>
     	<module>notes.tests</module>
+    	<module>notes.rest</module>
     </modules>
 
 </project>
