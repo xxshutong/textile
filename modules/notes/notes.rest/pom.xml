@@ -22,8 +22,8 @@
         <configuration>
           <instructions>
             <Web-ContextPath>/notes</Web-ContextPath>
-            <Private-Package>org.opentaps.notes.rest</Private-Package>
             <Import-Package>*,javax.servlet,javax.servlet.http,org.restlet.ext.servlet</Import-Package>
+            <Private-Package>org.opentaps.notes.rest</Private-Package>
           </instructions>
         </configuration>
       </plugin>

@@ -2,9 +2,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>opentaps2</artifactId>
         <groupId>org.opentaps</groupId>
         <version>2.0.1-SNAPSHOT</version>
+        <artifactId>modules</artifactId>
     </parent>
 
     <name>notes</name>
@@ -19,6 +19,7 @@
     	<module>notes.services</module>
     	<module>notes.tests</module>
     	<module>notes.rest</module>
+        <module>notes.eba</module>
     </modules>
 
 </project>
