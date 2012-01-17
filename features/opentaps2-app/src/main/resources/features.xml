@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="opentaps2-app-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+    <feature name="notes-dist" version="${project.version}">
+        <bundle>mvn:org.opentaps/notes.rest/${project.version}</bundle>
+        <bundle>mvn:org.opentaps/notes.api/${project.version}</bundle>
+        <bundle>mvn:org.opentaps/notes.repository/${project.version}</bundle>
+        <bundle>mvn:org.opentaps/notes.services/${project.version}</bundle>
+    </feature>
+
+</features>

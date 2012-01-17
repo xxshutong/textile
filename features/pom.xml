@@ -13,7 +13,8 @@
 
   <version>2.0.1-SNAPSHOT</version>
   <modules>
-  	<module>example</module>
+  	<module>opentaps2-core</module>
+    <module>opentaps2-app</module>
   </modules>
 
 </project>
