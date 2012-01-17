@@ -94,7 +94,7 @@ function parseResponse(req) {
     var resp = req.responseText;
     document.getElementById('successMessage').innerHTML="Note has been successfully added. Note id: " + resp;
   } else {
-    document.getElementById('successMessage').innerHTML="Error add note ! ";
+    document.getElementById('errorMessage').innerHTML="Error add note ! ";
   }
 
   console.log(req);
