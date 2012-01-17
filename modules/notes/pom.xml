@@ -19,6 +19,7 @@
     	<module>notes.services</module>
     	<module>notes.tests</module>
     	<module>notes.rest</module>
+        <module>notes.eba</module>
     </modules>
 
 </project>
