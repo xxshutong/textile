@@ -21,11 +21,32 @@ import java.net.URL;
 
 import org.apache.geronimo.testsupport.HttpUtils;
 import org.opentaps.tests.BaseTestCase;
+import org.restlet.Client;
+import org.restlet.Context;
+import org.restlet.data.Protocol;
+import org.restlet.ext.httpclient.HttpClientHelper;
 
 import junit.framework.TestCase;
 
 
 public class RemoteTestCase extends TestCase {
+
+    protected Client client;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        // use Apache HTTP client for REST requests
+        client = new Client(new Context(), Protocol.HTTP);
+        new HttpClientHelper(client);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        client = null;
+        super.tearDown();
+    }
 
     protected void checkReply(String address) throws Exception {
         URL url = new URL("http://localhost:8080/itest" + address);
