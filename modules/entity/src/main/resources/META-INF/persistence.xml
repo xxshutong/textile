@@ -19,17 +19,17 @@
 
     <persistence-unit transaction-type="JTA" name="default">
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps-db-xa)</jta-data-source>
-        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps-db-none)</non-jta-data-source>
+        <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps2-db-xa)</jta-data-source>
+        <non-jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/opentaps2-db-none)</non-jta-data-source>
 
         <class>org.opentaps.entity.Enumeration</class>
         <class>org.opentaps.entity.EnumerationType</class>
         <class>org.opentaps.entity.TestEntity</class>
         <class>org.opentaps.entity.TestEntityItem</class>
-        <class>org.opentaps.entity.UserLogin</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
             <property name="openjpa.BrokerImpl" value="non-finalizing" /> 
         </properties>
     </persistence-unit>
