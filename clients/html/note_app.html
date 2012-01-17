@@ -74,19 +74,31 @@
 
 function createRequest() {
   var xmlhttp;
+  if (typeof XMLHttpRequest != 'undefined') { 
+    return new XMLHttpRequest(); 
+  }
   try {
     xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
   } catch (e) {
     try {
       xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    } catch (E) {
+    } catch (e) {
       xmlhttp = false;
     }
   }
-  if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-    xmlhttp = new XMLHttpRequest();
-  }
   return xmlhttp
+}
+
+function parseResponse(req) {
+  if (req.status == 201) {
+    var resp = req.responseText;
+    document.getElementById('successMessage').innerHTML="Note has been successfully added. Note id: " + resp;
+  } else {
+    document.getElementById('successMessage').innerHTML="Error add note ! ";
+  }
+
+  console.log(req);
+
 }
 
 function saveNote(form){
@@ -94,20 +106,15 @@ function saveNote(form){
   
   // Create the callback:
   req.onreadystatechange = function() {    
-    if (req.readyState != 4) return; // Not there yet
-    if (req.status != 200) {
-      // Handle request failure here...
-      return;
+    if (req.readyState == 4) {        
+        parseResponse(req);
     }
-
-    // Request successful, read the response
-    var resp = req.responseText;
-
+   
   }
 
-  var params = 'note=' + encodeURIComponent(form["noteText"].value);
+  var params = 'noteText=' + encodeURIComponent(form["noteText"].value);
 
-  req.open("POST", "http://localhost:8080/note/", true);
+  req.open("POST", "http://localhost:8080/notes/note", true);
   req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
   req.send(params);
@@ -131,6 +138,11 @@ function saveNote(form){
     </div>
   </div>
   <div id="content">
+    <div id="successMessage">
+    </div>
+    <div id="errorMessage" style="color: red">
+    </div>  
+
     <h1>Create Note<h1>
 
     <form name="createNote" id="createNote" action="createNote" method="post">
