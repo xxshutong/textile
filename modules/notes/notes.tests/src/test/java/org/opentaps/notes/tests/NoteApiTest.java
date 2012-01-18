@@ -10,7 +10,7 @@ import org.opentaps.notes.services.GetNoteByIdService;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
 @RunWith(JUnit4TestRunner.class)
-public class NoteApiTest extends NotesTestCase {
+public class NoteApiTest extends NotesTestConfig {
 
     @Inject
     private CreateNoteService createNoteService;

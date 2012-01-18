@@ -6,8 +6,7 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import static org.ops4j.pax.exam.CoreOptions.*;
 
-public class NotesTestCase extends OpentapsTestCase {
-
+public class NotesTestConfig extends OpentapsTestCase {
 
     @Configuration
     public Option[] config() {

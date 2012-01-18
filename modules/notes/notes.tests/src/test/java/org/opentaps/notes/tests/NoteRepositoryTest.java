@@ -9,7 +9,7 @@ import org.opentaps.notes.domain.Note;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
 @RunWith(JUnit4TestRunner.class)
-public class NoteRepositoryTest extends NotesTestCase {
+public class NoteRepositoryTest extends NotesTestConfig {
 
     @Inject
     private NoteRepository noteRepository;
