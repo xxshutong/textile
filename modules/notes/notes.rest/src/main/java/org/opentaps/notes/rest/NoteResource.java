@@ -13,6 +13,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.services.NoteServices;
 import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.GetNoteByIdService;
 
@@ -30,7 +31,8 @@ public class NoteResource extends ServerResource {
 	    if (noteId != null && noteId.length() > 0) {
 	        try {
 	            InitialContext context = new InitialContext();
-	            GetNoteByIdService getNoteByIdService = (GetNoteByIdService) context.lookup("osgi:service/org.opentaps.notes.services.GetNoteByIdService");
+	            NoteServices noteServices = (NoteServices) context.lookup("osgi:service/org.opentaps.notes.services.NoteServices");
+	            GetNoteByIdService getNoteByIdService = noteServices.getGetNoteByIdService();
 
 	            if (getNoteByIdService != null) {
 	                getNoteByIdService.setNoteId(noteId);
@@ -83,7 +85,8 @@ public class NoteResource extends ServerResource {
 
 		try {
 		    InitialContext context = new InitialContext();
-		    CreateNoteService createNoteService = (CreateNoteService) context.lookup("osgi:service/org.opentaps.notes.services.CreateNoteService");
+	            NoteServices noteServices = (NoteServices) context.lookup("osgi:service/org.opentaps.notes.services.NoteServices");
+	            CreateNoteService createNoteService = noteServices.getCreateNoteService();
 
 		    if (createNoteService != null) {
 		        createNoteService.setText(noteText);
