@@ -3,7 +3,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 default-activation="eager">
 
-    <!-- database connection, opentaps 2 DB -->
+    <!-- transactional datasource -->
     <bean id="MysqlXaDataSource2" class="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource">
         <property name="databaseName" value="opentaps2"/>
         <property name="serverName" value="localhost"/>
@@ -17,6 +17,7 @@
         </service-properties>
     </service>
 
+    <!-- non-transactional datasource, please avoid to use in regular code -->
     <bean id="MysqlDataSource2" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
         <property name="databaseName" value="opentaps2"/>
         <property name="serverName" value="localhost"/>
