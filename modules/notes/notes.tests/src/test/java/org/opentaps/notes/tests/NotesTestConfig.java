@@ -50,7 +50,7 @@ public class NotesTestConfig extends OpentapsTestCase {
                        mavenBundle().groupId("org.opentaps").artifactId("core").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.opentaps").artifactId("tests").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.opentaps").artifactId("notes.api").version("2.0.1-SNAPSHOT"),
-                       mavenBundle().groupId("org.opentaps").artifactId("notes.services").version("2.0.1-SNAPSHOT"),
+                       mavenBundle().groupId("org.opentaps").artifactId("notes.services.impl").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.opentaps").artifactId("notes.repository").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.opentaps").artifactId("notes.repository.impl").version("2.0.1-SNAPSHOT"),
                        junitBundles(),
