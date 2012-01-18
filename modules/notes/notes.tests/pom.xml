@@ -7,6 +7,7 @@
         <paxexamversion>2.3.0</paxexamversion>
         <paxurlversion>1.3.5</paxurlversion>
         <paxrunnerversion>1.7.4</paxrunnerversion>
+        <skipTests>true</skipTests>
     </properties>
 
     <parent>
@@ -18,6 +19,18 @@
     <artifactId>notes.tests</artifactId>
     <name>Notes Application Tests</name>
     <packaging>jar</packaging>
+
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <skipTests>${skipTests}</skipTests>
+          </configuration>
+        </plugin>
+      </plugins>
+    </build>
 
     <dependencies>
       <dependency>
