@@ -42,6 +42,42 @@
       <version>2.0.10</version>
     </dependency>
     <dependency>
+      <groupId>net.sourceforge.ezmorph</groupId>
+      <artifactId>com.springsource.net.sf.ezmorph</artifactId>
+      <version>1.0.5</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>com.springsource.org.apache.commons.beanutils</artifactId>
+      <version>1.8.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>com.springsource.org.apache.commons.collections</artifactId>
+      <version>3.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>com.springsource.org.apache.commons.logging</artifactId>
+      <version>1.1.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>com.springsource.org.apache.commons.lang</artifactId>
+      <version>2.5.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.json</groupId>
+      <artifactId>com.springsource.net.sf.json</artifactId>
+      <version>2.2.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.opentaps</groupId>
       <artifactId>core</artifactId>
       <version>2.0.1-SNAPSHOT</version>
