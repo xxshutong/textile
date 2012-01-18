@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.opentaps</groupId>
             <artifactId>entity</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -49,13 +49,13 @@
         <dependency>
             <groupId>org.opentaps</groupId>
             <artifactId>tests</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
             <artifactId>core</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <type>bundle</type>
         </dependency>
         <dependency>
@@ -66,8 +66,8 @@
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
-            <artifactId>notes.api</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <artifactId>notes.services</artifactId>
+            <version>${project.version}</version>
             <type>bundle</type>
             <scope>provided</scope>
         </dependency>
