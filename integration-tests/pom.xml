@@ -69,4 +69,8 @@
         <module>tests-app</module>
     </modules>
 
+    <properties>
+        <server.port>8080</server.port>
+        <server.host>localhost</server.host>
+    </properties>
 </project>
