@@ -9,9 +9,9 @@
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>notes.repository</artifactId>
-    <name>Notes Repository API</name>
-    <description>The repository API</description>
+    <artifactId>notes.services.impl</artifactId>
+    <name>Notes Application Services Implementation</name>
+    <description>Implementation of the services defined in notes.services</description>
     <packaging>bundle</packaging>
 
     <build>
@@ -22,26 +22,48 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>
-                            org.opentaps.notes.repository
-                        </Export-Package>
+                        <Private-Package>
+                            org.opentaps.notes.services.impl
+                        </Private-Package>
                     </instructions>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
-
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>4.2.0</version>
-            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jpa_2.0_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.aries</groupId>
+            <artifactId>org.apache.aries.util</artifactId>
+            <version>0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>notes.services</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>notes.repository</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

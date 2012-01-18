@@ -1,0 +1,126 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>notes</artifactId>
+        <groupId>org.opentaps</groupId>
+        <version>2.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>notes.repository.impl</artifactId>
+    <name>Notes Repository Implementation</name>
+    <description>The repository and persisted entities</description>
+    <packaging>bundle</packaging>
+
+    <build>
+    	<plugins>
+            <plugin>
+                <groupId>org.apache.openjpa</groupId>
+                <artifactId>openjpa-maven-plugin</artifactId>
+                <version>2.2.0-SNAPSHOT</version>
+                <configuration>
+                    <includes>**/*.class</includes>
+                    <excludes>**/*PK.class</excludes>
+                    <addDefaultConstructor>true</addDefaultConstructor>
+                    <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>enhancer</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+                        <Export-Package>org.opentaps.notes.entity</Export-Package>
+                        <Private-Package>org.opentaps.notes.repository.impl</Private-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+    	</plugins>
+    	<pluginManagement>
+    	    <plugins>
+    	        <plugin>
+    	            <groupId>org.eclipse.m2e</groupId>
+    	            <artifactId>lifecycle-mapping</artifactId>
+    	            <version>1.0.0</version>
+    	            <configuration>
+    	                <lifecycleMappingMetadata>
+    	                    <pluginExecutions>
+    	                        <pluginExecution>
+    	                            <pluginExecutionFilter>
+    	                                <groupId>org.apache.openjpa</groupId>
+    	                                <artifactId>openjpa-maven-plugin</artifactId>
+    	                                <versionRange>[2.2.0-SNAPSHOT,)</versionRange>
+    	                                <goals>
+                                            <goal>enhance</goal>
+    	                                </goals>
+    	                            </pluginExecutionFilter>
+    	                            <action>
+    	                                <ignore></ignore>
+    	                            </action>
+    	                        </pluginExecution>
+    	                    </pluginExecutions>
+    	                </lifecycleMappingMetadata>
+    	            </configuration>
+    	        </plugin>
+    	    </plugins>
+    	</pluginManagement>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.aries.jpa</groupId>
+            <artifactId>org.apache.aries.jpa.api</artifactId>
+            <version>0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.aries</groupId>
+            <artifactId>org.apache.aries.util</artifactId>
+            <version>0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.2.0</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+    	<dependency>
+    	    <groupId>mysql</groupId>
+    	    <artifactId>mysql-connector-java</artifactId>
+    	    <version>5.1.10</version>
+    	    <scope>provided</scope>
+    	</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>notes.services</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>notes.repository</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>

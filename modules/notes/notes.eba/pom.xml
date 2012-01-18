@@ -5,14 +5,13 @@
 
     <parent>
         <artifactId>notes</artifactId>
-        <version>2.0.1-SNAPSHOT</version>
         <groupId>org.opentaps</groupId>
+        <version>2.0.1-SNAPSHOT</version>
     </parent>
 
     <name>Notes EBA</name>
     <artifactId>notes.eba</artifactId>
     <packaging>eba</packaging>
-
 
     <build>
         <plugins>
@@ -108,33 +107,38 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.opentaps</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.opentaps</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>entity</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.opentaps</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>notes.rest</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.opentaps</groupId>
-            <artifactId>notes.api</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>notes.services</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.opentaps</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>notes.repository</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.opentaps</groupId>
-            <artifactId>notes.services</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>notes.repository.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>notes.services.impl</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

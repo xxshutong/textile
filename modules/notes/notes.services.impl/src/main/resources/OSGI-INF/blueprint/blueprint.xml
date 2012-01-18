@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <reference id="noteRepositoryService" interface="org.opentaps.notes.repository.NoteRepository"/>
+
+    <bean id="noteServicesImpl" class="org.opentaps.notes.services.impl.NoteServicesImpl">
+        <property name="noteRepository" ref="noteRepositoryService"/>
+    </bean>
+    <service id="notes.noteServices" ref="noteServicesImpl" interface="org.opentaps.notes.services.NoteServices">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.services.NoteServices"/>
+        </service-properties>
+    </service>
+
+</blueprint>
