@@ -11,7 +11,6 @@
   <packaging>pom</packaging>
   <name>opentaps and third party features</name>
 
-  <version>2.0.1-SNAPSHOT</version>
   <modules>
   	<module>opentaps2-core</module>
     <module>opentaps2-app</module>

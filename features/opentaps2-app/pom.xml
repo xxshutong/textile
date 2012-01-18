@@ -2,9 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.opentaps.features</groupId>
     <artifactId>apps</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
     <name>opentaps v2 Applications Features</name>
     <description>Collection of bundles implementing opentaps v2 applications.</description>
 
