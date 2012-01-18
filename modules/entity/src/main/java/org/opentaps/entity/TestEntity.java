@@ -45,11 +45,11 @@ public class TestEntity implements Serializable {
     private static final long serialVersionUID = -4144678701591091589L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-string")
-    @Column(name = "TEST_ID", nullable = false)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE)
+    @Column(name = "TEST_ID", nullable = false, length = 20)
     private String testId;
 
-    @Column(name = "TEST_STRING_FIELD")
+    @Column(name = "TEST_STRING_FIELD", length = 60)
     private String testStringField;
 
     @Column(name = "TEST_DATE_TIME_FIELD")
@@ -60,19 +60,19 @@ public class TestEntity implements Serializable {
     @Column(name = "TEST_BLOB_FIELD")
     private byte[] testBlobField;
 
-    @Column(name = "TEST_NUMERIC_FIELD")
+    @Column(name = "TEST_NUMERIC_FIELD", precision = 20)
     private Long testNumericField;
 
-    @Column(name = "TEST_FLOATING_POINT_FIELD")
+    @Column(name = "TEST_FLOATING_POINT_FIELD", scale = 6, precision = 18)
     private BigDecimal testFloatingPointField;
 
-    @Column(name = "TEST_CURRENCY_PRECISE_FIELD")
+    @Column(name = "TEST_CURRENCY_PRECISE_FIELD", scale = 3, precision = 18)
     private BigDecimal testCurrencyPreciseField;
 
     @Column(name = "TEST_CREDIT_CARD_NUMBER_FIELD")
     private String testCreditCardNumberField;
 
-    @Column(name = "TEST_CREDIT_CARD_DATE_FIELD")
+    @Column(name = "TEST_CREDIT_CARD_DATE_FIELD", length = 20)
     private String testCreditCardDateField;
 
     @Column(name = "TEST_EMAIL_FIELD")
@@ -81,7 +81,7 @@ public class TestEntity implements Serializable {
     @Column(name = "TEST_URL_FIELD")
     private String testUrlField;
 
-    @Column(name = "TEST_TELPHONE_FIELD")
+    @Column(name = "TEST_TELPHONE_FIELD", length = 60)
     private String testTelphoneField;
 
     @Column(name = "TEST_ENCRYPT")

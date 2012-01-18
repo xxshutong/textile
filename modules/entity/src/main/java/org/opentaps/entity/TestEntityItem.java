@@ -36,14 +36,14 @@ public class TestEntityItem implements Serializable {
     private static final long serialVersionUID = 3596944152636118951L;
 
     @Id
-    @Column(name="TEST_ENTITY_ID", nullable=false)
+    @Column(name="TEST_ENTITY_ID", nullable=false, length = 20)
     private String testEntityId;
 
     @Id
-    @Column(name="TEST_ENTITY_ITEM_SEQ_ID", nullable=false)
+    @Column(name="TEST_ENTITY_ITEM_SEQ_ID", nullable=false, length = 20)
     private String testEntityItemSeqId;
 
-    @Column(name="ITEM_VALUE")
+    @Column(name="ITEM_VALUE", length =  60)
     private String itemValue;
 
     @ManyToOne(fetch=FetchType.LAZY)

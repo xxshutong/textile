@@ -37,10 +37,10 @@ public class EnumerationType implements Serializable {
     private static final long serialVersionUID = 6806002176794105978L;
 
     @Id
-    @Column(name = "ENUM_TYPE_ID", nullable = false)
+    @Column(name = "ENUM_TYPE_ID", nullable = false, length = 20)
     private String enumTypeId;
 
-    @Column(name = "HAS_TABLE")
+    @Column(name = "HAS_TABLE", length = 1)
     private String hasTable;
 
     private String description;

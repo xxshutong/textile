@@ -26,18 +26,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
 @Entity
+@Table(name = "ENUMERATION")
 public class Enumeration implements Serializable {
 
     private static final long serialVersionUID = -4314958909722739986L;
 
     @Id
-    @Column(name = "ENUM_ID", nullable = false)
+    @Column(name = "ENUM_ID", nullable = false, length = 20)
     private String enumId;
 
-    @Column(name = "ENUM_TYPE_ID", nullable = false)
+    @Column(name = "ENUM_TYPE_ID", nullable = false, length = 20)
     private String enumTypeId;
 
     @Column(name = "ENUM_CODE")
@@ -48,6 +50,7 @@ public class Enumeration implements Serializable {
 
     private String description;
 
+    @Column(length = 1)
     private String disabled;
 
     @Column(name = "PARENT_ENUM_ID")
