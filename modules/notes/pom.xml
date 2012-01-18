@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
-    	<module>notes.api</module>
+    	<module>notes.services</module>
     	<module>notes.repository</module>
     	<module>notes.repository.impl</module>
     	<module>notes.services.impl</module>

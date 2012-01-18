@@ -9,8 +9,8 @@
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>notes.api</artifactId>
-    <name>Notes Application API</name>
+    <artifactId>notes.services</artifactId>
+    <name>Notes Application Services API</name>
     <description>This is a very simple yet useful application to demonstrate the concepts and technologies behind opentaps 2</description>
     <packaging>bundle</packaging>
 

@@ -11,7 +11,7 @@
 
     <artifactId>notes.services.impl</artifactId>
     <name>Notes Application Services Implementation</name>
-    <description>Implementation of the services defined in notes.api</description>
+    <description>Implementation of the services defined in notes.services</description>
     <packaging>bundle</packaging>
 
     <build>
@@ -57,7 +57,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>notes.api</artifactId>
+            <artifactId>notes.services</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
