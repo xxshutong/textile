@@ -2,10 +2,14 @@ package org.opentaps.notes.domain;
 
 import java.sql.Timestamp;
 
+import net.sf.json.JSONString;
+import net.sf.json.util.JSONStringer;
+
+
 /**
  * Represents a Note.
  */
-public class Note {
+public class Note implements JSONString {
 
     private String id;
     private String text;
@@ -136,6 +140,28 @@ public class Note {
     }
     public void setAttribute10(String attribute10) {
         this.attribute10 = attribute10;
+    }
+
+    /* (non-Javadoc)
+     * @see net.sf.json.JSONString#toJSONString()
+     */
+    public String toJSONString() {
+        return new JSONStringer()
+            .object()
+                .key("id").value(getId())
+                .key("text").value(getText())
+                .key("attribute1").value(getAttribute1())
+                .key("attribute2").value(getAttribute2())
+                .key("attribute3").value(getAttribute3())
+                .key("attribute4").value(getAttribute4())
+                .key("attribute5").value(getAttribute5())
+                .key("attribute6").value(getAttribute6())
+                .key("attribute7").value(getAttribute7())
+                .key("attribute8").value(getAttribute8())
+                .key("attribute9").value(getAttribute9())
+                .key("attribute10").value(getAttribute10())
+            .endObject()
+            .toString();
     }
 
 }

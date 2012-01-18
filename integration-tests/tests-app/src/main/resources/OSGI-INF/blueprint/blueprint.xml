@@ -25,12 +25,4 @@
         </service-properties>
     </service>
 
-    <bean id="notesTestImpl" class="org.opentaps.testsuit.notes.impl.NotesTestServiceImpl"/>
-
-    <service ref="notesTestImpl" interface="org.opentaps.testsuit.notes.NotesTestService">
-        <service-properties>
-            <entry key="osgi.jndi.service.name" value="NotesTestService"/>
-        </service-properties>
-    </service>
-
 </blueprint>
