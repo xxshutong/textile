@@ -98,7 +98,12 @@
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
-            <artifactId>notes.services</artifactId>
+            <artifactId>notes.repository.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opentaps</groupId>
+            <artifactId>notes.services.impl</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
