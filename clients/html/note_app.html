@@ -17,57 +17,6 @@
   padding: 5px 0px 2px 4px;
 }
 
-#navbar {
-  float: left;
-  width: 200px;
-}
-
-#vertmenu {
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 100%;
-  width: 160px;
-  padding: 0px;
-  margin: 0px;
-}
-
-#vertmenu h1 {
-  display: block;
-  background-color:#5492BB;
-  font-size: 90%;
-  padding: 3px 0 5px 3px;
-  border: 1px solid #FFFFFF;
-  color: #FFFFFF;
-  margin: 0px;
-  width:159px;
-}
-
-#vertmenu ul {
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-  border: none;
-}
-
-#vertmenu ul li {
-  margin: 0px;
-  padding: 0px;
-}
-
-#vertmenu ul li a {
-  font-size: 80%;
-  display: block;
-  border-bottom: 1px dashed #C39C4E;
-  padding: 5px 0px 2px 4px;
-  text-decoration: none;
-  color: #666666;
-  width:160px;
-}
-
-#vertmenu ul li a:hover, #vertmenu ul li a:focus {
-  color: #000000;
-  background-color: #eeeeee;
-}
-
 .savebutton {
    background-color:#007e00;
    cursor:pointer;
@@ -82,11 +31,18 @@
 }
 
 .savebutton:active {
-    padding-bottom:9px;
-    padding-left:10px;
-    padding-right:10px;
-    padding-top:11px;
-    top:1px;
+   padding-bottom:9px;
+   padding-left:10px;
+   padding-right:10px;
+   padding-top:11px;
+   top:1px;
+}
+
+.message {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 100%;
+  padding: 5px 0px 2px 4px;
+
 }
 
 </style>
@@ -158,19 +114,10 @@ function saveNote(form){
 
 <body>
 <div id="container">
-  <div id="navbar">
-  <div id="vertmenu">
-    <h1>Notes Application</h1>
-    <ul>
-        <li><a href="note_app.html" tabindex="1">Create Note</a></li>
-        <li><a href="#" tabindex="3">Find Notes</a></li>
-    </ul>
-    </div>
-  </div>
   <div id="content">
-    <div id="successMessage">
+    <div class="message" id="successMessage">
     </div>
-    <div id="errorMessage" style="color: red">
+    <div class="message" id="errorMessage" style="color: red">
     </div>  
 
     <h1>Create Note<h1>
