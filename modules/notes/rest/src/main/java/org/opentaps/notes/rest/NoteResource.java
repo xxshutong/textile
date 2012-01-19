@@ -9,9 +9,7 @@ import net.sf.json.util.JSONStringer;
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.services.CreateNoteService;
-import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
-import org.opentaps.notes.services.GetNoteByIdServiceInput;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -31,6 +29,8 @@ public class NoteResource extends ServerResource {
     @Get
     public Representation getNote() {
         String repString = "";
+        String successMessage = "";
+        String errorMessage = "";
         String noteId = (String) getRequest().getAttributes().get("noteId");
 
         if (!GenericValidator.isBlankOrNull(noteId)) {
@@ -47,18 +47,22 @@ public class NoteResource extends ServerResource {
                         setStatus(Status.SUCCESS_OK);
                         repString = getNoteJSON(note);
                     } else {
+                        errorMessage = "Note with id " + "[" + noteId + "] not found";
                         setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                     }
 
                 } else {
+                    errorMessage = "Cannot find Create Note Service.";
                     setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
                 }
 
             } catch (NamingException e) {
+                errorMessage = "Cannot find Create Note Service. " + e.getMessage();
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
             }
         }
 
+        repString = NoteUtils.getResultJSON(repString, successMessage, errorMessage);
         Representation rep = new StringRepresentation(repString, MediaType.APPLICATION_JSON);
         NoteUtils.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
@@ -73,6 +77,9 @@ public class NoteResource extends ServerResource {
     @Post
     public Representation createNote(Representation entity) {
         String repString = "";
+        String successMessage = "";
+        String errorMessage = "";
+
         Form form = new Form(entity);
         String noteText = form.getFirstValue("noteText");
         String attribute1 = form.getFirstValue("attribute1");
@@ -108,18 +115,23 @@ public class NoteResource extends ServerResource {
 
                 if (!GenericValidator.isBlankOrNull(noteId)) {
                     setStatus(Status.SUCCESS_CREATED);
-                    repString = new JSONStringer().object().key("id").value(noteId).endObject().toString();
+                    successMessage = "Note has been successfully created. Note id: " + noteId;
+                    repString = getNoteIdJSON(noteId);
                 } else {
+                    errorMessage = "Cannot create note.";
                     setStatus(Status.SERVER_ERROR_INTERNAL);
                 }
             } else {
+                errorMessage = "Cannot find Create Note Service.";
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
             }
 
         } catch (NamingException e) {
+            errorMessage = "Cannot find Create Note Service. " + e.getMessage();
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
         }
 
+        repString = NoteUtils.getResultJSON(repString, successMessage, errorMessage);
         Representation rep = new StringRepresentation(repString, MediaType.APPLICATION_JSON);
         NoteUtils.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
@@ -153,6 +165,28 @@ public class NoteResource extends ServerResource {
                                              .key("attribute8").value(note.getAttribute8())
                                              .key("attribute9").value(note.getAttribute9())
                                              .key("attribute10").value(note.getAttribute10())
+                                             .endObject()
+                                             .toString()))
+            .endObject()
+            .toString();
+    }
+
+    /**
+     * Get JSON representation of the noteId
+     * @param noteId a <code>String</code>
+     * @return a <code>String</code>
+     */
+    private String getNoteIdJSON(String noteId) {
+        if (noteId == null) {
+            throw new IllegalArgumentException();
+        }
+
+        return new JSONStringer()
+            .object()
+                .key("note")
+                .value(JSONSerializer.toJSON(new JSONStringer()
+                                             .object()
+                                             .key("id").value(noteId)
                                              .endObject()
                                              .toString()))
             .endObject()
