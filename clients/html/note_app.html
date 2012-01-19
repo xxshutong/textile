@@ -68,6 +68,27 @@
   background-color: #eeeeee;
 }
 
+.savebutton {
+   background-color:#007e00;
+   cursor:pointer;
+   padding:10px;
+   position:relative;
+   font-family: Verdana, Arial, Helvetica, sans-serif;
+   font-size:120%;
+   text-decoration:none;
+   color:#fff;
+   border: solid 1px #831212;
+   border-radius: 5px;
+}
+
+.savebutton:active {
+    padding-bottom:9px;
+    padding-left:10px;
+    padding-right:10px;
+    padding-top:11px;
+    top:1px;
+}
+
 </style>
 
 <script language="javascript" type="text/javascript">
@@ -90,15 +111,25 @@ function createRequest() {
 }
 
 function parseResponse(req) {
-  if (req.status == 201) {
-    var resp = req.responseText;
-    document.getElementById('successMessage').innerHTML="Note has been successfully added. Note id: " + resp;
+  var resp = req.responseText;
+  var json = eval('(' + resp + ')');
+
+  if (req.status == 201) { 
+    showErrorMessage("");
+    showSuccessMessage(json.result.successMessage);
   } else {
-    document.getElementById('errorMessage').innerHTML="Error add note ! ";
+    showSuccessMessage("");
+    showErrorMessage(json.result.errorMessage); 
   }
 
-  console.log(req);
+}
 
+function showErrorMessage(message) {
+    document.getElementById('errorMessage').innerHTML = message;
+}
+
+function showSuccessMessage(message) {
+    document.getElementById('successMessage').innerHTML = message;
 }
 
 function saveNote(form){
@@ -131,8 +162,7 @@ function saveNote(form){
   <div id="vertmenu">
     <h1>Notes Application</h1>
     <ul>
-        <li><a href="#" tabindex="1">Create Note</a></li>
-        <li><a href="#" tabindex="2">Get Note</a></li>
+        <li><a href="note_app.html" tabindex="1">Create Note</a></li>
         <li><a href="#" tabindex="3">Find Notes</a></li>
     </ul>
     </div>
@@ -148,11 +178,11 @@ function saveNote(form){
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table>
       <tr><td>
-      <textarea name="noteText" id="noteText" rows="20" cols="100"></textarea> 
+      <textarea name="noteText" id="noteText" rows="6" cols="70"></textarea> 
       </br>
       </td></tr>
       <tr><td>
-      <input type="button" value="Save" onClick="saveNote(this.form)"/>
+      <input type="button" value="Save" onClick="saveNote(this.form)" class="savebutton"/>
       </td></tr>
     </table>
     </form>
