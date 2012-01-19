@@ -70,5 +70,46 @@ public class NoteApiTest extends NotesTestConfig {
         assertEquals("attribute 8 mismatch", "attribute 8", note.getAttribute8());
         assertEquals("attribute 9 mismatch", "attribute 9", note.getAttribute9());
         assertEquals("attribute 10 mismatch", "attribute 10", note.getAttribute10());
+
+        // create a second note
+        createNoteService.reset();
+        createNoteService.setText("This is another note text");
+        createNoteService.setAttribute1("attribute 1");
+        createNoteService.setAttribute3("attribute 3");
+        createNoteService.setAttribute5("attribute 5");
+        createNoteService.setAttribute7("attribute 7");
+        createNoteService.setAttribute9("attribute 9");
+
+        log("NoteApiTest :: testCreateNote : Creating note 2 ...");
+
+        createNoteService.createNote();
+
+        noteId = createNoteService.getNoteId();
+
+        assertNotNull("CreateNoteService should have succeeded and returned a noteId", noteId);
+
+        log("NoteApiTest :: testCreateNote : Note [" + noteId + "] was created.");
+
+        // get the note
+        getNoteByIdService.setNoteId(noteId);
+        getNoteByIdService.getNoteById();
+        note = getNoteByIdService.getNote();
+
+        assertNotNull("The created note [" + noteId + "] should have been found.", note);
+
+        log("NoteApiTest :: testCreateNote : Found Note [" + noteId + "], checking values ...");
+
+        assertEquals("note id mismatch", noteId, note.getId());
+        assertEquals("note text mismatch", "This is another note text", note.getText());
+        assertEquals("attribute 1 mismatch", "attribute 1", note.getAttribute1());
+        assertEquals("attribute 2 mismatch", null, note.getAttribute2());
+        assertEquals("attribute 3 mismatch", "attribute 3", note.getAttribute3());
+        assertEquals("attribute 4 mismatch", null, note.getAttribute4());
+        assertEquals("attribute 5 mismatch", "attribute 5", note.getAttribute5());
+        assertEquals("attribute 6 mismatch", null, note.getAttribute6());
+        assertEquals("attribute 7 mismatch", "attribute 7", note.getAttribute7());
+        assertEquals("attribute 8 mismatch", null, note.getAttribute8());
+        assertEquals("attribute 9 mismatch", "attribute 9", note.getAttribute9());
+        assertEquals("attribute 10 mismatch", null, note.getAttribute10());
     }
 }
