@@ -4,6 +4,8 @@ import org.opentaps.notes.domain.Note;
 
 public interface GetNoteByIdService {
 
+    public void reset();
+
     public void setNoteId(String noteId);
     public Note getNote();
 

@@ -23,6 +23,21 @@ public class CreateNoteServiceImpl implements CreateNoteService {
 
     public CreateNoteServiceImpl() { }
 
+    public void reset() {
+        this.noteId = null;
+        this.text = null;
+        this.attribute1 = null;
+        this.attribute2 = null;
+        this.attribute3 = null;
+        this.attribute4 = null;
+        this.attribute5 = null;
+        this.attribute6 = null;
+        this.attribute7 = null;
+        this.attribute8 = null;
+        this.attribute9 = null;
+        this.attribute10 = null;
+    }
+
     public void setNoteRepository(NoteRepository noteRepository) {
         this.repository = noteRepository;
     }

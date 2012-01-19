@@ -2,6 +2,8 @@ package org.opentaps.notes.services;
 
 public interface CreateNoteService {
 
+    public void reset();
+
     public void setText(String text);
     public void setAttribute1(String value);
     public void setAttribute2(String value);

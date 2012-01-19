@@ -13,6 +13,11 @@ public class GetNoteByIdServiceImpl implements GetNoteByIdService {
 
     public GetNoteByIdServiceImpl() { }
 
+    public void reset() {
+        this.noteId = null;
+        this.note = null;
+    }
+
     public void setNoteRepository(NoteRepository noteRepository) {
         this.repository = noteRepository;
     }
