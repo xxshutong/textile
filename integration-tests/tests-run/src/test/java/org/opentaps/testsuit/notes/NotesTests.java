@@ -18,7 +18,7 @@ import org.restlet.resource.ClientResource;
 public class NotesTests extends RemoteTestCase {
 
     @Test
-    public void testRemoteCreateAndRetriveNote() throws Exception {
+    public void testRemoteCreateAndRetrieveNote() throws Exception {
         final String TEXT   = "Integration Tests Test Note!";
         final String ATTR1  = "ATTR01";
         final String ATTR2  = "ATTR02";
