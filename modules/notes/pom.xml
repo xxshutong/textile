@@ -14,10 +14,10 @@
     <packaging>pom</packaging>
 
     <modules>
-    	<module>notes.api</module>
-    	<module>notes.impl</module>
-    	<module>notes.rest</module>
-        <module>notes.eba</module>
+    	<module>api</module>
+    	<module>impl</module>
+    	<module>rest</module>
+        <module>eba</module>
     </modules>
 
 </project>

@@ -7,16 +7,15 @@
         <artifactId>modules</artifactId>
     </parent>
 
-    <name>notes implementations</name>
+    <name>Notes API</name>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>notes.impl</artifactId>
+    <artifactId>notes.api</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-    	<module>notes.repository.impl</module>
-    	<module>notes.services.impl</module>
-    	<module>notes.tests</module>
+    	<module>services</module>
+    	<module>repository</module>
     </modules>
 
 </project>
