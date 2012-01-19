@@ -9,7 +9,9 @@ import net.sf.json.util.JSONStringer;
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.services.CreateNoteService;
+import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
+import org.opentaps.notes.services.GetNoteByIdServiceInput;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -37,10 +39,9 @@ public class NoteResource extends ServerResource {
                 GetNoteByIdService getNoteByIdService = (GetNoteByIdService) context.lookup("osgi:service/org.opentaps.notes.services.GetNoteByIdService");
 
                 if (getNoteByIdService != null) {
-                    getNoteByIdService.setNoteId(noteId);
-                    getNoteByIdService.getNoteById();
-
-                    Note note = getNoteByIdService.getNote();
+                    GetNoteByIdServiceInput getNoteByIdServiceInput = new GetNoteByIdServiceInput();
+                    getNoteByIdServiceInput.setNoteId(noteId);
+                    Note note = getNoteByIdService.getNoteById(getNoteByIdServiceInput).getNote();
 
                     if (note != null) {
                         setStatus(Status.SUCCESS_OK);
@@ -90,20 +91,20 @@ public class NoteResource extends ServerResource {
             CreateNoteService createNoteService = (CreateNoteService) context.lookup("osgi:service/org.opentaps.notes.services.CreateNoteService");
 
             if (createNoteService != null) {
-                createNoteService.setText(noteText);
-                createNoteService.setAttribute1(attribute1);
-                createNoteService.setAttribute2(attribute2);
-                createNoteService.setAttribute3(attribute3);
-                createNoteService.setAttribute4(attribute4);
-                createNoteService.setAttribute5(attribute5);
-                createNoteService.setAttribute6(attribute6);
-                createNoteService.setAttribute7(attribute7);
-                createNoteService.setAttribute8(attribute8);
-                createNoteService.setAttribute9(attribute9);
-                createNoteService.setAttribute10(attribute10);
-                createNoteService.createNote();
+                CreateNoteServiceInput createNoteServiceInput = new CreateNoteServiceInput();
+                createNoteServiceInput.setText(noteText);
+                createNoteServiceInput.setAttribute1(attribute1);
+                createNoteServiceInput.setAttribute2(attribute2);
+                createNoteServiceInput.setAttribute3(attribute3);
+                createNoteServiceInput.setAttribute4(attribute4);
+                createNoteServiceInput.setAttribute5(attribute5);
+                createNoteServiceInput.setAttribute6(attribute6);
+                createNoteServiceInput.setAttribute7(attribute7);
+                createNoteServiceInput.setAttribute8(attribute8);
+                createNoteServiceInput.setAttribute9(attribute9);
+                createNoteServiceInput.setAttribute10(attribute10);
 
-                String noteId = createNoteService.getNoteId();
+                String noteId = createNoteService.createNote(createNoteServiceInput).getNoteId();
 
                 if (!GenericValidator.isBlankOrNull(noteId)) {
                     setStatus(Status.SUCCESS_CREATED);

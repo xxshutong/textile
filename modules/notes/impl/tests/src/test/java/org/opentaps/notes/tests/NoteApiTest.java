@@ -6,7 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.services.CreateNoteService;
+import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
+import org.opentaps.notes.services.GetNoteByIdServiceInput;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
 @RunWith(JUnit4TestRunner.class)
@@ -26,33 +28,32 @@ public class NoteApiTest extends NotesTestConfig {
         log("NoteApiTest :: testCreateNote : Got all the notes OSGI services");
 
         // create a note
-        createNoteService.setText("This is the note text");
-        createNoteService.setAttribute1("attribute 1");
-        createNoteService.setAttribute2("attribute 2");
-        createNoteService.setAttribute3("attribute 3");
-        createNoteService.setAttribute4("attribute 4");
-        createNoteService.setAttribute5("attribute 5");
-        createNoteService.setAttribute6("attribute 6");
-        createNoteService.setAttribute7("attribute 7");
-        createNoteService.setAttribute8("attribute 8");
-        createNoteService.setAttribute9("attribute 9");
-        createNoteService.setAttribute10("attribute 10");
+        CreateNoteServiceInput createNoteInput = new CreateNoteServiceInput();
+        createNoteInput.setText("This is the note text");
+        createNoteInput.setAttribute1("attribute 1");
+        createNoteInput.setAttribute2("attribute 2");
+        createNoteInput.setAttribute3("attribute 3");
+        createNoteInput.setAttribute4("attribute 4");
+        createNoteInput.setAttribute5("attribute 5");
+        createNoteInput.setAttribute6("attribute 6");
+        createNoteInput.setAttribute7("attribute 7");
+        createNoteInput.setAttribute8("attribute 8");
+        createNoteInput.setAttribute9("attribute 9");
+        createNoteInput.setAttribute10("attribute 10");
 
 
         log("NoteApiTest :: testCreateNote : Creating note ...");
 
-        createNoteService.createNote();
-
-        String noteId = createNoteService.getNoteId();
+        String noteId = createNoteService.createNote(createNoteInput).getNoteId();
 
         assertNotNull("CreateNoteService should have succeeded and returned a noteId", noteId);
 
         log("NoteApiTest :: testCreateNote : Note [" + noteId + "] was created.");
 
         // get the note
-        getNoteByIdService.setNoteId(noteId);
-        getNoteByIdService.getNoteById();
-        Note note = getNoteByIdService.getNote();
+        GetNoteByIdServiceInput getNoteByIdServiceInput = new GetNoteByIdServiceInput();
+        getNoteByIdServiceInput.setNoteId(noteId);
+        Note note = getNoteByIdService.getNoteById(getNoteByIdServiceInput).getNote();
 
         assertNotNull("The created note [" + noteId + "] should have been found.", note);
 
@@ -72,28 +73,26 @@ public class NoteApiTest extends NotesTestConfig {
         assertEquals("attribute 10 mismatch", "attribute 10", note.getAttribute10());
 
         // create a second note
-        createNoteService.reset();
-        createNoteService.setText("This is another note text");
-        createNoteService.setAttribute1("attribute 1");
-        createNoteService.setAttribute3("attribute 3");
-        createNoteService.setAttribute5("attribute 5");
-        createNoteService.setAttribute7("attribute 7");
-        createNoteService.setAttribute9("attribute 9");
+        createNoteInput = new CreateNoteServiceInput();
+        createNoteInput.setText("This is another note text");
+        createNoteInput.setAttribute1("attribute 1");
+        createNoteInput.setAttribute3("attribute 3");
+        createNoteInput.setAttribute5("attribute 5");
+        createNoteInput.setAttribute7("attribute 7");
+        createNoteInput.setAttribute9("attribute 9");
 
         log("NoteApiTest :: testCreateNote : Creating note 2 ...");
 
-        createNoteService.createNote();
-
-        noteId = createNoteService.getNoteId();
+        noteId = createNoteService.createNote(createNoteInput).getNoteId();
 
         assertNotNull("CreateNoteService should have succeeded and returned a noteId", noteId);
 
         log("NoteApiTest :: testCreateNote : Note [" + noteId + "] was created.");
 
         // get the note
-        getNoteByIdService.setNoteId(noteId);
-        getNoteByIdService.getNoteById();
-        note = getNoteByIdService.getNote();
+        getNoteByIdServiceInput = new GetNoteByIdServiceInput();
+        getNoteByIdServiceInput.setNoteId(noteId);
+        note = getNoteByIdService.getNoteById(getNoteByIdServiceInput).getNote();
 
         assertNotNull("The created note [" + noteId + "] should have been found.", note);
 
