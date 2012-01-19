@@ -5,12 +5,21 @@
 
     <reference id="noteRepositoryService" interface="org.opentaps.notes.repository.NoteRepository"/>
 
-    <bean id="noteServicesImpl" class="org.opentaps.notes.services.impl.NoteServicesImpl">
+    <bean id="createNoteServiceImpl" class="org.opentaps.notes.services.impl.CreateNoteServiceImpl">
         <property name="noteRepository" ref="noteRepositoryService"/>
     </bean>
-    <service id="notes.noteServices" ref="noteServicesImpl" interface="org.opentaps.notes.services.NoteServices">
+    <service id="notes.createNoteService" ref="createNoteServiceImpl" interface="org.opentaps.notes.services.CreateNoteService">
         <service-properties>
-            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.services.NoteServices"/>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.services.CreateNoteService"/>
+        </service-properties>
+    </service>
+
+    <bean id="getNoteByIdServiceImpl" class="org.opentaps.notes.services.impl.GetNoteByIdServiceImpl">
+        <property name="noteRepository" ref="noteRepositoryService"/>
+    </bean>
+    <service id="notes.getNoteByIdService" ref="getNoteByIdServiceImpl" interface="org.opentaps.notes.services.GetNoteByIdService">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.services.GetNoteByIdService"/>
         </service-properties>
     </service>
 

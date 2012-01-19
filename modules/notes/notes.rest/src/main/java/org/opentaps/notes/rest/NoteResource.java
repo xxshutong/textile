@@ -10,7 +10,6 @@ import org.apache.commons.validator.GenericValidator;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.GetNoteByIdService;
-import org.opentaps.notes.services.NoteServices;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -35,8 +34,7 @@ public class NoteResource extends ServerResource {
         if (!GenericValidator.isBlankOrNull(noteId)) {
             try {
                 InitialContext context = new InitialContext();
-                NoteServices noteServices = (NoteServices) context.lookup("osgi:service/org.opentaps.notes.services.NoteServices");
-                GetNoteByIdService getNoteByIdService = noteServices.getGetNoteByIdService();
+                GetNoteByIdService getNoteByIdService = (GetNoteByIdService) context.lookup("osgi:service/org.opentaps.notes.services.GetNoteByIdService");
 
                 if (getNoteByIdService != null) {
                     getNoteByIdService.setNoteId(noteId);
@@ -89,8 +87,7 @@ public class NoteResource extends ServerResource {
 
         try {
             InitialContext context = new InitialContext();
-            NoteServices noteServices = (NoteServices) context.lookup("osgi:service/org.opentaps.notes.services.NoteServices");
-            CreateNoteService createNoteService = noteServices.getCreateNoteService();
+            CreateNoteService createNoteService = (CreateNoteService) context.lookup("osgi:service/org.opentaps.notes.services.CreateNoteService");
 
             if (createNoteService != null) {
                 createNoteService.setText(noteText);
