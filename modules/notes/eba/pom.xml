@@ -117,12 +117,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>notes.services</artifactId>
+            <artifactId>notes.services.api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>notes.repository</artifactId>
+            <artifactId>notes.repository.api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

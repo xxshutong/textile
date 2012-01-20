@@ -9,7 +9,7 @@
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>notes.repository</artifactId>
+    <artifactId>notes.repository.api</artifactId>
     <name>Notes Repository API</name>
     <description>The repository API</description>
     <packaging>bundle</packaging>
@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>notes.services</artifactId>
+            <artifactId>notes.services.api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

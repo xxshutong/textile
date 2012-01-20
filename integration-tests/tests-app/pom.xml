@@ -72,7 +72,7 @@
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
-            <artifactId>notes.services</artifactId>
+            <artifactId>notes.services.api</artifactId>
             <version>${project.version}</version>
             <type>bundle</type>
             <scope>provided</scope>

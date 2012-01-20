@@ -96,12 +96,12 @@
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
-            <artifactId>notes.services</artifactId>
+            <artifactId>notes.services.api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
-            <artifactId>notes.repository</artifactId>
+            <artifactId>notes.repository.api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
