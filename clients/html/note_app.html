@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Notes Application</title>
+<title>opentaps 2 Notes Application</title>
 
 <style type="text/css">
 
@@ -120,21 +120,19 @@ function saveNote(form){
     <div class="message" id="errorMessage" style="color: red">
     </div>  
 
-    <h1>Create Note<h1>
+    <h1>Write Your Note Here<h1>
 
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table>
       <tr><td>
       <textarea name="noteText" id="noteText" rows="6" cols="70"></textarea> 
-      </br>
       </td></tr>
       <tr><td>
-      <input type="button" value="Save" onClick="saveNote(this.form)" class="savebutton"/>
+      <input type="button" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
       </td></tr>
     </table>
     </form>
 
-   </div>
 </div>
 
 </body>
