@@ -21,6 +21,10 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     private static Note makeNote(NoteData noteData) {
+        if (noteData == null) {
+            return null;
+        }
+
         Note note = new Note();
         note.setId(noteData.getNoteId());
         note.setText(noteData.getNoteText());
