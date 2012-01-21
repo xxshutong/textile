@@ -30,7 +30,7 @@ public class NoteResource extends ServerResource {
      */
     @Get
     public Representation getNote() {
-        String repString = "";
+        String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
         String noteId = (String) getRequest().getAttributes().get("noteId");
@@ -61,6 +61,9 @@ public class NoteResource extends ServerResource {
             } catch (NamingException e) {
                 errorMessage = "Cannot find Create Note Service. " + e.getMessage();
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+            } catch (Exception e) {
+                errorMessage = "Get Note Service error. " + e.getMessage();
+                setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
             }
         }
 
@@ -78,7 +81,7 @@ public class NoteResource extends ServerResource {
      */
     @Post
     public Representation createNote(Representation entity) {
-        String repString = "";
+        String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
 
@@ -130,6 +133,9 @@ public class NoteResource extends ServerResource {
 
         } catch (NamingException e) {
             errorMessage = "Cannot find Create Note Service. " + e.getMessage();
+            setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+        } catch (Exception e) {
+            errorMessage = "Create Note Service error. " + e.getMessage();
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
         }
 
@@ -191,6 +197,19 @@ public class NoteResource extends ServerResource {
                                              .key("id").value(noteId)
                                              .endObject()
                                              .toString()))
+            .endObject()
+            .toString();
+    }
+
+    /**
+     * Get empty JSON representation
+     * @return a <code>String</code>
+     */
+    private String getEmptyJSON() {
+        return new JSONStringer()
+            .object()
+                .key("note")
+                .value("")
             .endObject()
             .toString();
     }

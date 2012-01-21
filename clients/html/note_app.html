@@ -68,16 +68,22 @@ function createRequest() {
 
 function parseResponse(req) {
   var resp = req.responseText;
-  var json = eval('(' + resp + ')');
 
-  if (req.status == 201) { 
-    showErrorMessage("");
-    showSuccessMessage(json.result.successMessage);
+  if (resp) {
+    var json = eval('(' + resp + ')');
+
+    if (req.status == 201) { 
+      showErrorMessage("");
+      showSuccessMessage(json.result.successMessage);
+    } else {
+      showSuccessMessage("");
+      showErrorMessage(json.result.errorMessage); 
+    }
+
   } else {
     showSuccessMessage("");
-    showErrorMessage(json.result.errorMessage); 
+    showErrorMessage("Cannot get response from server."); 
   }
-
 }
 
 function showErrorMessage(message) {
