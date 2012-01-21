@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
+import net.sf.json.util.JSONUtils;
 
 import org.apache.commons.validator.GenericValidator;
 import org.junit.Test;
@@ -55,34 +56,53 @@ public class NotesTests extends RemoteTestCase {
         BufferedReader reader = new BufferedReader(response.getReader());
         String content = reader.readLine();
         assertTrue("There is no content in response", !GenericValidator.isBlankOrNull(content));
+        assertTrue("It looks like the response is not a JSON string", JSONUtils.mayBeJSON(content));
 
-        JSONObject noteIdJSON = (JSONObject) JSONSerializer.toJSON(content);
+        Note note = toNote(content);
+        String noteId = note.getId();
+        assertTrue("Note ID is not found", !GenericValidator.isBlankOrNull(noteId));
 
         /*
          * 2. Read the note created during previous step and verify quality of the properties.
          */
-        ClientResource getURI = new ClientResource(String.format("http://localhost:8080/notes/note/%1$s", noteIdJSON.getString("id")));
+        ClientResource getURI = new ClientResource(String.format("http://localhost:8080/notes/note/%1$s", noteId));
         postURI.setNext(client);
-        String noteJSON = getURI.get().getText();
+        content = getURI.get().getText();
 
-        JSONObject noteArr = (JSONObject) JSONSerializer.toJSON(noteJSON);
-        assertNotNull(noteArr);
-        JSONObject note = noteArr.getJSONObject("note");
+        note = toNote(content);
         assertNotNull(note);
 
-        Note noteObj = (Note) JSONObject.toBean(note, Note.class);
-        assertNotNull(noteObj);
-
-        assertEquals("Checking text property", TEXT, noteObj.getText());
-        assertEquals("Checking attribute1 property", ATTR1, noteObj.getAttribute1());
-        assertEquals("Checking attribute2 property", ATTR2, noteObj.getAttribute2());
-        assertEquals("Checking attribute3 property", ATTR3, noteObj.getAttribute3());
-        assertEquals("Checking attribute4 property", ATTR4, noteObj.getAttribute4());
-        assertEquals("Checking attribute5 property", ATTR5, noteObj.getAttribute5());
-        assertEquals("Checking attribute6 property", ATTR6, noteObj.getAttribute6());
-        assertEquals("Checking attribute7 property", ATTR7, noteObj.getAttribute7());
-        assertEquals("Checking attribute8 property", ATTR8, noteObj.getAttribute8());
-        assertEquals("Checking attribute9 property", ATTR9, noteObj.getAttribute9());
-        assertEquals("Checking attribute10 property", ATTR10, noteObj.getAttribute10());
+        assertEquals("Checking text property", TEXT, note.getText());
+        assertEquals("Checking attribute1 property", ATTR1, note.getAttribute1());
+        assertEquals("Checking attribute2 property", ATTR2, note.getAttribute2());
+        assertEquals("Checking attribute3 property", ATTR3, note.getAttribute3());
+        assertEquals("Checking attribute4 property", ATTR4, note.getAttribute4());
+        assertEquals("Checking attribute5 property", ATTR5, note.getAttribute5());
+        assertEquals("Checking attribute6 property", ATTR6, note.getAttribute6());
+        assertEquals("Checking attribute7 property", ATTR7, note.getAttribute7());
+        assertEquals("Checking attribute8 property", ATTR8, note.getAttribute8());
+        assertEquals("Checking attribute9 property", ATTR9, note.getAttribute9());
+        assertEquals("Checking attribute10 property", ATTR10, note.getAttribute10());
     }
+
+    /**
+     * Notes application responds with JSON string that meets the following:<br/>
+     * <pre>
+     * {"result":{"resultValue":{"note":{"id":"NOTEID", ...}},"successMessage":"","errorMessage":""}}"
+     * </pre>
+     * This method extract JSON object with key "note" and convert it into an instance of Note class.
+     *
+     * @param respJSON A correctly formated JSON string
+     * @return The instance of {@link Note}
+      */
+    private Note toNote(String respJSON) {
+        JSONObject contentJSON = (JSONObject) JSONSerializer.toJSON(respJSON);
+        JSONObject result = contentJSON.getJSONObject("result");
+        assertNotNull("Expected \"result\" object", result);
+        JSONObject resultValue = result.getJSONObject("resultValue");
+        assertNotNull("Expected \"resultValue\" object", resultValue);
+        JSONObject note = resultValue.getJSONObject("note");
+        assertNotNull("Expected \"note\" object", note);
+        return (Note) JSONObject.toBean(note, Note.class);
+    };
 }
