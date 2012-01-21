@@ -45,8 +45,8 @@ public class TestEntity implements Serializable {
     private static final long serialVersionUID = -4144678701591091589L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE)
-    @Column(name = "TEST_ID", nullable = false, length = 20)
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-hex")
+    @Column(name = "TEST_ID", nullable = false, length = 32)
     private String testId;
 
     @Column(name = "TEST_STRING_FIELD", length = 60)

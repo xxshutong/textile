@@ -36,7 +36,7 @@ public class TestEntityItem implements Serializable {
     private static final long serialVersionUID = 3596944152636118951L;
 
     @Id
-    @Column(name="TEST_ENTITY_ID", nullable=false, length = 20)
+    @Column(name="TEST_ENTITY_ID", nullable=false, length = 32)
     private String testEntityId;
 
     @Id

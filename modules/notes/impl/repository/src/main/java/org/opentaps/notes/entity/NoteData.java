@@ -38,8 +38,8 @@ public class NoteData implements Serializable {
     private static final long serialVersionUID = -4314958909722739985L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE)
-    @Column(name = "NOTE_ID", nullable = false)
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-hex")
+    @Column(name = "NOTE_ID", nullable = false, length = 32)
     private String noteId;
 
     @Lob

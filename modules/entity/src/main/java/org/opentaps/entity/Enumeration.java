@@ -22,6 +22,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,7 +38,8 @@ public class Enumeration implements Serializable {
     private static final long serialVersionUID = -4314958909722739986L;
 
     @Id
-    @Column(name = "ENUM_ID", nullable = false, length = 20)
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-hex")
+    @Column(name = "ENUM_ID", nullable = false, length = 32)
     private String enumId;
 
     @Column(name = "ENUM_TYPE_ID", nullable = false, length = 20)
