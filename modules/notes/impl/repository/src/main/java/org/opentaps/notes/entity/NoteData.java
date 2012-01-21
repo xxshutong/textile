@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 /**
@@ -39,6 +40,7 @@ public class NoteData implements Serializable {
     @Column(name = "NOTE_ID", nullable = false)
     private String noteId;
 
+    @Lob
     @Column(name = "NOTE_TEXT", nullable = false)
     private String noteText;
 
