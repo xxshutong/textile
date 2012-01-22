@@ -22,19 +22,29 @@ import org.opentaps.notes.services.CreateNoteServiceOutput;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.repository.NoteRepository;
 
+
 public class CreateNoteServiceImpl implements CreateNoteService {
 
-    private NoteRepository repository;
+    private volatile NoteRepository repository = null;
 
     public CreateNoteServiceImpl() { }
 
     public void setNoteRepository(NoteRepository noteRepository) {
-        this.repository = noteRepository;
+        if (repository == null && noteRepository != null) {
+            synchronized (this) {
+                if (repository == null) {
+                    repository = noteRepository;
+                }
+            }
+        }
     }
 
     public CreateNoteServiceOutput createNote(CreateNoteServiceInput input) {
         if (input == null) {
             throw new IllegalArgumentException();
+        }
+        if (repository == null) {
+            throw new IllegalStateException();
         }
 
         Note note = new Note();
@@ -54,6 +64,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
 
         CreateNoteServiceOutput out = new CreateNoteServiceOutput();
         out.setNoteId(note.getId());
+
         return out;
     }
 

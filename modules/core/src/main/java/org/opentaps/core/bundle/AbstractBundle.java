@@ -31,7 +31,7 @@ import org.osgi.util.tracker.ServiceTracker;
 public abstract class AbstractBundle implements BundleActivator {
 
     // LogService tracker
-    private ServiceTracker logTracker;
+    private volatile ServiceTracker logTracker;
 
     /** {@inheritDoc} */
     public void start(BundleContext context) throws Exception {

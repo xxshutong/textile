@@ -21,19 +21,34 @@ import org.opentaps.notes.services.GetNoteByIdServiceInput;
 import org.opentaps.notes.services.GetNoteByIdServiceOutput;
 import org.opentaps.notes.repository.NoteRepository;
 
+
 public class GetNoteByIdServiceImpl implements GetNoteByIdService {
 
-    private NoteRepository repository;
+    private volatile NoteRepository repository = null;
 
     public GetNoteByIdServiceImpl() { }
 
     public void setNoteRepository(NoteRepository noteRepository) {
-        this.repository = noteRepository;
+        if (repository == null && noteRepository != null) {
+            synchronized (this) {
+                if (repository == null) {
+                    repository = noteRepository;
+                }
+            }
+        }
     }
 
     public GetNoteByIdServiceOutput getNoteById(GetNoteByIdServiceInput input) {
+        if (input == null) {
+            throw new IllegalArgumentException();
+        }
+        if (repository == null) {
+            throw new IllegalStateException();
+        }
+
         GetNoteByIdServiceOutput out = new GetNoteByIdServiceOutput();
         out.setNote(repository.getNoteById(input.getNoteId()));
+
         return out;
     }
 

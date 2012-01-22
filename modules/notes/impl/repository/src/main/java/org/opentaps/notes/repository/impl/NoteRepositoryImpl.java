@@ -31,10 +31,16 @@ import org.opentaps.notes.repository.NoteRepository;
  */
 public class NoteRepositoryImpl implements NoteRepository {
 
-    private EntityManager em;
+    private volatile EntityManager em;
 
     public void setEntityManager(EntityManager em) {
-        this.em = em;
+        if (this.em == null) {
+            synchronized (this) {
+                if (this.em == null) {
+                    this.em = em;
+                }
+            }
+        }
     }
 
     private static Note makeNote(NoteData noteData) {
@@ -81,6 +87,9 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public Note getNoteById(String noteId) {
+        if (em == null) {
+            throw new IllegalStateException();
+        }
         NoteData noteData = em.find(NoteData.class, noteId);
         return makeNote(noteData);
     }
@@ -96,6 +105,9 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public void persist(List<Note> notes) {
+        if (em == null) {
+            throw new IllegalStateException();
+        }
         if (notes == null) {
             throw new IllegalArgumentException();
         }
