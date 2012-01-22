@@ -33,6 +33,10 @@ public class CreateNoteServiceImpl implements CreateNoteService {
     }
 
     public CreateNoteServiceOutput createNote(CreateNoteServiceInput input) {
+        if (input == null) {
+            throw new IllegalArgumentException();
+        }
+
         Note note = new Note();
         note.setText(input.getText());
         note.setAttribute1(input.getAttribute1());

@@ -86,6 +86,10 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public void persist(Note note) {
+        if (note == null) {
+            throw new IllegalArgumentException();
+        }
+
         NoteData noteData = makeNoteData(note);
 
         // for creation set the created date
@@ -103,6 +107,10 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public void persist(List<Note> notes) {
+        if (notes == null) {
+            throw new IllegalArgumentException();
+        }
+
         List<NoteData> noteDatas = new ArrayList<NoteData>();
         for (Note note : notes) {
             NoteData noteData = makeNoteData(note);
