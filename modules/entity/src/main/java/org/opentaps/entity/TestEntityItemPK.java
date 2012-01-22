@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2011 Open Source Strategies, Inc.
- * 
+ * Copyright (c) Open Source Strategies, Inc.
+ *
  * Opentaps is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Opentaps.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.opentaps.entity;
 
 import java.io.Serializable;
