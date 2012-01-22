@@ -17,6 +17,7 @@
 package org.opentaps.notes.repository.impl;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -90,18 +91,7 @@ public class NoteRepositoryImpl implements NoteRepository {
             throw new IllegalArgumentException();
         }
 
-        NoteData noteData = makeNoteData(note);
-
-        // for creation set the created date
-        if (noteData.getDateTimeCreated() == null) {
-            noteData.setDateTimeCreated(new Timestamp(System.currentTimeMillis()));
-        }
-
-        em.persist(noteData);
-        em.flush();
-
-        // for creation the id was not set and is now available in noteData
-        note.setId(noteData.getNoteId());
+        persist(Arrays.asList(note));
     }
 
     /** {@inheritDoc} */
