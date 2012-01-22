@@ -111,7 +111,6 @@ public class NoteRepositoryImpl implements NoteRepository {
             throw new IllegalArgumentException();
         }
 
-        List<NoteData> noteDatas = new ArrayList<NoteData>();
         for (Note note : notes) {
             NoteData noteData = makeNoteData(note);
 
@@ -119,17 +118,13 @@ public class NoteRepositoryImpl implements NoteRepository {
             if (noteData.getDateTimeCreated() == null) {
                 noteData.setDateTimeCreated(new Timestamp(System.currentTimeMillis()));
             }
-            noteDatas.add(noteData);
+
+            em.persist(noteData);
+            note.setId(noteData.getNoteId());
         }
 
-        em.persist(noteDatas);
         em.flush();
         em.clear();
-
-        // for creation the id was not set and is now available in noteData
-        for (int i = 0; i < notes.size(); i++) {
-            notes.get(i).setId(noteDatas.get(i).getNoteId());
-        }
     }
 
 }
