@@ -18,12 +18,12 @@ package org.opentaps.notes.repository.impl;
 
 import java.sql.Timestamp;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.entity.NoteData;
 import org.opentaps.notes.repository.NoteRepository;
-import java.util.ArrayList;
 
 /**
  * The implementation of the NoteRepository using the javax.persistence.EntityManager.
@@ -99,7 +99,6 @@ public class NoteRepositoryImpl implements NoteRepository {
 
         em.persist(noteData);
         em.flush();
-        em.clear();
 
         // for creation the id was not set and is now available in noteData
         note.setId(noteData.getNoteId());
@@ -124,7 +123,6 @@ public class NoteRepositoryImpl implements NoteRepository {
         }
 
         em.flush();
-        em.clear();
     }
 
 }
