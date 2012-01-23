@@ -39,7 +39,8 @@
                     <instructions>
                         <Export-Package>
                             org.opentaps.core.bundle,
-                            org.opentaps.core.service
+                            org.opentaps.core.service,
+                            org.opentaps.core.log
                         </Export-Package>
                         <Private-Package>
                             org.opentaps.core,

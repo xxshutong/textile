@@ -19,7 +19,7 @@ package org.opentaps.core.service;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.opentaps.core.Activator;
+import org.opentaps.core.log.Log;
 
 public class ServiceUtil {
 
@@ -62,7 +62,7 @@ public class ServiceUtil {
             InitialContext ctx = new InitialContext();
             return ctx.lookup(name.toString());
         } catch (NamingException e) {
-            Activator.getInstance().logError(e.getLocalizedMessage());
+            Log.logError(e.getLocalizedMessage());
             return null;
         }
     }
