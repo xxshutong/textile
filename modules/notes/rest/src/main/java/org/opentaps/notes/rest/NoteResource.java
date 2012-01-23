@@ -23,6 +23,7 @@ import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONStringer;
 
 import org.apache.commons.validator.GenericValidator;
+import org.opentaps.core.log.Log;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
@@ -67,19 +68,23 @@ public class NoteResource extends ServerResource {
                     } else {
                         errorMessage = "Note with id " + "[" + noteId + "] not found";
                         setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                        Log.logError(errorMessage);
                     }
 
                 } else {
                     errorMessage = "Cannot find Create Note Service.";
                     setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+                    Log.logError(errorMessage);
                 }
 
             } catch (NamingException e) {
                 errorMessage = "Cannot find Create Note Service. " + e.getMessage();
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+                Log.logError(errorMessage, e);
             } catch (Exception e) {
                 errorMessage = "Get Note Service error. " + e.getMessage();
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+                Log.logError(errorMessage, e);
             }
         }
 
@@ -137,22 +142,27 @@ public class NoteResource extends ServerResource {
                 if (!GenericValidator.isBlankOrNull(noteId)) {
                     setStatus(Status.SUCCESS_CREATED);
                     successMessage = "Note has been successfully created. Note id: " + noteId;
+                    Log.logDebug(successMessage);
                     repString = getNoteIdJSON(noteId);
                 } else {
                     errorMessage = "Cannot create note.";
                     setStatus(Status.SERVER_ERROR_INTERNAL);
+                    Log.logError(errorMessage);
                 }
             } else {
                 errorMessage = "Cannot find Create Note Service.";
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+                Log.logError(errorMessage);
             }
 
         } catch (NamingException e) {
             errorMessage = "Cannot find Create Note Service. " + e.getMessage();
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+            Log.logError(errorMessage, e);
         } catch (Exception e) {
             errorMessage = "Create Note Service error. " + e.getMessage();
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+            Log.logError(errorMessage, e);
         }
 
         repString = NoteUtils.getResultJSON(repString, successMessage, errorMessage);
