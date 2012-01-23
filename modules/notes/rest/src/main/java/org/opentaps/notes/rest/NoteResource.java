@@ -141,7 +141,7 @@ public class NoteResource extends ServerResource {
 
                 if (!GenericValidator.isBlankOrNull(noteId)) {
                     setStatus(Status.SUCCESS_CREATED);
-                    successMessage = "Note has been successfully created. Note id: " + noteId;
+                    successMessage = "Note created successfully.";
                     Log.logDebug(successMessage);
                     repString = getNoteIdJSON(noteId);
                 } else {
