@@ -27,6 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Basic;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * The persisted NoteData entity.
@@ -39,11 +40,13 @@ public class NoteData implements Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-hex")
+    @NotNull
     @Column(name = "NOTE_ID", nullable = false, length = 32)
     private String noteId;
 
     @Lob
     @Basic(fetch=FetchType.LAZY)
+    @NotNull
     @Column(name = "NOTE_TEXT", nullable = false)
     private String noteText;
 
@@ -53,6 +56,7 @@ public class NoteData implements Serializable {
     @Column(name = "USER_ID_TYPE")
     private String userIdType;
 
+    @NotNull
     @Column(name = "DATE_TIME_CREATED")
     private Timestamp dateTimeCreated;
 
