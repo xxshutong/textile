@@ -47,7 +47,10 @@ public class NotesTests extends RemoteTestCase {
         final String ATTR8  = "ATTR08";
         final String ATTR9  = "ATTR09";
         final String ATTR10 = "ATTR10";
-    
+
+        // work around timing issue, in some cases the test will be run before the webapp is mounted
+        Thread.sleep(5000);
+
         // 1. Create a note.
         ClientResource postURI = new ClientResource("http://localhost:8080/notes/note");
         postURI.setNext(client);
