@@ -50,7 +50,7 @@ public class ValidationTest extends NotesTestConfig {
 
         NoteData note = new NoteData();
         Set<ConstraintViolation<NoteData>> constraintViolations = validator.validate(note);
-        // ID, text, and created date time cannot be null
-        assertEquals(3, constraintViolations.size());
+        // text and created date time cannot be null
+        assertEquals(2, constraintViolations.size());
     }
 }

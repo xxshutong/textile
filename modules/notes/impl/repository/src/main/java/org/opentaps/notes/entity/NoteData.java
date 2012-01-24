@@ -40,7 +40,6 @@ public class NoteData implements Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-hex")
-    @NotNull
     @Column(name = "NOTE_ID", nullable = false, length = 32)
     private String noteId;
 
