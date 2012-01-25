@@ -108,6 +108,16 @@
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
+            <artifactId>validation.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opentaps</groupId>
+            <artifactId>validation.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opentaps</groupId>
             <artifactId>notes.rest</artifactId>
             <version>${project.version}</version>
         </dependency>

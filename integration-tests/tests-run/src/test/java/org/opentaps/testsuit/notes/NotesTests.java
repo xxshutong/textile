@@ -102,6 +102,14 @@ public class NotesTests extends RemoteTestCase {
         assertEquals("Checking attribute8 property", ATTR8, note.getAttribute8());
         assertEquals("Checking attribute9 property", ATTR9, note.getAttribute9());
         assertEquals("Checking attribute10 property", ATTR10, note.getAttribute10());
+
+        /*
+         * 3. Test that validation is working, the following should fail.
+         * TODO: implement actual error handling in the REST code, right now it just returns a 503 Service Unavailable error
+         */
+        /*formData = new Form();
+        formData.add(new Parameter("attribute1", ATTR1));
+        response = postURI.post(formData);*/
     }
 
     /**
