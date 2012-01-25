@@ -86,6 +86,7 @@
         <module>tests</module>
     	<module>core</module>
     	<module>entity</module>
+    	<module>validation</module>
     	<module>notes</module>
     </modules>
 
