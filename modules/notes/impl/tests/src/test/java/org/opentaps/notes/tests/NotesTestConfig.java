@@ -63,6 +63,8 @@ public class NotesTestConfig extends OpentapsTestCase {
                        mavenBundle().groupId("org.apache.aries.jndi").artifactId("org.apache.aries.jndi.core"),
                        mavenBundle().groupId("org.apache.aries.jndi").artifactId("org.apache.aries.jndi.url"),
                        mavenBundle().groupId("org.apache.bval").artifactId("org.apache.bval.bundle").version("0.3-incubating"),
+                       mavenBundle().groupId("org.opentaps").artifactId("validation.api").version("2.0.1-SNAPSHOT"),
+                       mavenBundle().groupId("org.opentaps").artifactId("validation.testimpl").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.apache.openjpa").artifactId("openjpa").version("2.0.1"),
                        mavenBundle().groupId("mysql").artifactId("mysql-connector-java").version("5.1.10"),
                        mavenBundle().groupId("org.opentaps").artifactId("entity").version("2.0.1-SNAPSHOT"),
