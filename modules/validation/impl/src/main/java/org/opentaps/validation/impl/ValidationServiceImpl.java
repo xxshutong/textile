@@ -30,6 +30,9 @@ public class ValidationServiceImpl implements ValidationService {
     public ValidationServiceImpl() {
     }
 
+    // Note: although it would be cleaner to get the factory in a static way, this has to be initialized this way
+    // as there seem to be some timing issues in OSGI .. eg: during testing static init, i got the correct Validator instance
+    // but it would not actually validate anything for some reasons
     public Validator getValidator() {
         if (factory == null) {
             synchronized(this) {
