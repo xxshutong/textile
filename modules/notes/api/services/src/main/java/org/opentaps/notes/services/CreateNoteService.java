@@ -16,8 +16,11 @@
  */
 package org.opentaps.notes.services;
 
-public interface CreateNoteService {
+import org.opentaps.core.service.Service;
+import org.opentaps.core.service.ServiceException;
 
-    public CreateNoteServiceOutput createNote(CreateNoteServiceInput input);
+public interface CreateNoteService extends Service {
+
+    public CreateNoteServiceOutput createNote(CreateNoteServiceInput input) throws ServiceException;
 
 }

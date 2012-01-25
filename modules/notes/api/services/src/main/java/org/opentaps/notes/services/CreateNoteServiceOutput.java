@@ -16,8 +16,13 @@
  */
 package org.opentaps.notes.services;
 
-public class CreateNoteServiceOutput {
+import javax.validation.constraints.NotNull;
 
+import org.opentaps.core.service.ServiceOutput;
+
+public class CreateNoteServiceOutput implements ServiceOutput {
+
+    @NotNull
     private String noteId;
 
     public String getNoteId() { return noteId; }

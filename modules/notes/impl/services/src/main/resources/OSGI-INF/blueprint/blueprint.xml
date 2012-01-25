@@ -19,9 +19,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <reference id="noteRepositoryService" interface="org.opentaps.notes.repository.NoteRepository"/>
+    <reference id="validationService" interface="org.opentaps.validation.services.ValidationService"/>
 
     <bean id="createNoteServiceImpl" class="org.opentaps.notes.services.impl.CreateNoteServiceImpl">
         <property name="noteRepository" ref="noteRepositoryService"/>
+        <property name="validationService" ref="validationService"/>
     </bean>
     <service id="notes.createNoteService" ref="createNoteServiceImpl" interface="org.opentaps.notes.services.CreateNoteService">
         <service-properties>
@@ -31,6 +33,7 @@
 
     <bean id="getNoteByIdServiceImpl" class="org.opentaps.notes.services.impl.GetNoteByIdServiceImpl">
         <property name="noteRepository" ref="noteRepositoryService"/>
+        <property name="validationService" ref="validationService"/>
     </bean>
     <service id="notes.getNoteByIdService" ref="getNoteByIdServiceImpl" interface="org.opentaps.notes.services.GetNoteByIdService">
         <service-properties>

@@ -16,8 +16,11 @@
  */
 package org.opentaps.notes.services;
 
-public interface GetNoteByIdService {
+import org.opentaps.core.service.Service;
+import org.opentaps.core.service.ServiceException;
 
-    public GetNoteByIdServiceOutput getNoteById(GetNoteByIdServiceInput input);
+public interface GetNoteByIdService extends Service {
+
+    public GetNoteByIdServiceOutput getNoteById(GetNoteByIdServiceInput input) throws ServiceException;
 
 }

@@ -16,8 +16,13 @@
  */
 package org.opentaps.notes.services;
 
-public class CreateNoteServiceInput {
+import javax.validation.constraints.NotNull;
 
+import org.opentaps.core.service.ServiceInput;
+
+public class CreateNoteServiceInput implements ServiceInput {
+
+    @NotNull
     private String text;
     private String attribute1;
     private String attribute2;

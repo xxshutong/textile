@@ -16,9 +16,10 @@
  */
 package org.opentaps.notes.services;
 
+import org.opentaps.core.service.ServiceOutput;
 import org.opentaps.notes.domain.Note;
 
-public class GetNoteByIdServiceOutput {
+public class GetNoteByIdServiceOutput implements ServiceOutput {
 
     private Note note;
 

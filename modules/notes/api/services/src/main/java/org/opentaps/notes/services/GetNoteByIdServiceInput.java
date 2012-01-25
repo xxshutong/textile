@@ -16,8 +16,13 @@
  */
 package org.opentaps.notes.services;
 
-public class GetNoteByIdServiceInput {
+import javax.validation.constraints.NotNull;
 
+import org.opentaps.core.service.ServiceInput;
+
+public class GetNoteByIdServiceInput implements ServiceInput {
+
+    @NotNull
     private String noteId;
 
     public void setNoteId(String noteId) { this.noteId = noteId; }
