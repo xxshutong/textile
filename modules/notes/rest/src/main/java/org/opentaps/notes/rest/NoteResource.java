@@ -16,6 +16,8 @@
  */
 package org.opentaps.notes.rest;
 
+import java.util.Locale;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -25,6 +27,7 @@ import net.sf.json.util.JSONStringer;
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.core.log.Log;
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.rest.locale.Messages;
 import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
@@ -50,6 +53,7 @@ public class NoteResource extends ServerResource {
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
+        Locale locale = Locale.US;
         String noteId = (String) getRequest().getAttributes().get("noteId");
 
         if (!GenericValidator.isBlankOrNull(noteId)) {
@@ -66,23 +70,23 @@ public class NoteResource extends ServerResource {
                         setStatus(Status.SUCCESS_OK);
                         repString = getNoteJSON(note);
                     } else {
-                        errorMessage = "Note with id " + "[" + noteId + "] not found";
+                        errorMessage = Messages.getMsg("NoteNotFound", locale, noteId);
                         setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                         Log.logError(errorMessage);
                     }
 
                 } else {
-                    errorMessage = "Cannot find Create Note Service.";
+                    errorMessage = Messages.get("GetNoteServiceUnavailable");
                     setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
                     Log.logError(errorMessage);
                 }
 
             } catch (NamingException e) {
-                errorMessage = "Cannot find Create Note Service. " + e.getMessage();
+                errorMessage = Messages.getMsg("LookupGetNoteServiceFails", locale, e.getLocalizedMessage());
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
                 Log.logError(errorMessage, e);
             } catch (Exception e) {
-                errorMessage = "Get Note Service error. " + e.getMessage();
+                errorMessage = Messages.getMsg("UnexpectedError", locale, e.getLocalizedMessage());
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
                 Log.logError(errorMessage, e);
             }
@@ -105,6 +109,7 @@ public class NoteResource extends ServerResource {
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
+        Locale locale = Locale.US;
 
         Form form = new Form(entity);
         String noteText = form.getFirstValue("noteText");
@@ -141,26 +146,26 @@ public class NoteResource extends ServerResource {
 
                 if (!GenericValidator.isBlankOrNull(noteId)) {
                     setStatus(Status.SUCCESS_CREATED);
-                    successMessage = "Note created successfully.";
+                    successMessage = Messages.get("NoteCreatedSuccess");
                     Log.logDebug(successMessage);
                     repString = getNoteIdJSON(noteId);
                 } else {
-                    errorMessage = "Cannot create note.";
+                    errorMessage = Messages.get("CanNotCreateNote");
                     setStatus(Status.SERVER_ERROR_INTERNAL);
                     Log.logError(errorMessage);
                 }
             } else {
-                errorMessage = "Cannot find Create Note Service.";
+                errorMessage = Messages.get("CreateNoteServiceUnavailable");
                 setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
                 Log.logError(errorMessage);
             }
 
         } catch (NamingException e) {
-            errorMessage = "Cannot find Create Note Service. " + e.getMessage();
+            errorMessage = Messages.getMsg("LookupCreateNoteServiceFails", locale, e.getLocalizedMessage());
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
             Log.logError(errorMessage, e);
         } catch (Exception e) {
-            errorMessage = "Create Note Service error. " + e.getMessage();
+            errorMessage = Messages.getMsg("UnexpectedError", locale, e.getLocalizedMessage());
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
             Log.logError(errorMessage, e);
         }
