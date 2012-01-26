@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Opentaps.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.opentaps.validation.services.impl;
+package org.opentaps.validation.impl;
 
 import java.util.ArrayList;
 import java.util.List;
