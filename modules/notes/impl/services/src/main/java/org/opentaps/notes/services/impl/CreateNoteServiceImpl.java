@@ -19,6 +19,7 @@ package org.opentaps.notes.services.impl;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 
+import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
 import org.opentaps.core.service.ServiceValidationException;
 import org.opentaps.notes.domain.Note;
@@ -95,6 +96,8 @@ public class CreateNoteServiceImpl implements CreateNoteService {
             throw new ServiceValidationException("Could not create note", outputViolations);
         }
 
+        Log.logDebug("Note created with id [" + note.getId() + "]");
+        
         return out;
     }
 
