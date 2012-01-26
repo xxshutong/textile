@@ -45,7 +45,7 @@ import org.restlet.resource.ServerResource;
 public class NoteResource extends ServerResource {
 
     /**
-     * Handle GET requests
+     * Handle GET requests.
      * @return JSON representation of the note and http.status SUCCESS_OK
      */
     @Get
@@ -178,7 +178,7 @@ public class NoteResource extends ServerResource {
     }
 
     /**
-     * Get JSON representation of the note
+     * Get JSON representation of the note.
      * @param note a <code>Note</code>
      * @return a <code>String</code>
      */
@@ -211,7 +211,7 @@ public class NoteResource extends ServerResource {
     }
 
     /**
-     * Get JSON representation of the noteId
+     * Get JSON representation of the noteId.
      * @param noteId a <code>String</code>
      * @return a <code>String</code>
      */
@@ -233,7 +233,7 @@ public class NoteResource extends ServerResource {
     }
 
     /**
-     * Get empty JSON representation
+     * Get empty JSON representation.
      * @return a <code>String</code>
      */
     private String getEmptyJSON() {
