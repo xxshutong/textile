@@ -51,7 +51,8 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.opentaps.validation.services
+                            org.opentaps.validation.services,
+                            org.opentaps.validation.contraints
                         </Export-Package>
                     </instructions>
                 </configuration>
