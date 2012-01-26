@@ -16,10 +16,14 @@
  */
 package org.opentaps.core.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 /**
  * Exception thrown by services if the validation of input or output failed.
@@ -27,6 +31,60 @@ import javax.validation.ConstraintViolation;
 public class ServiceValidationException extends ServiceException {
 
     private static final long serialVersionUID = 43L;
+
+    /**
+     * Describe a validation error on a particular field.
+     */
+    public static class FieldError implements Serializable {
+
+        private static final long serialVersionUID = 4301L;
+
+        private String field;
+        private Object value;
+        private String message;
+
+        /**
+         * Creates a new <code>FieldError</code> instance.
+         * @param field a <code>String</code> value
+         * @param value an <code>Object</code> value
+         * @param message a <code>String</code> value
+         */
+        public FieldError(String field, Object value, String message) {
+            this.field = field;
+            this.value = value;
+            this.message = message;
+        }
+
+        /**
+         * Creates a new <code>FieldError</code> instance.
+         * @param violation a <code>ConstraintViolation</code> value
+         */
+        public FieldError(ConstraintViolation<?> violation) {
+            this.field = violation.getPropertyPath().toString();
+            this.value = violation.getInvalidValue();
+            this.message = violation.getMessage();
+        }
+
+        /**
+         * Gets the name of the field that failed validation.
+         * @return a <code>String</code> value
+         */
+        public String getField() { return this.field; }
+
+        /**
+         * Gets the value that failed validation.
+         * @return an <code>Object</code> value
+         */
+        public Object getValue() { return this.value; }
+
+        /**
+         * Gets the message describing the validation error.
+         * @return a <code>String</code> value
+         */
+        public String getMessage() { return this.message; }
+    }
+
+    private Set<FieldError> fieldErrors;;
 
     /**
      * Creates new <code>ServiceValidationException</code> without detail message.
@@ -37,23 +95,31 @@ public class ServiceValidationException extends ServiceException {
 
     /**
      * Creates new <code>ServiceValidationException</code> without detail message.
-     * @param <T> a service parameter class
      * @param violations a collection of JSR303 <code>ConstraintViolation</code>
      */
-    public <T> ServiceValidationException(Collection<ConstraintViolation<T>> violations) {
+    public ServiceValidationException(Collection<ConstraintViolation<?>> violations) {
         super();
         translate(violations);
     }
 
     /**
      * Creates new <code>ServiceValidationException</code> with detail message and collection of JSR303 <code>ConstraintViolation</code>.
-     * @param <T> a service parameter class
      * @param msg the detail message.
      * @param violations a collection of JSR303 <code>ConstraintViolation</code>
      */
-    public <T> ServiceValidationException(String msg, Collection<ConstraintViolation<T>> violations) {
+    public ServiceValidationException(String msg, Collection<ConstraintViolation<?>> violations) {
         super(msg);
         translate(violations);
+    }
+
+    /**
+     * Creates new <code>ServiceValidationException</code> with detail message and collection of JSR303 <code>ConstraintViolation</code>.
+     * @param msg the detail message.
+     * @param exception a JSR303 <code>ConstraintViolationException</code>
+     */
+    public ServiceValidationException(String msg, ConstraintViolationException exception) {
+        super(msg, exception);
+        translate(exception.getConstraintViolations());
     }
 
     /**
@@ -77,16 +143,44 @@ public class ServiceValidationException extends ServiceException {
 
     /**
      * Translates a collection of JSR303 <code>ConstraintViolation</code> into the generic list of strings.
-     * @param <T> a service parameter class
      * @param violations a collection of JSR303 <code>ConstraintViolation</code>
      */
-    protected <T> void translate(Collection<ConstraintViolation<T>> violations) {
+    protected void translate(Collection<ConstraintViolation<?>> violations) {
         // build the message list from the list of validation error
         List<String> messages = new ArrayList<String>();
-        for (ConstraintViolation<T> violation : violations) {
-            messages.add(violation.getMessage());
+        fieldErrors = new HashSet<FieldError>();
+        for (ConstraintViolation<?> violation : violations) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(violation.getPropertyPath()).append(" : ").append(" was given \"").append(violation.getInvalidValue()).append("\", ").append(violation.getMessage());
+            messages.add(sb.toString());
+            fieldErrors.add(new FieldError(violation));
         }
         setMessageList(messages);
+    }
+
+    /**
+     * Returns the detail message.
+     * @return the formatted message
+     */
+    @Override
+    public String getMessage() {
+        StringBuilder sb = new StringBuilder(super.getMessage());
+        if (getMessageList() != null && getMessageList().size() > 0) {
+            sb.append("\nThe following validation errors occurred:");
+        }
+
+        for (String msg : getMessageList()) {
+            sb.append("\n").append(msg);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Gets the Field Errors that caused the exception.
+     * @return a <code>Set<FieldError></code> value
+     */
+    public Set<FieldError> getFieldErrors() {
+        return fieldErrors;
     }
 
 }

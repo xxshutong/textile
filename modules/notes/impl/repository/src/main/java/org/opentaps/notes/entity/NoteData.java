@@ -28,6 +28,7 @@ import javax.persistence.Lob;
 import javax.persistence.Basic;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * The persisted NoteData entity.
@@ -46,6 +47,7 @@ public class NoteData implements Serializable {
     @Lob
     @Basic(fetch=FetchType.LAZY)
     @NotNull
+    @Size(min = 1) // this means must not be empty
     @Column(name = "NOTE_TEXT", nullable = false)
     private String noteText;
 

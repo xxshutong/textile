@@ -18,6 +18,7 @@ package org.opentaps.notes.services.impl;
 
 import java.util.Set;
 import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
@@ -69,7 +70,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
 
         Set<ConstraintViolation<CreateNoteServiceInput>> inputViolations = validationService.getValidator().validate(input);
         if (inputViolations.size() > 0) {
-            throw new ServiceValidationException("Cannot create note", inputViolations);
+            throw new ServiceValidationException("Cannot create note", (Set) inputViolations);
         }
 
 
@@ -86,14 +87,18 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         note.setAttribute9(input.getAttribute9());
         note.setAttribute10(input.getAttribute10());
 
-        repository.persist(note);
+        try {
+            repository.persist(note);
+        } catch (ConstraintViolationException e) {
+            throw new ServiceValidationException("Cannot create note", e);
+        }
 
         CreateNoteServiceOutput out = new CreateNoteServiceOutput();
         out.setNoteId(note.getId());
 
         Set<ConstraintViolation<CreateNoteServiceOutput>> outputViolations = validationService.getValidator().validate(out);
         if (outputViolations.size() > 0) {
-            throw new ServiceValidationException("Could not create note", outputViolations);
+            throw new ServiceValidationException("Could not create note", (Set) outputViolations);
         }
 
         Log.logDebug("Note created with id [" + note.getId() + "]");

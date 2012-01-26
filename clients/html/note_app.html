@@ -54,12 +54,17 @@
    top:1px;
 }
 
-.message {
+.errorMessage,
+.message,
+.fieldErrorMessage
+{
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 100%;
   padding: 5px 0px 2px 4px;
-
 }
+
+.fieldErrorMessage,
+.errorMessage { color:red; }
 
 </style>
 
@@ -93,7 +98,7 @@ function parseResponse(req) {
       showSuccessMessage(json.result.successMessage);
     } else {
       showSuccessMessage("");
-      showErrorMessage(json.result.errorMessage); 
+      showErrorMessage(json.result.errorMessage, json.result.errorDetail);
     }
 
   } else {
@@ -102,8 +107,28 @@ function parseResponse(req) {
   }
 }
 
-function showErrorMessage(message) {
+function showErrorMessage(message, details) {
     document.getElementById('errorMessage').innerHTML = message;
+    // reset field errors
+    var els = document.getElementById('createNote').getElementsByTagName("div");
+    var elsLen = els.length;
+    var pattern = new RegExp("(^|\\s)fieldErrorMessage(\\s|$)");
+    for (i = 0, j = 0; i < elsLen; i++) {
+        if (pattern.test(els[i].className)) {
+            els[i].innerHTML = "";
+        }
+    }
+    // check field errors in the details
+    if (details) {
+        var len = details.length;
+        for (var i=0; i < len; i++) {
+            var detail = details[i];
+            var el = document.getElementById(detail.field + '_error');
+            if (el) {
+                el.innerHTML = detail.message;
+            }
+        }
+    }
 }
 
 function showSuccessMessage(message) {
@@ -137,16 +162,15 @@ function saveNote(form){
 <body>
 <div id="container">
   <div id="content">
-    <div class="message" id="successMessage">
-    </div>
-    <div class="message" id="errorMessage" style="color: red">
-    </div>  
+    <div class="message" id="successMessage"></div>
+    <div class="errorMessage" id="errorMessage"></div>  
 
     <h1>Write Your Note Here<h1>
 
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table>
       <tr><td>
+      <div class="fieldErrorMessage" id="noteText_error"></div>
       <textarea name="noteText" id="noteText" rows="6" cols="70"></textarea> 
       </td></tr>
       <tr><td>

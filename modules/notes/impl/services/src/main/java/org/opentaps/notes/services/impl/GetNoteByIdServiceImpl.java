@@ -68,7 +68,7 @@ public class GetNoteByIdServiceImpl implements GetNoteByIdService {
 
         Set<ConstraintViolation<GetNoteByIdServiceInput>> inputViolations = validationService.getValidator().validate(input);
         if (inputViolations.size() > 0) {
-            throw new ServiceValidationException("Cannot get note", inputViolations);
+            throw new ServiceValidationException("Cannot get note", (Set) inputViolations);
         }
 
         GetNoteByIdServiceOutput out = new GetNoteByIdServiceOutput();
@@ -76,7 +76,7 @@ public class GetNoteByIdServiceImpl implements GetNoteByIdService {
 
         Set<ConstraintViolation<GetNoteByIdServiceOutput>> outputViolations = validationService.getValidator().validate(out);
         if (outputViolations.size() > 0) {
-            throw new ServiceValidationException("Could not get note", outputViolations);
+            throw new ServiceValidationException("Could not get note", (Set) outputViolations);
         }
 
         return out;

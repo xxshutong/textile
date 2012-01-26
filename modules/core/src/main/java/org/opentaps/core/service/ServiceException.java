@@ -103,8 +103,7 @@ public class ServiceException extends Exception {
      * Returns the detail message, including the message from the nested exception if there is one.
      * @return the formatted message
      */
-    @Override
-    public String getMessage() {
+    public String getMessageWithNested() {
         Throwable nested = getCause();
         if (nested != null) {
             if (super.getMessage() == null) {
@@ -131,14 +130,6 @@ public class ServiceException extends Exception {
      */
     protected void setMessageList(List<String> messages) {
         this.messages = messages;
-    }
-
-    /**
-     * Returns the detail message, NOT including the message from the nested exception.
-     * @return the detail message, NOT including the message from the nested exception
-     */
-    public String getNonNestedMessage() {
-        return super.getMessage();
     }
 
     /**
