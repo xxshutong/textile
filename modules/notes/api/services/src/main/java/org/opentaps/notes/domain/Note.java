@@ -30,6 +30,8 @@ public class Note {
     private String createdByUserId;
     private String userIdType;
 
+    private Long sequenceNum;
+    
     private Timestamp dateTimeCreated;
 
     private String attribute1;
@@ -83,6 +85,14 @@ public class Note {
 
     public void setUserIdType(String userIdType) {
         this.userIdType = userIdType;
+    }
+    
+    public Long getSequenceNum() {
+        return sequenceNum;
+    }
+    
+    public void setSequenceNum(Long sequenceNum) {
+        this.sequenceNum = sequenceNum;
     }
 
     public String getAttribute1() {
