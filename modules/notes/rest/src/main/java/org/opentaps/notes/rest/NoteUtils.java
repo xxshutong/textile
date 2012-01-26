@@ -27,15 +27,14 @@ import org.restlet.engine.http.header.HeaderConstants;
 public final class NoteUtils {
 
     /**
-     * Set http header
+     * Set http header.
      * @param response a <code>Response</code>
      * @param header <code>String</code>
      * @param value <code>String</code>
      */
-    public static void setResponseHttpHeader(Response response, String header, String value ) {
+    public static void setResponseHttpHeader(Response response, String header, String value) {
         Form responseHeaders = (Form) response.getAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-        if (responseHeaders == null)
-        {
+        if (responseHeaders == null) {
             responseHeaders = new Form();
         }
         responseHeaders.add(header, value);
@@ -43,7 +42,7 @@ public final class NoteUtils {
     }
 
     /**
-     * Get response JSON result
+     * Get response JSON result.
      * @param resultValue <code>String</code>
      * @param succesMessage <code>String</code>
      * @param errorMessage <code>String</code>
