@@ -58,6 +58,10 @@ public class NoteData implements Serializable {
     @Column(name = "USER_ID_TYPE")
     private String userIdType;
 
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "SEQUENCE_NUM", nullable = false)
+    private Long sequenceNum;
+
     @NotNull
     @Column(name = "DATE_TIME_CREATED")
     private Timestamp dateTimeCreated;
@@ -123,6 +127,14 @@ public class NoteData implements Serializable {
 
     public void setUserIdType(String userIdType) {
         this.userIdType = userIdType;
+    }
+
+    public Long getSequenceNum() {
+        return sequenceNum;
+    }
+
+    public void setSequenceNum(Long sequenceNum) {
+        this.sequenceNum = sequenceNum;
     }
 
     public String getAttribute1() {

@@ -199,6 +199,8 @@ public class NoteResource extends ServerResource {
                                              .object()
                                              .key("id").value(note.getId())
                                              .key("text").value(note.getText())
+                                             .key("sequenceNum").value(note.getSequenceNum())
+                                             .key("dateTimeCreated").value(note.getDateTimeCreated())
                                              .key("attribute1").value(note.getAttribute1())
                                              .key("attribute2").value(note.getAttribute2())
                                              .key("attribute3").value(note.getAttribute3())
