@@ -18,7 +18,7 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <bean id="validationServiceImpl" class="org.opentaps.validation.services.impl.ValidationServiceImpl"/>
+    <bean id="validationServiceImpl" class="org.opentaps.validation.impl.ValidationServiceImpl"/>
     <service id="validation.validationService" ref="validationServiceImpl" interface="org.opentaps.validation.services.ValidationService">
         <service-properties>
             <entry key="osgi.jndi.service.name" value="org.opentaps.validation.services.ValidationService"/>

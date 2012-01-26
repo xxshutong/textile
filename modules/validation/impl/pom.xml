@@ -39,7 +39,7 @@
                 <configuration>
                     <instructions>
                         <Private-Package>
-                            org.opentaps.validation.services.impl
+                            org.opentaps.validation.impl
                         </Private-Package>
                     </instructions>
                 </configuration>
