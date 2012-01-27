@@ -159,23 +159,6 @@ public class ServiceValidationException extends ServiceException {
     }
 
     /**
-     * Returns the detail message.
-     * @return the formatted message
-     */
-    @Override
-    public String getMessage() {
-        StringBuilder sb = new StringBuilder(super.getMessage());
-        if (getMessageList() != null && getMessageList().size() > 0) {
-            sb.append("\nThe following validation errors occurred:");
-        }
-
-        for (String msg : getMessageList()) {
-            sb.append("\n").append(msg);
-        }
-        return sb.toString();
-    }
-
-    /**
      * Gets the Field Errors that caused the exception.
      * @return a <code>Set<FieldError></code> value
      */

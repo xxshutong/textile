@@ -118,6 +118,11 @@
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
+            <artifactId>rest</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opentaps</groupId>
             <artifactId>notes.rest</artifactId>
             <version>${project.version}</version>
         </dependency>

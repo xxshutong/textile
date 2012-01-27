@@ -98,7 +98,7 @@ function parseResponse(req) {
       showSuccessMessage(json.result.successMessage);
     } else {
       showSuccessMessage("");
-      showErrorMessage(json.result.errorMessage, json.result.errorDetail);
+      showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
     }
 
   } else {

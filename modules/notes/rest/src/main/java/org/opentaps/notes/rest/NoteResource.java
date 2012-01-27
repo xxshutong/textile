@@ -16,7 +16,6 @@
  */
 package org.opentaps.notes.rest;
 
-import java.util.Locale;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -24,7 +23,7 @@ import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONStringer;
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.core.log.Log;
-import org.opentaps.core.service.ServiceValidationException;
+import org.opentaps.core.service.ServiceException;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.rest.locale.Messages;
 import org.opentaps.notes.services.CreateNoteService;
@@ -38,79 +37,67 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
-import org.restlet.resource.ServerResource;
+import org.opentaps.rest.ServerResource;
+import org.opentaps.rest.JSONUtil;
 
-
+/**
+ * The Notes REST implementation.
+ */
 public class NoteResource extends ServerResource {
 
     /**
      * Handle GET requests.
      * @return JSON representation of the note and http.status SUCCESS_OK
+     * @throws NamingException if the service cannot be found
+     * @throws ServiceException if an error occur in the service
      */
     @Get
-    public Representation getNote() {
+    public Representation getNote() throws NamingException, ServiceException {
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
-        Locale locale = Locale.US;
         String noteId = (String) getRequest().getAttributes().get("noteId");
 
-        NoteUtils.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
+        JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
-        try {
-            InitialContext context = new InitialContext();
-            GetNoteByIdService getNoteByIdService = (GetNoteByIdService) context.lookup("osgi:service/org.opentaps.notes.services.GetNoteByIdService");
+        InitialContext context = new InitialContext();
+        GetNoteByIdService getNoteByIdService = (GetNoteByIdService) context.lookup("osgi:service/org.opentaps.notes.services.GetNoteByIdService");
 
-            if (getNoteByIdService != null) {
-                GetNoteByIdServiceInput getNoteByIdServiceInput = new GetNoteByIdServiceInput();
-                getNoteByIdServiceInput.setNoteId(noteId);
-                Note note = getNoteByIdService.getNoteById(getNoteByIdServiceInput).getNote();
+        if (getNoteByIdService != null) {
+            GetNoteByIdServiceInput getNoteByIdServiceInput = new GetNoteByIdServiceInput();
+            getNoteByIdServiceInput.setNoteId(noteId);
+            Note note = getNoteByIdService.getNoteById(getNoteByIdServiceInput).getNote();
 
-                if (note != null) {
-                    setStatus(Status.SUCCESS_OK);
-                    repString = getNoteJSON(note);
-                } else {
-                    errorMessage = Messages.getMsg("NoteNotFound", locale, noteId);
-                    setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-                    Log.logError(errorMessage);
-                }
-
+            if (note != null) {
+                setStatus(Status.SUCCESS_OK);
+                repString = getNoteJSON(note);
             } else {
-                errorMessage = Messages.get("GetNoteServiceUnavailable");
-                setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+                errorMessage = Messages.getMsg("NoteNotFound", getLocale(), noteId);
+                setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                 Log.logError(errorMessage);
             }
 
-        } catch (NamingException e) {
-            errorMessage = Messages.getMsg("LookupGetNoteServiceFails", locale, e.getLocalizedMessage());
+        } else {
+            errorMessage = Messages.get("GetNoteServiceUnavailable");
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
-            Log.logError(errorMessage, e);
-        } catch (ServiceValidationException e) {
-            errorMessage = Messages.getMsg("ValidationError", locale, e.getLocalizedMessage());
-            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            Log.logError(errorMessage, e);
-            return new StringRepresentation(NoteUtils.getResultJSON(repString, successMessage, errorMessage, e.getFieldErrors()), MediaType.APPLICATION_JSON);
-        } catch (Exception e) {
-            errorMessage = Messages.getMsg("UnexpectedError", locale, e.getLocalizedMessage());
-            setStatus(Status.SERVER_ERROR_INTERNAL);
-            Log.logError(errorMessage, e);
+            Log.logError(errorMessage);
         }
 
-        repString = NoteUtils.getResultJSON(repString, successMessage, errorMessage);
-        return new StringRepresentation(repString, MediaType.APPLICATION_JSON);
+        return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
     }
 
     /**
      * Handle POST requests: create a new note.
      * @param entity a <code>Representation</code>
      * @return a noteId as plain text and http.status SUCCESS_CREATED
+     * @throws NamingException if the service cannot be found
+     * @throws ServiceException if an error occur in the service
      */
     @Post
-    public Representation createNote(Representation entity) {
+    public Representation createNote(Representation entity) throws NamingException, ServiceException  {
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
-        Locale locale = Locale.US;
 
         Form form = new Form(entity);
         String noteText = form.getFirstValue("noteText");
@@ -125,61 +112,44 @@ public class NoteResource extends ServerResource {
         String attribute9 = form.getFirstValue("attribute9");
         String attribute10 = form.getFirstValue("attribute10");
 
-        NoteUtils.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
+        JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
-        try {
-            InitialContext context = new InitialContext();
-            CreateNoteService createNoteService = (CreateNoteService) context.lookup("osgi:service/org.opentaps.notes.services.CreateNoteService");
+        InitialContext context = new InitialContext();
+        CreateNoteService createNoteService = (CreateNoteService) context.lookup("osgi:service/org.opentaps.notes.services.CreateNoteService");
 
-            if (createNoteService != null) {
-                CreateNoteServiceInput createNoteServiceInput = new CreateNoteServiceInput();
-                createNoteServiceInput.setText(noteText);
-                createNoteServiceInput.setAttribute1(attribute1);
-                createNoteServiceInput.setAttribute2(attribute2);
-                createNoteServiceInput.setAttribute3(attribute3);
-                createNoteServiceInput.setAttribute4(attribute4);
-                createNoteServiceInput.setAttribute5(attribute5);
-                createNoteServiceInput.setAttribute6(attribute6);
-                createNoteServiceInput.setAttribute7(attribute7);
-                createNoteServiceInput.setAttribute8(attribute8);
-                createNoteServiceInput.setAttribute9(attribute9);
-                createNoteServiceInput.setAttribute10(attribute10);
+        if (createNoteService != null) {
+            CreateNoteServiceInput createNoteServiceInput = new CreateNoteServiceInput();
+            createNoteServiceInput.setText(noteText);
+            createNoteServiceInput.setAttribute1(attribute1);
+            createNoteServiceInput.setAttribute2(attribute2);
+            createNoteServiceInput.setAttribute3(attribute3);
+            createNoteServiceInput.setAttribute4(attribute4);
+            createNoteServiceInput.setAttribute5(attribute5);
+            createNoteServiceInput.setAttribute6(attribute6);
+            createNoteServiceInput.setAttribute7(attribute7);
+            createNoteServiceInput.setAttribute8(attribute8);
+            createNoteServiceInput.setAttribute9(attribute9);
+            createNoteServiceInput.setAttribute10(attribute10);
 
-                String noteId = createNoteService.createNote(createNoteServiceInput).getNoteId();
+            String noteId = createNoteService.createNote(createNoteServiceInput).getNoteId();
 
-                if (!GenericValidator.isBlankOrNull(noteId)) {
-                    setStatus(Status.SUCCESS_CREATED);
-                    successMessage = Messages.get("NoteCreatedSuccess");
-                    Log.logDebug(successMessage);
-                    repString = getNoteIdJSON(noteId);
-                } else {
-                    errorMessage = Messages.get("CanNotCreateNote");
-                    setStatus(Status.SERVER_ERROR_INTERNAL);
-                    Log.logError(errorMessage);
-                }
+            if (!GenericValidator.isBlankOrNull(noteId)) {
+                setStatus(Status.SUCCESS_CREATED);
+                successMessage = Messages.get("NoteCreatedSuccess");
+                Log.logDebug(successMessage);
+                repString = getNoteIdJSON(noteId);
             } else {
-                errorMessage = Messages.get("CreateNoteServiceUnavailable");
-                setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+                errorMessage = Messages.get("CanNotCreateNote");
+                setStatus(Status.SERVER_ERROR_INTERNAL);
                 Log.logError(errorMessage);
             }
-
-        } catch (NamingException e) {
-            errorMessage = Messages.getMsg("LookupCreateNoteServiceFails", locale, e.getLocalizedMessage());
+        } else {
+            errorMessage = Messages.get("CreateNoteServiceUnavailable");
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
-            Log.logError(errorMessage, e);
-        } catch (ServiceValidationException e) {
-            errorMessage = Messages.getMsg("ValidationError", locale, e.getLocalizedMessage());
-            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            Log.logError(errorMessage, e);
-            return new StringRepresentation(NoteUtils.getResultJSON(repString, successMessage, errorMessage, e.getFieldErrors()), MediaType.APPLICATION_JSON);
-        } catch (Exception e) {
-            errorMessage = Messages.getMsg("UnexpectedError", locale, e.getLocalizedMessage());
-            setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
-            Log.logError(errorMessage, e);
+            Log.logError(errorMessage);
         }
 
-        repString = NoteUtils.getResultJSON(repString, successMessage, errorMessage);
-        return new StringRepresentation(repString, MediaType.APPLICATION_JSON);
+        return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
     }
 
     /**
