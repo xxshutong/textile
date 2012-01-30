@@ -57,9 +57,15 @@ public class ServerResource extends org.restlet.resource.ServerResource {
             getResponse().setEntity(new StringRepresentation(JSONUtil.getJSONError(errorMessage, ((ServiceValidationException) throwable).getFieldErrors()), MediaType.APPLICATION_JSON));
         } else {
             StringBuilder sb = new StringBuilder(throwable.getLocalizedMessage());
+            // In some cases like exception from the persistence layer, errors can be duplicated in the stack
+            // so we filter that out
+            Throwable parent = throwable;
             Throwable nested = throwable.getCause();
             while (nested != null) {
-                sb.append("\n Caused by: ").append(nested.getMessage());
+                if (parent.getMessage() == null || !parent.getMessage().equals(nested.getMessage())) {
+                    sb.append("\n Caused by: ").append(nested.getMessage());
+                }
+                parent = nested;
                 nested = nested.getCause();
             }
             errorMessage = "Unexpected Error " + sb.toString();
