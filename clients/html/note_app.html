@@ -54,6 +54,11 @@
    top:1px;
 }
 
+input[disabled] {
+	background-color: #7a7a7a;
+    color:#fff;
+}
+
 .errorMessage,
 .message,
 .fieldErrorMessage
@@ -89,6 +94,7 @@ function createRequest() {
 
 function parseResponse(req) {
   var resp = req.responseText;
+  switchButtonDisable(document.getElementById('createNoteButton'), false, "Create Note");
 
   if (resp) {
     var json = eval('(' + resp + ')');
@@ -96,6 +102,7 @@ function parseResponse(req) {
     if (req.status == 201) { 
       showErrorMessage("");
       showSuccessMessage(json.result.successMessage);
+      document.getElementById('noteText').value = "";
     } else {
       showSuccessMessage("");
       showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
@@ -105,6 +112,7 @@ function parseResponse(req) {
     showSuccessMessage("");
     showErrorMessage("Cannot get response from server."); 
   }
+
 }
 
 function showErrorMessage(message, details) {
@@ -136,6 +144,7 @@ function showSuccessMessage(message) {
 }
 
 function saveNote(form){
+  switchButtonDisable(document.getElementById('createNoteButton'), true, "Please Wait...");
   var req = createRequest(); 
   
   // Create the callback:
@@ -155,6 +164,13 @@ function saveNote(form){
  
 }
 
+function switchButtonDisable(button, disabled, buttonText) {
+  if (button) {
+    button.disabled = disabled;
+    button.value = buttonText;
+  }
+}
+
 </script>
 
 </head>
@@ -165,16 +181,14 @@ function saveNote(form){
     <div class="message" id="successMessage"></div>
     <div class="errorMessage" id="errorMessage"></div>  
 
-    <h1>Write Your Note Here<h1>
-
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table>
       <tr><td>
       <div class="fieldErrorMessage" id="noteText_error"></div>
-      <textarea name="noteText" id="noteText" rows="6" cols="70"></textarea> 
+      <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea> 
       </td></tr>
       <tr><td>
-      <input type="button" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
+      <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
       </td></tr>
     </table>
     </form>
