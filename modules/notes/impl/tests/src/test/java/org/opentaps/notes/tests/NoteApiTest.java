@@ -127,4 +127,53 @@ public class NoteApiTest extends NotesTestConfig {
         assertEquals("attribute 9 mismatch", "attribute 9", note.getAttribute9());
         assertEquals("attribute 10 mismatch", null, note.getAttribute10());
     }
+    
+    @Test
+    public void testCreateNoteSequence() throws Exception {
+        log("NoteApiTest :: testCreateNoteSequence : Create 100 notes in sequence");
+
+        assertNotNull("CreateNoteService should have been initialized", createNoteService);
+        assertNotNull("GetNoteByIdService should have been initialized", getNoteByIdService);
+
+        Long previousSequenceNum = 0L;
+
+        for (int i = 1; i <= 100; i++) {
+            CreateNoteServiceInput createNoteInput = new CreateNoteServiceInput();
+            createNoteInput.setText("This is the note text");
+            createNoteInput.setAttribute1("attribute 1");
+            createNoteInput.setAttribute2("attribute 2");
+            createNoteInput.setAttribute3("attribute 3");
+            createNoteInput.setAttribute4("attribute 4");
+            createNoteInput.setAttribute5("attribute 5");
+            createNoteInput.setAttribute6("attribute 6");
+            createNoteInput.setAttribute7("attribute 7");
+            createNoteInput.setAttribute8("attribute 8");
+            createNoteInput.setAttribute9("attribute 9");
+            createNoteInput.setAttribute10("attribute 10");
+
+            log("NoteApiTest :: testCreateNoteSequence : Creating note : Iteration : " + i);
+
+            String noteId = createNoteService.createNote(createNoteInput).getNoteId();
+
+            assertNotNull("CreateNoteService should have succeeded and returned a noteId", noteId);
+
+            log("NoteApiTest :: testCreateNoteSequence : Note [" + noteId + "] was created.");
+
+            // get the note
+            GetNoteByIdServiceInput getNoteByIdServiceInput = new GetNoteByIdServiceInput();
+            getNoteByIdServiceInput.setNoteId(noteId);
+            Note note = getNoteByIdService.getNoteById(getNoteByIdServiceInput).getNote();
+
+            assertNotNull("The created note [" + noteId + "] should have been found.", note);
+
+            log("NoteApiTest :: testCreateNoteSequence : Found Note [" + noteId + "], checking sequence Number ...");
+
+            assertEquals("note id mismatch", noteId, note.getId());
+            Long sequenceNum = note.getSequenceNum();
+            log("NoteApiTest :: testCreateNoteSequence : Current sequence number [" + sequenceNum + "], previous sequence number [" + previousSequenceNum + "]");
+
+            assertTrue("Current sequence number [" + sequenceNum + "] should be > then previous [" + previousSequenceNum + "]", sequenceNum > previousSequenceNum);
+            previousSequenceNum = sequenceNum;
+        }
+    }
 }
