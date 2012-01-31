@@ -130,6 +130,7 @@ public class NotesTests extends RemoteTestCase {
         assertNotNull("Expected \"resultValue\" object", resultValue);
         JSONObject note = resultValue.getJSONObject("note");
         assertNotNull("Expected \"note\" object", note);
+        JSONUtils.getMorpherRegistry().registerMorpher(new org.opentaps.rest.ezmorph.TimestampMorpher(new String[] {"yyyy-MM-dd HH:mm:ss.S"}));
         return (Note) JSONObject.toBean(note, Note.class);
-    };
+    }
 }
