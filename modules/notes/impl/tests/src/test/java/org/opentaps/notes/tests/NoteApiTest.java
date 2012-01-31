@@ -127,7 +127,7 @@ public class NoteApiTest extends NotesTestConfig {
         assertEquals("attribute 9 mismatch", "attribute 9", note.getAttribute9());
         assertEquals("attribute 10 mismatch", null, note.getAttribute10());
     }
-    
+
     @Test
     public void testCreateNoteSequence() throws Exception {
         log("NoteApiTest :: testCreateNoteSequence : Create 100 notes in sequence");
@@ -139,7 +139,7 @@ public class NoteApiTest extends NotesTestConfig {
 
         for (int i = 1; i <= 100; i++) {
             CreateNoteServiceInput createNoteInput = new CreateNoteServiceInput();
-            createNoteInput.setText("This is the note text");
+            createNoteInput.setText("Test note sequence " + i);
             createNoteInput.setAttribute1("attribute 1");
             createNoteInput.setAttribute2("attribute 2");
             createNoteInput.setAttribute3("attribute 3");
