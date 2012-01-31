@@ -40,7 +40,7 @@
           <instructions>
             <Web-ContextPath>/notes</Web-ContextPath>
             <Import-Package>*,javax.servlet,javax.servlet.http,org.restlet.ext.servlet</Import-Package>
-            <Private-Package>org.opentaps.notes.rest</Private-Package>
+            <Private-Package>org.opentaps.notes.rest,org.opentaps.notes.rest.locale</Private-Package>
           </instructions>
         </configuration>
       </plugin>

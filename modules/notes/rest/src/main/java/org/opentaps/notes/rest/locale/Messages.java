@@ -16,28 +16,80 @@
  */
 package org.opentaps.notes.rest.locale;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.apache.commons.validator.GenericValidator;
+import org.opentaps.core.log.Log;
+import org.restlet.Request;
+import org.restlet.data.ClientInfo;
+import org.restlet.data.Language;
+import org.restlet.data.Preference;
+
 
 public class Messages {
     private static final String BUNDLE_NAME = "org.opentaps.notes.rest.locale.messages";
-    private static ResourceBundle RESOURCE_BUNDLE;
+    private ResourceBundle resourceBundle;
 
-    static {
-        RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+
+    private Messages (ResourceBundle rb) {
+        resourceBundle = rb;
     }
 
-    public static String get(String key) {
+    public String get(String key) {
         try {
-            return RESOURCE_BUNDLE.getString(key);
+            return resourceBundle.getString(key);
         } catch (MissingResourceException e) {
             return key;
         }
     }
 
-    public static String getMsg(String key, Locale locale, Object...arguments) {
+    public String getMsg(String key, Locale locale, Object...arguments) {
         return String.format(locale, get(key), arguments);
+    }
+
+    public static Messages getInstance(Request request) {
+        List<Locale> localeList = null;
+        String lang = (String) request.getAttributes().get("lang");
+        if (!GenericValidator.isBlankOrNull(lang)) {
+            try {
+                Locale locale = new Locale(lang);
+                localeList = Arrays.asList(locale);
+            } catch (NullPointerException e) {
+                //do nothing
+            }
+        }
+
+        if (localeList == null || localeList.size() == 0) {
+            ClientInfo clientInfo = request.getClientInfo();
+            List<Preference<Language>> preferences = clientInfo.getAcceptedLanguages();
+            localeList = new ArrayList<Locale>(preferences.size());
+            for (Preference<Language> pref : preferences) {
+                localeList.add(new Locale(pref.getMetadata().toString()));
+            }
+        }
+
+        if (localeList != null && localeList.size() > 0) {
+            ResourceBundle.clearCache();
+            for (Locale locale : localeList) {
+                try {
+                    ResourceBundle rb = ResourceBundle.getBundle(BUNDLE_NAME, locale);
+                    if (locale.toString().equals(rb.getLocale().toString())) {
+                        return new Messages(rb);
+                    } else {
+                        continue;
+                    }
+                } catch (MissingResourceException e) {
+                    Log.logWarning(e.getLocalizedMessage());
+                    continue;
+                }
+            }
+        }
+
+        return new Messages(ResourceBundle.getBundle(BUNDLE_NAME));
     }
 }

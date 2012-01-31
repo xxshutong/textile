@@ -21,6 +21,7 @@ import javax.naming.NamingException;
 
 import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONStringer;
+
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
@@ -30,6 +31,8 @@ import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
 import org.opentaps.notes.services.GetNoteByIdServiceInput;
+import org.opentaps.rest.JSONUtil;
+import org.opentaps.rest.ServerResource;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -37,8 +40,6 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
-import org.opentaps.rest.ServerResource;
-import org.opentaps.rest.JSONUtil;
 
 /**
  * The Notes REST implementation.
@@ -53,6 +54,7 @@ public class NoteResource extends ServerResource {
      */
     @Get
     public Representation getNote() throws NamingException, ServiceException {
+        Messages messages = Messages.getInstance(getRequest());
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
@@ -72,13 +74,13 @@ public class NoteResource extends ServerResource {
                 setStatus(Status.SUCCESS_OK);
                 repString = getNoteJSON(note);
             } else {
-                errorMessage = Messages.getMsg("NoteNotFound", getLocale(), noteId);
+                errorMessage = messages.getMsg("NoteNotFound", getLocale(), noteId);
                 setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                 Log.logError(errorMessage);
             }
 
         } else {
-            errorMessage = Messages.get("GetNoteServiceUnavailable");
+            errorMessage = messages.get("GetNoteServiceUnavailable");
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
             Log.logError(errorMessage);
         }
@@ -95,6 +97,7 @@ public class NoteResource extends ServerResource {
      */
     @Post
     public Representation createNote(Representation entity) throws NamingException, ServiceException  {
+        Messages messages = Messages.getInstance(getRequest());
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
@@ -135,16 +138,16 @@ public class NoteResource extends ServerResource {
 
             if (!GenericValidator.isBlankOrNull(noteId)) {
                 setStatus(Status.SUCCESS_CREATED);
-                successMessage = Messages.get("NoteCreatedSuccess");
+                successMessage = messages.get("NoteCreatedSuccess");
                 Log.logDebug(successMessage);
                 repString = getNoteIdJSON(noteId);
             } else {
-                errorMessage = Messages.get("CanNotCreateNote");
+                errorMessage = messages.get("CanNotCreateNote");
                 setStatus(Status.SERVER_ERROR_INTERNAL);
                 Log.logError(errorMessage);
             }
         } else {
-            errorMessage = Messages.get("CreateNoteServiceUnavailable");
+            errorMessage = messages.get("CreateNoteServiceUnavailable");
             setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
             Log.logError(errorMessage);
         }
