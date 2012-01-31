@@ -30,6 +30,7 @@
         <servlet.api>2.5.0</servlet.api>
         <felix.version>2.0.5</felix.version>
         <wicket.version>1.5-rc2</wicket.version>
+        <com.springsource.net.sf.json.version>2.2.2</com.springsource.net.sf.json.version>
         <bundle.symbolicName>${project.groupId}.${project.artifactId}</bundle.symbolicName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
