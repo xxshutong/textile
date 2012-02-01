@@ -48,12 +48,28 @@ public class Messages {
         }
     }
 
-    public String getMsg(String key, Locale locale, Object...arguments) {
-        return String.format(locale, get(key), arguments);
+    public String getMsg(String key, Object...arguments) {
+        try {
+            Locale locale = resourceBundle.getLocale();
+            if (locale == null || GenericValidator.isBlankOrNull(locale.toString())) {
+                locale = Locale.getDefault();
+            }
+            return String.format(locale, resourceBundle.getString(key), arguments);
+        } catch (MissingResourceException e) {
+            return key;
+        }
     }
 
+    /**
+     * Returns class initialized with resource bundle of the requested locale.<br>
+     * First we check URL for embed locale identifier that equals to Locale valid string representation.<br>
+     * Example of encoding locale with URL is: <code>/notes/note/fr_fr/noteID</code><br>
+     * If not found we have to check <code>Accept-Language</code> header and select first available language
+     * looking through the list in the natural order.   
+     */
     public static Messages getInstance(Request request) {
         List<Locale> localeList = null;
+        // get encoded locale
         String lang = (String) request.getAttributes().get("lang");
         if (!GenericValidator.isBlankOrNull(lang)) {
             try {
@@ -64,6 +80,7 @@ public class Messages {
             }
         }
 
+        // get languages from Accept-Language
         if (localeList == null || localeList.size() == 0) {
             ClientInfo clientInfo = request.getClientInfo();
             List<Preference<Language>> preferences = clientInfo.getAcceptedLanguages();
@@ -73,12 +90,18 @@ public class Messages {
             }
         }
 
+        // looking for the first available
         if (localeList != null && localeList.size() > 0) {
             ResourceBundle.clearCache();
             for (Locale locale : localeList) {
                 try {
+                    String langCode = locale.toString().replaceAll("-", "_");
                     ResourceBundle rb = ResourceBundle.getBundle(BUNDLE_NAME, locale);
-                    if (locale.toString().equals(rb.getLocale().toString())) {
+                    Locale rbLocale = rb.getLocale();
+                    if (rbLocale == null || GenericValidator.isBlankOrNull(rbLocale.toString())) {
+                        rbLocale = Locale.getDefault();
+                    }
+                    if (langCode.equalsIgnoreCase(rbLocale.toString())) {
                         return new Messages(rb);
                     } else {
                         continue;

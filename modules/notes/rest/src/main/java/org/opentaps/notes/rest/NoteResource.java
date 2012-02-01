@@ -74,7 +74,7 @@ public class NoteResource extends ServerResource {
                 setStatus(Status.SUCCESS_OK);
                 repString = getNoteJSON(note);
             } else {
-                errorMessage = messages.getMsg("NoteNotFound", getLocale(), noteId);
+                errorMessage = messages.getMsg("NoteNotFound", noteId);
                 setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                 Log.logError(errorMessage);
             }
