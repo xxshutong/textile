@@ -177,10 +177,8 @@ function switchButtonDisable(button, disabled, buttonText) {
 
 <body>
 <div id="container">
-  <div id="content">
-    <div class="message" id="successMessage"></div>
-    <div class="errorMessage" id="errorMessage"></div>  
-
+  <div id="content"> 
+    <img src="http://www.opentaps.org/images/opentaps_logo.png"/><br/>
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table>
       <tr><td>
@@ -190,6 +188,10 @@ function switchButtonDisable(button, disabled, buttonText) {
       <tr><td>
       <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
       </td></tr>
+	  <tr><td>
+        <div class="message" id="successMessage"></div>
+        <div class="errorMessage" id="errorMessage"></div> 
+	  </td></tr>	  
     </table>
     </form>
   </div>
