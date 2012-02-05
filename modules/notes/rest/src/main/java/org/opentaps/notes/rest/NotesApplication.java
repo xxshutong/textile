@@ -30,7 +30,11 @@ public class NotesApplication extends Application {
 		router.attach("/note", NoteResource.class);
         router.attach("/note/{noteId}", NoteResource.class);
         router.attach("/note/{lang}/{noteId}", NoteResource.class);
- 
+        
+        // Action should be login or callback 
+        router.attach("/facebook/{action}", FacebookResource.class);
+        
+        
 		return router;
 	}
 }
