@@ -3,6 +3,7 @@ package org.opentaps.notes.rest;
 import org.apache.commons.validator.GenericValidator;
 import org.restlet.Client;
 import org.restlet.Context;
+import org.restlet.data.Form;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.representation.Representation;
@@ -58,15 +59,19 @@ public class FacebookResource extends ServerResource {
      * @return Representation
      */
     private Representation callback() {
-        Representation rep = null;
+        Representation rep = new StringRepresentation("Can't get token ");
         String code = getRequest().getResourceRef().getQueryAsForm().getFirstValue("code");
 
         if (!GenericValidator.isBlankOrNull(code)) {
-            rep = getAccessToken(code);
+            Form form = getAccessToken(code);
 
-        }
-        else {
-            rep = new StringRepresentation("Can't get token ");
+            if (form != null) {
+                String accessToken = form.getFirstValue("access_token");
+
+                if (!GenericValidator.isBlankOrNull(accessToken)) {
+                    rep = getMe(accessToken);
+                }
+            }
         }
 
         return rep;
@@ -77,7 +82,7 @@ public class FacebookResource extends ServerResource {
      * @param code a <code>String</code>
      * @return access token a <code>Representation</code>
      */
-    private Representation getAccessToken(String code) {
+    private Form getAccessToken(String code) {
         Reference ref = new Reference(FB_GRAPH_API_URL+FB_TOKEN_CALL);
         ref.addQueryParameter("client_id", FB_CLIENT_ID);
         ref.addQueryParameter("redirect_uri", FB_REDIRECT_URL);
@@ -88,9 +93,9 @@ public class FacebookResource extends ServerResource {
         Client client = new Client(new Context(), Protocol.HTTPS);
         client.getContext().getParameters().add("useForwardedForHeader", "false");
         cr.setNext(client);
-        Representation rep = cr.get();
+        Form form = cr.get(Form.class);
 
-        return rep;
+        return form;
     }
 
     /**
@@ -107,6 +112,6 @@ public class FacebookResource extends ServerResource {
         cr.setNext(client);
 
         Representation rep = cr.get();
-        return new StringRepresentation(rep.toString());
+        return rep;
     }
 }
