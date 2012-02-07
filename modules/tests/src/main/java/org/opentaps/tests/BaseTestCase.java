@@ -26,9 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.naming.InitialContext;
+import org.opentaps.core.log.Log;
 
-import org.osgi.service.log.LogService;
 
 /**
  * Opentaps Test Suite defines common testing patterns and API methods
@@ -41,30 +40,9 @@ public class BaseTestCase {
 
     public static final long STANDARD_PAUSE_DURATION = 1001; // standard pause
 
-    private LogService log;
-
-    public void setUp() throws Exception {
-        InitialContext context = new InitialContext();
-        try {
-            System.err.println("look for osgi:service/LogService");
-            log = (LogService) context.lookup("osgi:service/LogService");
-        } catch (Exception e) {
-            System.err.println("Could not get the log service from context, looked up value was osgi:service/LogService");
-            throw e;
-        }
-
-    }
-
-    public void tearDown() throws Exception {
-        log = null;
-    }
-
     public void log(String msg) {
-        if (log == null) {
-            System.err.println("[NO LOGGER] " + msg);
-        } else {
-            log.log(LogService.LOG_INFO, msg);
-        }
+        //TODO: try to use standard logging class from core bundle
+        System.err.println("[NO LOGGER] " + msg);
     }
 
     /*************************************************************************/
@@ -82,7 +60,7 @@ public class BaseTestCase {
      */
     public void pause(String reason, long milliseconds) throws AssertionException {
         try {
-            log.log(LogService.LOG_INFO, String.format("Waiting %1$dms : %2$s", milliseconds, reason));
+            Log.logInfo(String.format("Waiting %1$dms : %2$s", milliseconds, reason));
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             fail(e);
@@ -96,7 +74,7 @@ public class BaseTestCase {
      * @throws AssertionException 
      */
     public void pause(String reason) throws AssertionException {
-        log.log(LogService.LOG_INFO, String.format("Waiting %1$dms : %2$s", STANDARD_PAUSE_DURATION, reason));
+        Log.logInfo(String.format("Waiting %1$dms : %2$s", STANDARD_PAUSE_DURATION, reason));
         pause(reason, STANDARD_PAUSE_DURATION);
     }
 
@@ -217,7 +195,7 @@ public class BaseTestCase {
      * @throws AssertionException 
      */
     public void assertEquals(String message, Map<?, ?> actual, Map<?, ?> expected, boolean ignoreExtraActualValues) throws AssertionException {
-        log.log(LogService.LOG_INFO, "Comparing maps :\nactual = " + actual + "\nexpected = " + expected);
+        Log.logInfo("Comparing maps :\nactual = " + actual + "\nexpected = " + expected);
 
         for (Object key : expected.keySet()) {
             Object expectedObj = expected.get(key);
@@ -251,7 +229,7 @@ public class BaseTestCase {
      * @throws AssertionException 
      */
     public void assertEquals(String message, List<?> actual, List<?> expected, boolean ignoreExtraActualValues) throws AssertionException {
-        log.log(LogService.LOG_INFO, "Comparing lists :\nactual = " + actual + "\nexpected = " + expected);
+        Log.logInfo("Comparing lists :\nactual = " + actual + "\nexpected = " + expected);
 
         for (int i = 0; i < expected.size(); i++) {
             Object expectedObj = expected.get(i);
@@ -316,8 +294,8 @@ public class BaseTestCase {
      */
     public void printMapDifferences(Map<?, ?> initialMap, Map<?, ?> finalMap) throws AssertionException {
 
-        log.log(LogService.LOG_INFO, "---------------------");
-        log.log(LogService.LOG_INFO, "printMapDifferences:");
+        Log.logInfo("---------------------");
+        Log.logInfo("printMapDifferences:");
 
         String fs = "%12s %12.3f => %12.3f *** %12.3f";
 
@@ -337,7 +315,7 @@ public class BaseTestCase {
                 finalBd = asBigDecimal(finalMap.get(key));
             }
             BigDecimal differenceBd = finalBd.subtract(initialBd);
-            log.log(LogService.LOG_INFO, String.format(fs, key, initialBd, finalBd, differenceBd));
+            Log.logInfo(String.format(fs, key, initialBd, finalBd, differenceBd));
 
         }
     }

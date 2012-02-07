@@ -25,14 +25,10 @@
     </dependencies>
 
     <properties>
-        <org.osgi.service.http.port>8181</org.osgi.service.http.port>
-        <org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure>
-        <servlet.api>2.5.0</servlet.api>
-        <felix.version>2.0.5</felix.version>
-        <wicket.version>1.5-rc2</wicket.version>
-        <com.springsource.net.sf.json.version>2.2.2</com.springsource.net.sf.json.version>
         <bundle.symbolicName>${project.groupId}.${project.artifactId}</bundle.symbolicName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <com.springsource.net.sf.json.version>2.2.2</com.springsource.net.sf.json.version>
+        <felix.version>2.0.5</felix.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -87,6 +83,16 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>4.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.compendium</artifactId>
+                <version>4.2.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-servlet_3.0_spec</artifactId>
                 <version>1.0</version>
@@ -95,6 +101,26 @@
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-jpa_2.0_spec</artifactId>
                 <version>1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet</artifactId>
+                <version>2.0.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.servlet</artifactId>
+                <version>2.0.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jse</groupId>
+                <artifactId>org.restlet</artifactId>
+                <version>2.0.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jse</groupId>
+                <artifactId>org.restlet.ext.httpclient</artifactId>
+                <version>2.0.11</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

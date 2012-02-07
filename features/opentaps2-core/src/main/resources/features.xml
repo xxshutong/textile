@@ -23,8 +23,8 @@
         <bundle>mvn:org.apache.oro/com.springsource.org.apache.oro/2.0.8</bundle>
         <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.httpclient/3.1.0</bundle>
         <bundle>mvn:mysql/mysql-connector-java/5.1.18</bundle>
-        <bundle>mvn:org.restlet.jee/org.restlet/2.0.10</bundle>
-        <bundle>mvn:org.restlet.jee/org.restlet.ext.servlet/2.0.10</bundle>
+        <bundle>mvn:org.restlet.jee/org.restlet/2.0.11</bundle>
+        <bundle>mvn:org.restlet.jee/org.restlet.ext.servlet/2.0.11</bundle>
         <bundle>mvn:org.opentaps/org.apache.xmlrpc/3.0.0-v20100427-1100</bundle>
         <bundle>mvn:org.opentaps/core/${project.version}</bundle>
         <bundle>mvn:org.opentaps/entity/${project.version}</bundle>
