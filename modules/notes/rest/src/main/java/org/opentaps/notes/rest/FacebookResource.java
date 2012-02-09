@@ -1,6 +1,32 @@
+/*
+ * Copyright (c) Open Source Strategies, Inc.
+ *
+ * Opentaps is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Opentaps is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Opentaps.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.opentaps.notes.rest;
 
+import java.io.IOException;
+import java.util.UUID;
+
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+
 import org.apache.commons.validator.GenericValidator;
+import org.opentaps.core.log.Log;
+import org.opentaps.rest.FacebookUser;
+import org.opentaps.rest.JSONUtil;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.Form;
@@ -25,11 +51,15 @@ public class FacebookResource extends ServerResource {
     public static final String FB_REDIRECT_URL = "http://localhost:8080/notes/facebook/callback";
     public static final String FB_ACTION_LOGIN = "login";
     public static final String FB_ACTION_CALLBACK = "callback";
+    public static final String FB_HTML_CLIENT_CALLBACK = "http://localhost/note_app.html";
+    public static final String USER_KEY_NAME = "userKey";
 
     @Get
     public Representation getLogin() {
         Representation rep = null;
         String action = (String) getRequest().getAttributes().get("action");
+        
+        JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
         if (FB_ACTION_LOGIN.equalsIgnoreCase(action)) {
             login();
@@ -70,6 +100,23 @@ public class FacebookResource extends ServerResource {
 
                 if (!GenericValidator.isBlankOrNull(accessToken)) {
                     rep = getMe(accessToken);
+                    
+                    if (rep != null) {
+                        UUID userLey = UUID.randomUUID();
+                        try {
+                            JSONObject userJSON = (JSONObject) JSONSerializer.toJSON(rep.getText());
+                            FacebookUser fbUser = new FacebookUser(userJSON);
+
+                            Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "#" + USER_KEY_NAME + "=" + userLey.toString());
+                            getResponse().redirectTemporary(ref);
+                        } catch (IOException e) {
+                            rep = new StringRepresentation("Can't get facebook user from json ");
+                            Log.logError(e.toString());
+                        }
+                        
+                    } else {
+                        rep = new StringRepresentation("Can't get facebook user ");
+                    }
                 }
             }
         }
