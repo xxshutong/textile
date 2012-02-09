@@ -19,7 +19,6 @@ package org.opentaps.notes.rest;
 import java.io.IOException;
 import java.util.UUID;
 
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
@@ -27,6 +26,8 @@ import org.apache.commons.validator.GenericValidator;
 import org.opentaps.core.log.Log;
 import org.opentaps.rest.FacebookUser;
 import org.opentaps.rest.JSONUtil;
+import org.opentaps.rest.ServerResource;
+import org.opentaps.rest.UserCache;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.Form;
@@ -36,7 +37,6 @@ import org.restlet.representation.Representation;
 import org.restlet.representation. StringRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
 
 public class FacebookResource extends ServerResource {
 
@@ -102,13 +102,15 @@ public class FacebookResource extends ServerResource {
                     rep = getMe(accessToken);
                     
                     if (rep != null) {
-                        UUID userLey = UUID.randomUUID();
+                        String userKey = UUID.randomUUID().toString();
                         try {
                             JSONObject userJSON = (JSONObject) JSONSerializer.toJSON(rep.getText());
                             FacebookUser fbUser = new FacebookUser(userJSON);
-
-                            Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "#" + USER_KEY_NAME + "=" + userLey.toString());
-                            getResponse().redirectTemporary(ref);
+                            if (fbUser != null) {
+                                userCache.putUser(userKey, fbUser);
+                                Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "#" + USER_KEY_NAME + "=" + userKey);                            
+                                getResponse().redirectTemporary(ref);
+                            }
                         } catch (IOException e) {
                             rep = new StringRepresentation("Can't get facebook user from json ");
                             Log.logError(e.toString());

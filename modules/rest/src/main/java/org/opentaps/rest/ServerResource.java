@@ -32,6 +32,8 @@ public class ServerResource extends org.restlet.resource.ServerResource {
 
     private Locale locale = Locale.US;
 
+    protected static volatile UserCache userCache = new UserCache();
+    
     protected Locale getLocale() {
         return locale;
     }

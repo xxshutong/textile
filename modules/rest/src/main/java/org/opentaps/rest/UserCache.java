@@ -14,28 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Opentaps.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.opentaps.notes.rest;
+package org.opentaps.rest;
 
-import org.restlet.Application;
-import org.restlet.Restlet;
-import org.restlet.routing.Router;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class NotesApplication extends Application {
+public class UserCache {
+    private final Map<String, FacebookUser> users = new ConcurrentHashMap<String, FacebookUser>();
 
-	@Override
-	public synchronized Restlet createInboundRoot() {
-		Router router = new Router(getContext());
+    public void putUser(String userKey, FacebookUser user) {
+        users.put(userKey, user);
+    }
 
-		// Attach the resources to the router
-		router.attach("/note", NoteResource.class);
-        router.attach("/note/{noteId}", NoteResource.class);
-        router.attach("/note/{lang}/{noteId}", NoteResource.class);
-
-        // Action should be login or callback
-        router.attach("/facebook/{action}", FacebookResource.class);
-
-        router.attach("/user/{userKey}", UserResource.class);
-
-		return router;
-	}
+    public FacebookUser getUser(String userKey) {
+        return users.get(userKey);
+    }
 }

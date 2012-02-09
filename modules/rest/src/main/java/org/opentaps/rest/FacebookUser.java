@@ -17,6 +17,8 @@
 package org.opentaps.rest;
 
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+import net.sf.json.util.JSONStringer;
 
 import org.opentaps.core.log.Log;
 import org.restlet.security.User;
@@ -94,5 +96,23 @@ public class FacebookUser extends User {
         setLastName(user.getString("last_name"));
         setLink(user.getString("link"));
         setEmail(user.getString("email"));
-   }
+    }
+
+    public String getUserJSON() {
+        return new JSONStringer()
+        .object()
+            .key("user")
+            .value(JSONSerializer.toJSON(new JSONStringer()
+                                         .object()
+                                         .key("id").value(id)
+                                         .key("name").value(name)
+                                         .key("firstName").value(firstName)
+                                         .key("lastName").value(lastName)
+                                         .key("link").value(link)
+                                         .key("email").value(email)
+                                         .endObject()
+                                         .toString()))
+        .endObject()
+        .toString();
+    }
 }
