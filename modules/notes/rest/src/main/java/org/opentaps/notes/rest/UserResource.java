@@ -21,19 +21,29 @@ import javax.naming.NamingException;
 import net.sf.json.util.JSONStringer;
 
 import org.apache.commons.validator.GenericValidator;
+import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
+import org.opentaps.notes.rest.locale.Messages;
 import org.opentaps.rest.FacebookUser;
 import org.opentaps.rest.JSONUtil;
 import org.opentaps.rest.ServerResource;
 import org.restlet.data.MediaType;
+import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 
 public class UserResource extends ServerResource {
 
+    /**
+     * Handle GET requests.
+     * @return JSON representation of the user and http.status SUCCESS_OK
+     * @throws NamingException if the service cannot be found
+     * @throws ServiceException if an error occur in the service
+     */
     @Get
     public Representation getUser() throws NamingException, ServiceException {
+        Messages messages = Messages.getInstance(getRequest());
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
@@ -45,7 +55,13 @@ public class UserResource extends ServerResource {
             FacebookUser user = userCache.getUser(userKey);
 
             if (user != null) {
+                successMessage = messages.get("LoggedInAs");
+                setStatus(Status.SUCCESS_OK);
                 repString = user.getUserJSON();
+            } else {
+                errorMessage = messages.getMsg("UserNotFound", userKey);
+                setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                Log.logError(errorMessage);
             }
         }
 

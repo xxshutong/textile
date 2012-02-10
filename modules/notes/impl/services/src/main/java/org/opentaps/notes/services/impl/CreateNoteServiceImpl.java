@@ -74,7 +74,6 @@ public class CreateNoteServiceImpl implements CreateNoteService {
             throw new ServiceValidationException("Cannot create note.", (Set) inputViolations);
         }
 
-
         Note note = new Note();
         note.setText(input.getText());
         note.setAttribute1(input.getAttribute1());
@@ -87,6 +86,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         note.setAttribute8(input.getAttribute8());
         note.setAttribute9(input.getAttribute9());
         note.setAttribute10(input.getAttribute10());
+        note.setCreatedByUserId(input.getCreatedByUserId());
 
         try {
             repository.persist(note);

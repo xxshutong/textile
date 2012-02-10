@@ -31,6 +31,7 @@ import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
 import org.opentaps.notes.services.GetNoteByIdServiceInput;
+import org.opentaps.rest.FacebookUser;
 import org.opentaps.rest.JSONUtil;
 import org.opentaps.rest.ServerResource;
 import org.restlet.data.Form;
@@ -102,7 +103,29 @@ public class NoteResource extends ServerResource {
         String successMessage = "";
         String errorMessage = "";
 
+        JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
+
         Form form = new Form(entity);
+        String userKey = form.getFirstValue("userKey");
+
+        if (GenericValidator.isBlankOrNull(userKey)) {
+            errorMessage = messages.get("UserKeyIsEmpty");
+            setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+            Log.logError(errorMessage);
+            return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
+        }
+
+        FacebookUser user = userCache.getUser(userKey);
+
+        if (user == null) {
+            errorMessage = messages.getMsg("WrongUserKey", userKey);
+            setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+            Log.logError(errorMessage);
+            return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
+        }
+
+        String createdByUserId = user.getId();
+
         String noteText = form.getFirstValue("noteText");
         String attribute1 = form.getFirstValue("attribute1");
         String attribute2 = form.getFirstValue("attribute2");
@@ -114,8 +137,6 @@ public class NoteResource extends ServerResource {
         String attribute8 = form.getFirstValue("attribute8");
         String attribute9 = form.getFirstValue("attribute9");
         String attribute10 = form.getFirstValue("attribute10");
-
-        JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
         InitialContext context = new InitialContext();
         CreateNoteService createNoteService = (CreateNoteService) context.lookup("osgi:service/org.opentaps.notes.services.CreateNoteService");
@@ -133,6 +154,7 @@ public class NoteResource extends ServerResource {
             createNoteServiceInput.setAttribute8(attribute8);
             createNoteServiceInput.setAttribute9(attribute9);
             createNoteServiceInput.setAttribute10(attribute10);
+            createNoteServiceInput.setCreatedByUserId(createdByUserId);
 
             String noteId = createNoteService.createNote(createNoteServiceInput).getNoteId();
 

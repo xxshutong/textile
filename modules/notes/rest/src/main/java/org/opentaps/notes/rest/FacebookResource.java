@@ -108,7 +108,7 @@ public class FacebookResource extends ServerResource {
                             FacebookUser fbUser = new FacebookUser(userJSON);
                             if (fbUser != null) {
                                 userCache.putUser(userKey, fbUser);
-                                Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "#" + USER_KEY_NAME + "=" + userKey);                            
+                                Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "?" + USER_KEY_NAME + "=" + userKey);                            
                                 getResponse().redirectTemporary(ref);
                             }
                         } catch (IOException e) {
