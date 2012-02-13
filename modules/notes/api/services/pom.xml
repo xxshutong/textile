@@ -52,6 +52,7 @@
                     <instructions>
                         <Export-Package>
                             org.opentaps.notes.services,
+                            org.opentaps.notes.services.security,
                             org.opentaps.notes.domain
                         </Export-Package>
                     </instructions>
@@ -72,6 +73,11 @@
           <artifactId>geronimo-validation_1.0_spec</artifactId>
           <version>1.1</version>
           <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
