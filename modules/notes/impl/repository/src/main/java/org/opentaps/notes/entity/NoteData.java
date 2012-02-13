@@ -28,6 +28,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.validation.constraints.NotNull;
 
 import org.opentaps.validation.contraints.NotEmpty;
@@ -37,6 +39,7 @@ import org.opentaps.validation.contraints.NotEmpty;
  */
 @Entity
 @Table(name="NOTE_DATA")
+@Inheritance(strategy=InheritanceType.JOINED)
 public class NoteData implements Serializable {
 
     private static final long serialVersionUID = -4314958909722739985L;
