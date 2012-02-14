@@ -233,7 +233,7 @@ function parseUserResponse(req) {
         var json = eval('(' + resp + ')');
 
         if (req.status == 200) {
-            document.getElementById('userArea').innerHTML = json.result.successMessage + " " + json.result.resultValue.user.name;
+            showUserArea(json); 
         } else {
             showSuccessMessage("");
             showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
@@ -242,6 +242,17 @@ function parseUserResponse(req) {
 
     } else {
         showErrorMessage("Cannot get response from server."); 
+    }
+}
+
+function showUserArea(json) {
+    var userArea = document.getElementById('userArea');
+    if (userArea) {
+        userArea.innerHTML = json.result.successMessage + " " + json.result.resultValue.user.name;
+    }
+    var userAreaPhoto = document.getElementById('userAreaPhoto');
+    if (userAreaPhoto) {
+        userAreaPhoto.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=normal";
     }
 }
 
@@ -264,10 +275,17 @@ function parseUserResponse(req) {
           </div>
         </td>
      </tr>
+     <tr>
+       <td valign="bottom">
+         <div id="userArea">         
+         </div>
+       </td>
+       <td align="right">
+         <img id="userAreaPhoto" src=""/>
+       </td>
+     </tr>
     </table>
     <input type="hidden" name="userKey" id="userKey"/>
-    <div id="userArea">         
-    </div>
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table>
       <tr><td>
