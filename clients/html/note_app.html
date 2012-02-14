@@ -199,8 +199,10 @@ function onLoadPage() {
 }
 
 function showLoginPrompt() {
-    var userArea = document.getElementById("userArea");
-    userArea.innerHTML = 'You should <a href="javascript:login()">login</a> before create note';
+    var userLogin = document.getElementById("userLogin");
+    if (userLogin) {
+        userLogin.style.display = "inline";
+    }
 }
 
 function getUser(userKey) {
@@ -251,7 +253,18 @@ function parseUserResponse(req) {
 
 <div id="container">
   <div id="content"> 
-    <img src="http://www.opentaps.org/images/opentaps_logo.png"/><br/>
+    <table style="width:518px">
+     <tr>
+       <td style="width:70%">
+         <img src="http://www.opentaps.org/images/opentaps_logo.png"/>
+       </td>
+        <td align="right" style="width:30%">
+          <div id="userLogin" style="display:none">
+          <a href="javascript:login()"><img src="images/fb_login.png"></a>
+          </div>
+        </td>
+     </tr>
+    </table>
     <input type="hidden" name="userKey" id="userKey"/>
     <div id="userArea">         
     </div>
