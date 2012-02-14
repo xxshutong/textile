@@ -102,29 +102,20 @@ public class NoteResource extends ServerResource {
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
+        String createdByUserId = null;
 
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
         Form form = new Form(entity);
         String userKey = form.getFirstValue("userKey");
 
-        if (GenericValidator.isBlankOrNull(userKey)) {
-            errorMessage = messages.get("UserKeyIsEmpty");
-            setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-            Log.logError(errorMessage);
-            return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
+        if (!GenericValidator.isBlankOrNull(userKey)) {
+            FacebookUser user = userCache.getUser(userKey);
+
+            if (user != null) {
+                createdByUserId = user.getId();
+            }
         }
-
-        FacebookUser user = userCache.getUser(userKey);
-
-        if (user == null) {
-            errorMessage = messages.getMsg("WrongUserKey", userKey);
-            setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-            Log.logError(errorMessage);
-            return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
-        }
-
-        String createdByUserId = user.getId();
 
         String noteText = form.getFirstValue("noteText");
         String attribute1 = form.getFirstValue("attribute1");

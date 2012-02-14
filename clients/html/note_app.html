@@ -199,8 +199,10 @@ function onLoadPage() {
 }
 
 function showLoginPrompt() {
-    var userArea = document.getElementById("userArea");
-    userArea.innerHTML = 'You should <a href="javascript:login()">login</a> before create note';
+    var userLogin = document.getElementById("userLogin");
+    if (userLogin) {
+        userLogin.style.display = "inline";
+    }
 }
 
 function getUser(userKey) {
@@ -231,7 +233,7 @@ function parseUserResponse(req) {
         var json = eval('(' + resp + ')');
 
         if (req.status == 200) {
-            document.getElementById('userArea').innerHTML = json.result.successMessage + " " + json.result.resultValue.user.name;
+            showUserArea(json); 
         } else {
             showSuccessMessage("");
             showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
@@ -243,6 +245,17 @@ function parseUserResponse(req) {
     }
 }
 
+function showUserArea(json) {
+    var userArea = document.getElementById('userArea');
+    if (userArea) {
+        userArea.innerHTML = json.result.successMessage + " " + json.result.resultValue.user.name;
+    }
+    var userAreaPhoto = document.getElementById('userAreaPhoto');
+    if (userAreaPhoto) {
+        userAreaPhoto.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=normal";
+    }
+}
+
 </script>
 
 </head>
@@ -251,10 +264,28 @@ function parseUserResponse(req) {
 
 <div id="container">
   <div id="content"> 
-    <img src="http://www.opentaps.org/images/opentaps_logo.png"/><br/>
+    <table style="width:518px">
+     <tr>
+       <td style="width:70%">
+         <img src="http://www.opentaps.org/images/opentaps_logo.png"/>
+       </td>
+        <td align="right" style="width:30%">
+          <div id="userLogin" style="display:none">
+          <a href="javascript:login()"><img src="images/fb_login.png"></a>
+          </div>
+        </td>
+     </tr>
+     <tr>
+       <td valign="bottom">
+         <div id="userArea">         
+         </div>
+       </td>
+       <td align="right">
+         <img id="userAreaPhoto" src=""/>
+       </td>
+     </tr>
+    </table>
     <input type="hidden" name="userKey" id="userKey"/>
-    <div id="userArea">         
-    </div>
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table>
       <tr><td>

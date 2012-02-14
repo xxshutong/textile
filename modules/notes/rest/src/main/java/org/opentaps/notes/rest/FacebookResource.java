@@ -27,7 +27,6 @@ import org.opentaps.core.log.Log;
 import org.opentaps.rest.FacebookUser;
 import org.opentaps.rest.JSONUtil;
 import org.opentaps.rest.ServerResource;
-import org.opentaps.rest.UserCache;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.Form;
@@ -42,7 +41,7 @@ public class FacebookResource extends ServerResource {
 
     public static final String FB_API_URL = "https://www.facebook.com/";
     public static final String FB_GRAPH_API_URL = "https://graph.facebook.com/";
-    public static final String FB_SCOPE = "offline_access,email";
+    public static final String FB_SCOPE = "offline_access,email,user_photos";
     public static final String FB_OAUTH_CALL = "dialog/oauth";
     public static final String FB_TOKEN_CALL = "oauth/access_token";
     public static final String FB_ME_CALL = "me";
@@ -58,7 +57,7 @@ public class FacebookResource extends ServerResource {
     public Representation getLogin() {
         Representation rep = null;
         String action = (String) getRequest().getAttributes().get("action");
-        
+
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
         if (FB_ACTION_LOGIN.equalsIgnoreCase(action)) {
@@ -100,7 +99,7 @@ public class FacebookResource extends ServerResource {
 
                 if (!GenericValidator.isBlankOrNull(accessToken)) {
                     rep = getMe(accessToken);
-                    
+
                     if (rep != null) {
                         String userKey = UUID.randomUUID().toString();
                         try {
@@ -108,14 +107,14 @@ public class FacebookResource extends ServerResource {
                             FacebookUser fbUser = new FacebookUser(userJSON);
                             if (fbUser != null) {
                                 userCache.putUser(userKey, fbUser);
-                                Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "?" + USER_KEY_NAME + "=" + userKey);                            
+                                Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "?" + USER_KEY_NAME + "=" + userKey);
                                 getResponse().redirectTemporary(ref);
                             }
                         } catch (IOException e) {
                             rep = new StringRepresentation("Can't get facebook user from json ");
                             Log.logError(e.toString());
                         }
-                        
+
                     } else {
                         rep = new StringRepresentation("Can't get facebook user ");
                     }
