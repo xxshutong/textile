@@ -16,15 +16,30 @@
  */
 package org.opentaps.notes.rest;
 
+import org.opentaps.core.log.Log;
+import org.opentaps.core.service.ServiceUtil;
+import org.opentaps.notes.services.security.NotesSecurityFactory;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
+import org.restlet.security.Authenticator;
 
 public class NotesApplication extends Application {
 
 	@Override
 	public synchronized Restlet createInboundRoot() {
 		Router router = new Router(getContext());
+
+		// try to find authenticator
+		Authenticator authenticator = null;
+        NotesSecurityFactory sf = (NotesSecurityFactory) ServiceUtil.getService(NotesSecurityFactory.class.getName());
+        if (sf != null) {
+            authenticator = sf.getAuthenticator(getContext(), false, null);
+            if (authenticator != null) {
+                Log.logInfo("Authenticator is found and attached to a route.");
+                authenticator.setNext(router);
+            }
+        }
 
 		// Attach the resources to the router
 		router.attach("/note", NoteResource.class);
@@ -36,6 +51,8 @@ public class NotesApplication extends Application {
 
         router.attach("/user/{userKey}", UserResource.class);
 
-		return router;
+        authenticator.setNext(router);
+
+		return authenticator == null ? router : authenticator;
 	}
 }
