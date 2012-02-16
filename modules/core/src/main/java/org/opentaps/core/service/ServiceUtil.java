@@ -62,7 +62,7 @@ public class ServiceUtil {
             InitialContext ctx = new InitialContext();
             return ctx.lookup(name.toString());
         } catch (NamingException e) {
-            Log.logError(e.getLocalizedMessage());
+            Log.logWarning(e.toString(true)); // not an error in most cases
             return null;
         }
     }
