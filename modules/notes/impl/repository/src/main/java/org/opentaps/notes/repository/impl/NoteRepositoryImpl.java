@@ -63,6 +63,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         note.setAttribute10(noteData.getAttribute10());
         note.setDateTimeCreated(noteData.getDateTimeCreated());
         note.setCreatedByUserId(noteData.getCreatedByUserId());
+        note.setUserIdType(noteData.getUserIdType());
         note.setSequenceNum(noteData.getSequenceNum());
         return note;
     }
@@ -83,6 +84,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         noteData.setAttribute10(note.getAttribute10());
         noteData.setDateTimeCreated(note.getDateTimeCreated());
         noteData.setCreatedByUserId(note.getCreatedByUserId());
+        noteData.setUserIdType(note.getUserIdType());
         noteData.setSequenceNum(note.getSequenceNum());
         return noteData;
     }

@@ -103,6 +103,7 @@ public class NoteResource extends ServerResource {
         String successMessage = "";
         String errorMessage = "";
         String createdByUserId = null;
+        String userIdType = null;
 
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
@@ -114,6 +115,7 @@ public class NoteResource extends ServerResource {
 
             if (user != null) {
                 createdByUserId = user.getId();
+                userIdType = user.getUserIdType();
             }
         }
 
@@ -146,6 +148,7 @@ public class NoteResource extends ServerResource {
             createNoteServiceInput.setAttribute9(attribute9);
             createNoteServiceInput.setAttribute10(attribute10);
             createNoteServiceInput.setCreatedByUserId(createdByUserId);
+            createNoteServiceInput.setUserIdType(userIdType);
 
             String noteId = createNoteService.createNote(createNoteServiceInput).getNoteId();
 

@@ -25,6 +25,8 @@ import org.restlet.security.User;
 
 public class FacebookUser extends User {
 
+    private static final String USER_ID_TYPE = "facebook";
+
     public String id;
     public String name;
     public String firstName;
@@ -39,6 +41,10 @@ public class FacebookUser extends User {
         catch(Exception e){
             Log.logError(e.toString());
         }
+    }
+
+    public String getUserIdType() {
+        return USER_ID_TYPE;
     }
 
     public String getFirstName() {
@@ -110,6 +116,7 @@ public class FacebookUser extends User {
                                          .key("lastName").value(lastName)
                                          .key("link").value(link)
                                          .key("email").value(email)
+                                         .key("userIdType").value(USER_ID_TYPE)
                                          .endObject()
                                          .toString()))
         .endObject()
