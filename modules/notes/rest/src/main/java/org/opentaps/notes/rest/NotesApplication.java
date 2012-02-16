@@ -50,6 +50,7 @@ public class NotesApplication extends Application {
         router.attach("/facebook/{action}", FacebookResource.class);
 
         router.attach("/user/{userKey}", UserResource.class);
+        router.attach("/user/logout/{userKey}", UserResource.class);
 
         if (authenticator != null) {
             authenticator.setNext(router);

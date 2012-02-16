@@ -32,6 +32,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 
 public class UserResource extends ServerResource {
 
@@ -63,6 +64,39 @@ public class UserResource extends ServerResource {
                 setStatus(Status.CLIENT_ERROR_NOT_FOUND);
                 Log.logError(errorMessage);
             }
+        }
+
+        return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
+    }
+
+    /**
+     * Handle POST request to logout user i.e. remove it from UserCache
+     * @return JSON representation of the user and http.status SUCCESS_OK
+     * @throws NamingException if the service cannot be found
+     * @throws ServiceException if an error occur in the service
+     */
+    @Post
+    public Representation logout() throws NamingException, ServiceException {
+        Messages messages = Messages.getInstance(getRequest());
+        String repString = getEmptyJSON();
+        String successMessage = "";
+        String errorMessage = "";
+
+        JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
+        String userKey = (String) getRequest().getAttributes().get("userKey");
+
+        if (!GenericValidator.isBlankOrNull(userKey)) {
+            FacebookUser user = userCache.getUser(userKey);
+
+            if (user != null) {
+                userCache.removeUser(userKey);
+                setStatus(Status.SUCCESS_OK);
+            } else {
+                errorMessage = messages.getMsg("UserNotFound", userKey);
+                setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                Log.logError(errorMessage);
+            }
+
         }
 
         return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);

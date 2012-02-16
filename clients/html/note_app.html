@@ -55,8 +55,18 @@
 }
 
 input[disabled] {
-	background-color: #7a7a7a;
-    color:#fff;
+   background-color: #7a7a7a;
+   color:#fff;
+}
+
+.logoutbutton {
+   background-color:#007e00;
+   cursor:pointer;
+   font-family: Verdana, Arial, Helvetica, sans-serif;
+   font-size:80%;
+   text-decoration:none;
+   color:#fff;
+   width:52px;
 }
 
 .errorMessage,
@@ -257,6 +267,59 @@ function showUserArea(json) {
     if (userAreaPhoto) {
         userAreaPhoto.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=square";
     }
+    var userLogout = document.getElementById('userLogout');
+    if (userLogout) {
+        userLogout.style.display = "block";
+    }
+}
+
+function hideUserArea(json) {
+    var userArea = document.getElementById('userArea');
+    if (userArea) {
+        userArea.innerHTML = "";
+    }
+    var userAreaPhoto = document.getElementById('userAreaPhoto');
+    if (userAreaPhoto) {
+        userAreaPhoto.src = "";
+    }
+    var userLogout = document.getElementById('userLogout');
+    if (userLogout) {
+        userLogout.style.display = "none";
+    }
+}
+
+function parseLogoutUserResponse(req) {
+    var resp = req.responseText;
+    showSuccessMessage("");
+    showErrorMessage("");
+
+    if (resp) {
+        if (req.status == 200) {
+            var userKey = getQueryVariable("userKey");
+            document.getElementById('userKey').value = "";
+            hideUserArea();
+            showLoginPrompt();
+        } 
+    } else {
+        showErrorMessage("Cannot get response from server."); 
+    }
+}
+
+function logout() {
+    var reqLogoutUser = createRequest();
+    var userKey = document.getElementById('userKey');    
+
+    // Create the callback:
+    reqLogoutUser.onreadystatechange = function() {    
+        if (reqLogoutUser.readyState == 4) {        
+            parseLogoutUserResponse(reqLogoutUser);
+        }   
+    }
+
+    reqLogoutUser.open("POST", "http://localhost:8080/notes/user/logout/"+userKey.value, true);
+    reqLogoutUser.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    reqLogoutUser.send(null);
 }
 
 </script>
@@ -277,6 +340,9 @@ function showUserArea(json) {
           <a href="javascript:login()"><img src="images/fb_login.png"></a>
           </div>
          <img id="userAreaPhoto" src=""/>
+         <div id="userLogout" style="display:none">
+           <input type="button" name="logoutButton" id="logoutButton" value="Logout" onClick="logout()" class="logoutbutton"/>
+         </div>
        </td>
      </tr>
      <tr>
