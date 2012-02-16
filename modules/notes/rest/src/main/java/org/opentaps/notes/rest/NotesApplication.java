@@ -51,8 +51,12 @@ public class NotesApplication extends Application {
 
         router.attach("/user/{userKey}", UserResource.class);
 
-        authenticator.setNext(router);
+        if (authenticator != null) {
+            authenticator.setNext(router);
+            return authenticator;
+        } else {
+            return router;
+        }
 
-		return authenticator == null ? router : authenticator;
 	}
 }
