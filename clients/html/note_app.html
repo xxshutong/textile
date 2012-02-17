@@ -62,11 +62,13 @@ input[disabled] {
 .logoutbutton {
    background-color:#007e00;
    cursor:pointer;
+   padding:8px;
    font-family: Verdana, Arial, Helvetica, sans-serif;
-   font-size:80%;
+   font-size:100%;
    text-decoration:none;
    color:#fff;
-   width:52px;
+   border: solid 1px #831212;
+   border-radius: 5px;
 }
 
 .errorMessage,
@@ -266,6 +268,7 @@ function showUserArea(json) {
     var userAreaPhoto = document.getElementById('userAreaPhoto');
     if (userAreaPhoto) {
         userAreaPhoto.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=square";
+        userAreaPhoto.style.display = "inline";
     }
     var userLogout = document.getElementById('userLogout');
     if (userLogout) {
@@ -281,6 +284,7 @@ function hideUserArea(json) {
     var userAreaPhoto = document.getElementById('userAreaPhoto');
     if (userAreaPhoto) {
         userAreaPhoto.src = "";
+        userAreaPhoto.style.display = "none";
     }
     var userLogout = document.getElementById('userLogout');
     if (userLogout) {
@@ -345,20 +349,17 @@ function logout() {
        </td>
      </tr>
      <tr>
-       <td>
-     	 <div id="userArea"/>         
+       <td valign="top" colspan="2">
+         <label id="userArea"></label> <img style="display:none" id="userAreaPhoto" src="" height="25px"/>
        </td>
-	   <td>
-         <img id="userAreaPhoto" src="" height="25px"/>
-	   </td>
      </tr>
     </table>
     <input type="hidden" name="userKey" id="userKey"/>
     <form name="createNote" id="createNote" action="createNote" method="post">
-    <table>
+    <table style="width:518px">
       <tr><td>
       <div class="fieldErrorMessage" id="noteText_error"></div>
-      <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea> 
+      <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here" style="width:100%"></textarea> 
       </td></tr>
       <tr><td>
       <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
