@@ -25,12 +25,14 @@ import net.sf.json.util.JSONStringer;
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
+import org.opentaps.core.service.ServiceUtil;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.rest.locale.Messages;
 import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
 import org.opentaps.notes.services.GetNoteByIdServiceInput;
+import org.opentaps.notes.services.security.AuthorizationHelper;
 import org.opentaps.rest.FacebookUser;
 import org.opentaps.rest.JSONUtil;
 import org.opentaps.rest.ServerResource;
@@ -60,6 +62,15 @@ public class NoteResource extends ServerResource {
         String successMessage = "";
         String errorMessage = "";
         String noteId = (String) getRequest().getAttributes().get("noteId");
+        String organizationId = (String) getRequest().getAttributes().get("organizationId");
+
+        if (!GenericValidator.isBlankOrNull(organizationId)) {
+            AuthorizationHelper helper = (AuthorizationHelper) ServiceUtil.getService(AuthorizationHelper.class.getName());
+            if (helper == null || !helper.verifyId(organizationId, noteId)) {
+                setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                return null;
+            }
+        }
 
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
@@ -103,6 +114,7 @@ public class NoteResource extends ServerResource {
         String successMessage = "";
         String errorMessage = "";
         String createdByUserId = null;
+        String organizationId = (String) getRequest().getAttributes().get("organizationId");
 
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
@@ -150,6 +162,14 @@ public class NoteResource extends ServerResource {
             String noteId = createNoteService.createNote(createNoteServiceInput).getNoteId();
 
             if (!GenericValidator.isBlankOrNull(noteId)) {
+                if (!GenericValidator.isBlankOrNull(organizationId)) {
+                    AuthorizationHelper helper = (AuthorizationHelper) ServiceUtil.getService(AuthorizationHelper.class.getName());
+                    if (helper == null || !helper.verifyId(organizationId, noteId)) {
+                        setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+                        errorMessage = messages.get("CreateNoteServiceUnavailable");
+                        Log.logError("CanNotLinkNoteToOrganization");
+                    }
+                }
                 setStatus(Status.SUCCESS_CREATED);
                 successMessage = messages.get("NoteCreatedSuccess");
                 Log.logDebug(successMessage);
