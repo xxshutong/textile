@@ -29,4 +29,8 @@ public class UserCache {
     public FacebookUser getUser(String userKey) {
         return users.get(userKey);
     }
+
+    public void removeUser(String userKey) {
+        users.remove(userKey);
+    }
 }

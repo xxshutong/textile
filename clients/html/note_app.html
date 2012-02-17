@@ -55,8 +55,20 @@
 }
 
 input[disabled] {
-	background-color: #7a7a7a;
-    color:#fff;
+   background-color: #7a7a7a;
+   color:#fff;
+}
+
+.logoutbutton {
+   background-color:#888888;
+   cursor:pointer;
+   padding:8px;
+   font-family: Verdana, Arial, Helvetica, sans-serif;
+   font-size:100%;
+   text-decoration:none;
+   color:#fff;
+   border: solid 1px #666666;
+   border-radius: 5px;
 }
 
 .errorMessage,
@@ -256,7 +268,62 @@ function showUserArea(json) {
     var userAreaPhoto = document.getElementById('userAreaPhoto');
     if (userAreaPhoto) {
         userAreaPhoto.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=square";
+        userAreaPhoto.style.display = "inline";
     }
+    var userLogout = document.getElementById('userLogout');
+    if (userLogout) {
+        userLogout.style.display = "block";
+    }
+}
+
+function hideUserArea(json) {
+    var userArea = document.getElementById('userArea');
+    if (userArea) {
+        userArea.innerHTML = "";
+    }
+    var userAreaPhoto = document.getElementById('userAreaPhoto');
+    if (userAreaPhoto) {
+        userAreaPhoto.src = "";
+        userAreaPhoto.style.display = "none";
+    }
+    var userLogout = document.getElementById('userLogout');
+    if (userLogout) {
+        userLogout.style.display = "none";
+    }
+}
+
+function parseLogoutUserResponse(req) {
+    var resp = req.responseText;
+    showSuccessMessage("");
+    showErrorMessage("");
+
+    if (resp) {
+        if (req.status == 200) {
+            var userKey = getQueryVariable("userKey");
+            document.getElementById('userKey').value = "";
+            hideUserArea();
+            showLoginPrompt();
+        } 
+    } else {
+        showErrorMessage("Cannot get response from server."); 
+    }
+}
+
+function logout() {
+    var reqLogoutUser = createRequest();
+    var userKey = document.getElementById('userKey');    
+
+    // Create the callback:
+    reqLogoutUser.onreadystatechange = function() {    
+        if (reqLogoutUser.readyState == 4) {        
+            parseLogoutUserResponse(reqLogoutUser);
+        }   
+    }
+
+    reqLogoutUser.open("POST", "http://localhost:8080/notes/user/logout/"+userKey.value, true);
+    reqLogoutUser.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    reqLogoutUser.send(null);
 }
 
 </script>
@@ -276,21 +343,23 @@ function showUserArea(json) {
           <div id="userLogin" style="display:none">
           <a href="javascript:login()"><img src="images/fb_login.png"></a>
           </div>
-         <img id="userAreaPhoto" src=""/>
+         <div id="userLogout" style="display:none">
+           <input type="button" name="logoutButton" id="logoutButton" value="Logout" onClick="logout()" class="logoutbutton"/>
+         </div>
        </td>
      </tr>
      <tr>
-       <td>
-     	 <div id="userArea"/>         
+       <td valign="top" colspan="2">
+         <label id="userArea"></label> <img style="display:none" id="userAreaPhoto" src="" height="25px"/>
        </td>
      </tr>
     </table>
     <input type="hidden" name="userKey" id="userKey"/>
     <form name="createNote" id="createNote" action="createNote" method="post">
-    <table>
+    <table style="width:518px">
       <tr><td>
       <div class="fieldErrorMessage" id="noteText_error"></div>
-      <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea> 
+      <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here" style="width:100%"></textarea> 
       </td></tr>
       <tr><td>
       <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>

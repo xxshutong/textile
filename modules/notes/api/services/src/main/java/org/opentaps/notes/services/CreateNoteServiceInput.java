@@ -35,6 +35,7 @@ public class CreateNoteServiceInput implements ServiceInput {
     private String attribute9;
     private String attribute10;
     private String createdByUserId;
+    private String userIdType;
 
     public String getText() { return text; }
     public void setText(String text) { this.text = text; }
@@ -60,4 +61,6 @@ public class CreateNoteServiceInput implements ServiceInput {
     public void setAttribute10(String attribute10) { this.attribute10 = attribute10; }
     public String getCreatedByUserId() { return createdByUserId; }
     public void setCreatedByUserId(String createdByUserId) { this.createdByUserId = createdByUserId; }
+    public String getUserIdType() { return userIdType; }
+    public void setUserIdType(String userIdType) { this.userIdType = userIdType; }
 }
