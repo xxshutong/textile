@@ -167,11 +167,12 @@ public class NoteResource extends ServerResource {
             if (!GenericValidator.isBlankOrNull(noteId)) {
                 if (!GenericValidator.isBlankOrNull(organizationId)) {
                     AuthorizationHelper helper = (AuthorizationHelper) ServiceUtil.getService(AuthorizationHelper.class.getName());
-                    if (helper == null || !helper.verifyId(organizationId, noteId)) {
+                    if (helper == null) {
                         setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
                         errorMessage = messages.get("CreateNoteServiceUnavailable");
                         Log.logError("CanNotLinkNoteToOrganization");
                     }
+                    helper.registerId(organizationId, noteId);
                 }
                 setStatus(Status.SUCCESS_CREATED);
                 successMessage = messages.get("NoteCreatedSuccess");
