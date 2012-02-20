@@ -172,6 +172,12 @@ function saveNote(form){
 
   var params = 'noteText=' + encodeURIComponent(form["noteText"].value);
   params = params + '&userKey=' + encodeURIComponent(document.getElementById('userKey').value);
+  var postOnMyWall = document.getElementById('postOnMyWall').checked;
+  if (postOnMyWall) {
+    params = params + '&postOnMyWall=Y';
+  } else {
+    params = params + '&postOnMyWall=N';
+  }
 
   req.open("POST", "http://localhost:8080/notes/note", true);
   req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -274,6 +280,14 @@ function showUserArea(json) {
     if (userLogout) {
         userLogout.style.display = "block";
     }
+    var postOnMyWall = document.getElementById('postOnMyWall');
+    if (postOnMyWall) {
+        postOnMyWall.style.display = "inline";
+    }
+    var postOnMyWallLabel = document.getElementById('postOnMyWallLabel');
+    if (postOnMyWallLabel) {
+        postOnMyWallLabel.style.display = "inline";
+    }
 }
 
 function hideUserArea(json) {
@@ -289,6 +303,14 @@ function hideUserArea(json) {
     var userLogout = document.getElementById('userLogout');
     if (userLogout) {
         userLogout.style.display = "none";
+    }
+    var postOnMyWall = document.getElementById('postOnMyWall');
+    if (postOnMyWall) {
+        postOnMyWall.style.display = "none";
+    }
+    var postOnMyWallLabel = document.getElementById('postOnMyWallLabel');
+    if (postOnMyWallLabel) {
+        postOnMyWallLabel.style.display = "none";
     }
 }
 
@@ -357,14 +379,19 @@ function logout() {
     <input type="hidden" name="userKey" id="userKey"/>
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table style="width:518px">
-      <tr><td>
+      <tr><td colspan="2">
       <div class="fieldErrorMessage" id="noteText_error"></div>
       <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here" style="width:100%"></textarea> 
       </td></tr>
-      <tr><td>
-      <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
-      </td></tr>
-	  <tr><td>
+      <tr>
+        <td>
+          <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
+        </td>
+        <td align="right">
+          <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
+        </td>
+      </tr>
+	  <tr><td colspan="2">
         <div class="message" id="successMessage"></div>
         <div class="errorMessage" id="errorMessage"></div> 
 	  </td></tr>	  

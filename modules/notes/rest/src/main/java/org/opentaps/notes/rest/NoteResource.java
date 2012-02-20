@@ -36,11 +36,16 @@ import org.opentaps.notes.services.security.AuthorizationHelper;
 import org.opentaps.rest.FacebookUser;
 import org.opentaps.rest.JSONUtil;
 import org.opentaps.rest.ServerResource;
+import org.restlet.Client;
+import org.restlet.Context;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
+import org.restlet.data.Protocol;
+import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
+import org.restlet.resource.ClientResource;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
@@ -116,6 +121,7 @@ public class NoteResource extends ServerResource {
         String createdByUserId = null;
         String organizationId = (String) getRequest().getAttributes().get("organizationId");
         String userIdType = null;
+        FacebookUser user = null;
 
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
@@ -123,7 +129,7 @@ public class NoteResource extends ServerResource {
         String userKey = form.getFirstValue("userKey");
 
         if (!GenericValidator.isBlankOrNull(userKey)) {
-            FacebookUser user = userCache.getUser(userKey);
+            user = userCache.getUser(userKey);
 
             if (user != null) {
                 createdByUserId = user.getId();
@@ -178,6 +184,13 @@ public class NoteResource extends ServerResource {
                 successMessage = messages.get("NoteCreatedSuccess");
                 Log.logDebug(successMessage);
                 repString = getNoteIdJSON(noteId);
+
+                if (user != null) {
+                    String postOnMyWall = form.getFirstValue("postOnMyWall");
+                    if ("Y".equalsIgnoreCase(postOnMyWall)) {
+                        postNoteOnMyWall(user, noteText);
+                    }
+                }
             } else {
                 errorMessage = messages.get("CanNotCreateNote");
                 setStatus(Status.SERVER_ERROR_INTERNAL);
@@ -260,5 +273,26 @@ public class NoteResource extends ServerResource {
                 .value("")
             .endObject()
             .toString();
+    }
+
+    /**
+     * Post note on the user wall
+     * @param user a <code>FacebookUser</code>
+     * @param noteText a <code>String</code>
+     * @return a <code>Representation</code>
+     */
+    private Representation postNoteOnMyWall(FacebookUser user, String noteText) {
+        Reference ref = new Reference(FacebookResource.FB_GRAPH_API_URL + user.getId() + "/"+ FacebookResource.FB_FEED_CALL);
+        Form form = new Form();
+        form.add("access_token", user.getAccessToken());
+        form.add("message", noteText);
+        Representation input = form.getWebRepresentation();
+
+        ClientResource cr = new ClientResource(ref);
+        Client client = new Client(new Context(), Protocol.HTTPS);
+        cr.setNext(client);
+
+        Representation rep = cr.post(input);
+        return rep;
     }
 }
