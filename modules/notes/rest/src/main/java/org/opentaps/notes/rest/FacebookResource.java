@@ -41,10 +41,11 @@ public class FacebookResource extends ServerResource {
 
     public static final String FB_API_URL = "https://www.facebook.com/";
     public static final String FB_GRAPH_API_URL = "https://graph.facebook.com/";
-    public static final String FB_SCOPE = "offline_access,email,user_photos";
+    public static final String FB_SCOPE = "offline_access,email,user_photos,publish_stream";
     public static final String FB_OAUTH_CALL = "dialog/oauth";
     public static final String FB_TOKEN_CALL = "oauth/access_token";
     public static final String FB_ME_CALL = "me";
+    public static final String FB_FEED_CALL = "feed";
     public static final String FB_CLIENT_ID = "147297945387974";
     public static final String FB_CLIENT_SECRET = "47543515439316957dd2ad605a8e22f1";
     public static final String FB_REDIRECT_URL = "http://localhost:8080/notes/facebook/callback";
@@ -106,6 +107,7 @@ public class FacebookResource extends ServerResource {
                             JSONObject userJSON = (JSONObject) JSONSerializer.toJSON(rep.getText());
                             FacebookUser fbUser = new FacebookUser(userJSON);
                             if (fbUser != null) {
+                                fbUser.setAccessToken(accessToken);
                                 userCache.putUser(userKey, fbUser);
                                 Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "?" + USER_KEY_NAME + "=" + userKey);
                                 getResponse().redirectTemporary(ref);

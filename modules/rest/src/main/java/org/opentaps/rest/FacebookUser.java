@@ -27,12 +27,13 @@ public class FacebookUser extends User {
 
     private static final String USER_ID_TYPE = "facebook";
 
-    public String id;
-    public String name;
-    public String firstName;
-    public String lastName;
-    public String link;
-    public String email;
+    private String id;
+    private String name;
+    private String firstName;
+    private String lastName;
+    private String link;
+    private String email;
+    private String accessToken;
 
     public FacebookUser(JSONObject user){
         try{
@@ -71,6 +72,10 @@ public class FacebookUser extends User {
         return email;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -93,6 +98,10 @@ public class FacebookUser extends User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public void setUser(JSONObject user) throws Exception{
