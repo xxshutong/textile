@@ -379,19 +379,21 @@ function logout() {
     <input type="hidden" name="userKey" id="userKey"/>
     <form name="createNote" id="createNote" action="createNote" method="post">
     <table style="width:518px">
-      <tr><td colspan="2">
+      <tr><td>
       <div class="fieldErrorMessage" id="noteText_error"></div>
       <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here" style="width:100%"></textarea> 
       </td></tr>
       <tr>
         <td>
-          <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
-        </td>
-        <td align="right">
-          <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
+          <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
         </td>
       </tr>
-	  <tr><td colspan="2">
+      <tr>
+        <td>
+          <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
+        </td>
+      </tr>
+	  <tr><td>
         <div class="message" id="successMessage"></div>
         <div class="errorMessage" id="errorMessage"></div> 
 	  </td></tr>	  
