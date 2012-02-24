@@ -88,6 +88,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         note.setAttribute10(input.getAttribute10());
         note.setCreatedByUserId(input.getCreatedByUserId());
         note.setUserIdType(input.getUserIdType());
+        note.setClientDomain(input.getClientDomain());
 
         try {
             repository.persist(note);

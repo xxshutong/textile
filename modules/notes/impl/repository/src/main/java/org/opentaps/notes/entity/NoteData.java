@@ -65,6 +65,9 @@ public class NoteData implements Serializable {
     @Column(name = "SEQUENCE_NUM", nullable = false)
     private Long sequenceNum;
 
+    @Column(name = "CLIENT_DOMAIN")
+    private String clientDomain;
+    
     @NotNull
     @Column(name = "DATE_TIME_CREATED")
     private Timestamp dateTimeCreated;
@@ -107,6 +110,14 @@ public class NoteData implements Serializable {
     public void setNoteText(String noteText) {
         this.noteText = noteText;
     }
+    
+	public String getClientDomain() {
+		return clientDomain;
+	}
+
+	public void setClientDomain(String clientDomain) {
+		this.clientDomain = clientDomain;
+	}
 
     public Timestamp getDateTimeCreated() {
         return dateTimeCreated;

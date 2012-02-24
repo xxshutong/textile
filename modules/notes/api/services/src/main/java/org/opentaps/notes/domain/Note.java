@@ -32,6 +32,7 @@ public class Note {
 
     private Long sequenceNum;
     
+    private String clientDomain;
     private Timestamp dateTimeCreated;
 
     private String attribute1;
@@ -63,7 +64,15 @@ public class Note {
         this.text = text;
     }
 
-    public Timestamp getDateTimeCreated() {
+    public String getClientDomain() {
+		return clientDomain;
+	}
+
+	public void setClientDomain(String clientDomain) {
+		this.clientDomain = clientDomain;
+	}
+
+	public Timestamp getDateTimeCreated() {
         return dateTimeCreated;
     }
 

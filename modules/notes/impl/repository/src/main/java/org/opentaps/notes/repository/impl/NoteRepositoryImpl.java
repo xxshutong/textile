@@ -65,6 +65,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         note.setCreatedByUserId(noteData.getCreatedByUserId());
         note.setUserIdType(noteData.getUserIdType());
         note.setSequenceNum(noteData.getSequenceNum());
+        note.setClientDomain(noteData.getClientDomain());
         return note;
     }
 
@@ -86,6 +87,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         noteData.setCreatedByUserId(note.getCreatedByUserId());
         noteData.setUserIdType(note.getUserIdType());
         noteData.setSequenceNum(note.getSequenceNum());
+        noteData.setClientDomain(note.getClientDomain());
         return noteData;
     }
 

@@ -167,6 +167,7 @@ public class NoteResource extends ServerResource {
             createNoteServiceInput.setAttribute10(attribute10);
             createNoteServiceInput.setCreatedByUserId(createdByUserId);
             createNoteServiceInput.setUserIdType(userIdType);
+            createNoteServiceInput.setClientDomain(getRequest().getReferrerRef().getHostDomain());
 
             String noteId = createNoteService.createNote(createNoteServiceInput).getNoteId();
 
