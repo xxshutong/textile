@@ -67,6 +67,7 @@ public class NotesTestConfig extends OpentapsTestCase {
                        mavenBundle().groupId("org.opentaps").artifactId("validation.testimpl").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.apache.openjpa").artifactId("openjpa").version("2.0.1"),
                        mavenBundle().groupId("mysql").artifactId("mysql-connector-java").version("5.1.10"),
+                       mavenBundle().groupId("org.restlet.jee").artifactId("org.restlet").version("2.0.11"),
                        mavenBundle().groupId("org.opentaps").artifactId("entity").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.opentaps").artifactId("core").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.opentaps").artifactId("tests").version("2.0.1-SNAPSHOT"),
