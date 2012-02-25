@@ -52,8 +52,7 @@
                     <instructions>
                         <Export-Package>
                             org.opentaps.notes.services,
-                            org.opentaps.notes.services.security,
-                            org.opentaps.notes.domain
+                            org.opentaps.notes.services.security
                         </Export-Package>
                     </instructions>
                 </configuration>
@@ -67,6 +66,12 @@
         	<artifactId>core</artifactId>
         	<version>${project.version}</version>
         	<scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>notes.domain</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
           <groupId>org.apache.geronimo.specs</groupId>
