@@ -74,6 +74,7 @@ public class NotesTestConfig extends OpentapsTestCase {
                        mavenBundle().groupId("org.opentaps").artifactId("notes.services.impl").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.opentaps").artifactId("notes.repository.api").version("2.0.1-SNAPSHOT"),
                        mavenBundle().groupId("org.opentaps").artifactId("notes.repository.impl").version("2.0.1-SNAPSHOT"),
+                       mavenBundle().groupId("org.opentaps").artifactId("notes.domain").version("2.0.1-SNAPSHOT"),
                        junitBundles(),
                        felix()
                        );
