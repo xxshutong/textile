@@ -52,7 +52,7 @@
                     <configuration>
                         <instructions>
                             <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
-                            <Bundle-Copyright>Copyright (c) 2010-2011 Open Source Strategies, Inc.</Bundle-Copyright>
+                            <Bundle-Copyright>Copyright (c) Open Source Strategies, Inc.</Bundle-Copyright>
                         </instructions>
                     </configuration>
                 </plugin>
