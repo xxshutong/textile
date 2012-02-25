@@ -190,7 +190,6 @@
       <dependency>
         <groupId>net.sourceforge.json</groupId>
         <artifactId>com.springsource.net.sf.json</artifactId>
-        <version>${com.springsource.net.sf.json.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

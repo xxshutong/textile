@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<!-- 
  * Copyright (c) Open Source Strategies, Inc.
  *
  * Opentaps is free software: you can redistribute it and/or modify it
@@ -9,11 +9,11 @@
  *
  * Opentaps is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with Opentaps.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * You should have received a copy of the GNU Affero General Public License 
+ * along with Opentaps. If not, see <http://www.gnu.org/licenses/>.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -30,70 +30,57 @@
     <artifactId>rest</artifactId>
     <packaging>bundle</packaging>
 
-    
+
     <build>
-      <resources>
-        <resource>
-          <directory>src/main/java</directory>
-          <includes>
-            <include>**</include>
-          </includes>
-          <excludes>
-            <exclude>**/*.java</exclude>
-          </excludes>
-        </resource>
-      </resources>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <extensions>true</extensions>
-          <configuration>
-            <instructions>
-              <Export-Package>
-                org.opentaps.rest
-              </Export-Package>
-            </instructions>
-          </configuration>
-        </plugin>
-      </plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.opentaps.rest
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.core</artifactId>
-        <version>4.2.0</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>core</artifactId>
-        <version>${project.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>validation.api</artifactId>
-        <version>${project.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.geronimo.specs</groupId>
-        <artifactId>geronimo-validation_1.0_spec</artifactId>
-        <version>1.1</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.restlet.jee</groupId>
-        <artifactId>org.restlet</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>net.sourceforge.json</groupId>
-        <artifactId>com.springsource.net.sf.json</artifactId>
-        <version>2.2.2</version>
-        <scope>provided</scope>
-      </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>validation.api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-validation_1.0_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.json</groupId>
+            <artifactId>com.springsource.net.sf.json</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
