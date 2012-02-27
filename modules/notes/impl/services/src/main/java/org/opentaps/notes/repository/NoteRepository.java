@@ -13,6 +13,14 @@ public interface NoteRepository {
     public Note getNoteById(String noteId);
 
     /**
+     * Gets a paginated list of Notes.
+     * @param fromSequence the starting sequence <code>Long</code> value
+     * @param numberOfNotes the maximum number of notes to return, an <code>Integer</code> value
+     * @return a <code>Note</code> value
+     */
+    public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes);
+
+    /**
      * Persists a Note.
      * @param note a <code>Note</code> value
      */

@@ -16,12 +16,14 @@
  */
 package org.opentaps.notes.tests;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.opentaps.notes.repository.NoteRepository;
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.repository.NoteRepository;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
 @RunWith(JUnit4TestRunner.class)
@@ -73,5 +75,73 @@ public class NoteRepositoryTest extends NotesTestConfig {
         assertEquals("attribute 8 mismatch", "attribute 8", note.getAttribute8());
         assertEquals("attribute 9 mismatch", "attribute 9", note.getAttribute9());
         assertEquals("attribute 10 mismatch", "attribute 10", note.getAttribute10());
+    }
+
+    @Test
+    public void testNoteSequence() throws Exception {
+
+        assertNotNull("NoteRepository should have been initialized", noteRepository);
+
+        log("NoteRepositoryTest :: testNoteSequence : Got the NoteRepository OSGI service : " + noteRepository.getClass());
+
+        // create a few of notes
+        int numOfNotes = 100;
+        List<String> noteIds = new ArrayList<String>(numOfNotes);
+        for (int i = 1; i <= numOfNotes; i++) {
+            Note note = new Note();
+            note.setText("NoteRepository test note sequence " + i);
+            noteRepository.persist(note);
+            noteIds.add(note.getId());
+        }
+
+        log("NoteRepositoryTest :: testRepository : Persisted notes [" + noteIds + "]");
+
+        // retrieve notes int the order they were created and check the sequence
+        Long lastSequence = -1L;
+        Long firstSequence = -1L;
+        for (int i = 1; i <= numOfNotes; i++) {
+            String noteId = noteIds.get(i - 1);
+            Note note = noteRepository.getNoteById(noteId);
+            assertNotNull("getNoteById should have returned the note [" + noteId + "]", note);
+            log("NoteRepositoryTest :: testRepository : Found note [" + noteId + "], checking values ...");
+            assertEquals("note text mismatch", "NoteRepository test note sequence " + i, note.getText());
+            // test the sequencing
+            if (lastSequence > 0) {
+                assertEquals("note sequence incorrect, should be a continuous sequence of numbers", (Long) (lastSequence + 1L), note.getSequenceNum());
+            }
+            if (firstSequence < 0) {
+                firstSequence = note.getSequenceNum();
+            }
+            assertTrue("note sequence should be a positive number", note.getSequenceNum() > 0);
+            lastSequence = note.getSequenceNum();
+        }
+
+        // check the paginated retrieval
+        List<Note> notes = noteRepository.getNotesPaginated(firstSequence, numOfNotes);
+        assertEquals("getNotesPaginated should have retrieved the " + numOfNotes + " created before", numOfNotes, notes.size());
+        for (int i = 0; i < numOfNotes; i++) {
+            String noteId = noteIds.get(i);
+            Note note = noteRepository.getNoteById(noteId);
+            assertNotNull("getNoteById should have returned the note [" + noteId + "]", note);
+            log("NoteRepositoryTest :: testRepository : Found note [" + noteId + "], checking values ...");
+            assertEquals("note text mismatch", "NoteRepository test note sequence " + (i + 1), note.getText());
+            // test the sequencing
+            assertEquals("note sequence incorrect, should be a continuous sequence of numbers", (Long) (firstSequence + i), note.getSequenceNum());
+        }
+
+        int d = 50;
+        int n = numOfNotes - d;
+        notes = noteRepository.getNotesPaginated(firstSequence + d, n);
+        assertEquals("getNotesPaginated should have retrieved the " + n + " created before", n, notes.size());
+        for (int i = d; i < numOfNotes; i++) {
+            String noteId = noteIds.get(i);
+            Note note = noteRepository.getNoteById(noteId);
+            assertNotNull("getNoteById should have returned the note [" + noteId + "]", note);
+            log("NoteRepositoryTest :: testRepository : Found note [" + noteId + "], checking values ...");
+            assertEquals("note text mismatch", "NoteRepository test note sequence " + (i + 1), note.getText());
+            // test the sequencing
+            assertEquals("note sequence incorrect, should be a continuous sequence of numbers", (Long) (firstSequence + i), note.getSequenceNum());
+        }
+
     }
 }

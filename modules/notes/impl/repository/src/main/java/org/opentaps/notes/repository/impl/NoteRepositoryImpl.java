@@ -17,10 +17,12 @@
 package org.opentaps.notes.repository.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.repository.NoteRepository;
@@ -48,6 +50,17 @@ public class NoteRepositoryImpl implements NoteRepository {
             throw new IllegalStateException();
         }
         return em.find(Note.class, noteId);
+    }
+
+    /** {@inheritDoc} */
+    public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes) {
+        TypedQuery<Note> query = em.createQuery("SELECT o FROM NoteData o WHERE o.sequenceNum >= :sequence", Note.class);
+        if (numberOfNotes <= 0 || numberOfNotes > 100) {
+            numberOfNotes = 100;
+        }
+        query.setMaxResults(numberOfNotes);
+        query.setParameter("sequence", fromSequence);
+        return query.getResultList();
     }
 
     /** {@inheritDoc} */
