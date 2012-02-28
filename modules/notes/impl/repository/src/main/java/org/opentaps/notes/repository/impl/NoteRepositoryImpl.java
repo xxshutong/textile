@@ -17,7 +17,6 @@
 package org.opentaps.notes.repository.impl;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes) {
-        TypedQuery<Note> query = em.createQuery("SELECT o FROM NoteData o WHERE o.sequenceNum >= :sequence", Note.class);
+        TypedQuery<Note> query = em.createQuery("SELECT o FROM NoteData o WHERE o.sequenceNum >= :sequence ORDER BY o.sequenceNum", Note.class);
         if (numberOfNotes == null || numberOfNotes <= 0 || numberOfNotes > 100) {
             numberOfNotes = 100;
         }
