@@ -24,12 +24,12 @@ import org.restlet.routing.Router;
 
 public class NotesApplication extends Application {
 
-	@Override
-	public synchronized Restlet createInboundRoot() {
-		Router router = new Router(getContext());
+    @Override
+    public synchronized Restlet createInboundRoot() {
+        Router router = new Router(getContext());
 
-		// Attach the resources to the router
-		router.attach("/note", NoteResource.class);
+        // Attach the resources to the router
+        router.attach("/note", NoteResource.class);
         router.attach("/note/{noteId}", NoteResource.class);
         router.attach("/note/{lang}/{noteId}", NoteResource.class);
 
@@ -40,5 +40,5 @@ public class NotesApplication extends Application {
         router.attach("/user/logout/{userKey}", UserResource.class);
 
         return new WrapperAuthenticator(getContext(), router);
-	}
+    }
 }
