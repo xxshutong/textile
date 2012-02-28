@@ -16,12 +16,13 @@
  */
 package org.opentaps.notes.rest;
 
+import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import net.sf.json.JSONSerializer;
+import net.sf.json.util.JSONBuilder;
 import net.sf.json.util.JSONStringer;
-
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
@@ -32,6 +33,8 @@ import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
 import org.opentaps.notes.services.GetNoteByIdServiceInput;
+import org.opentaps.notes.services.GetNotesService;
+import org.opentaps.notes.services.GetNotesServiceInput;
 import org.opentaps.notes.services.security.AuthorizationHelper;
 import org.opentaps.rest.FacebookUser;
 import org.opentaps.rest.JSONUtil;
@@ -80,26 +83,57 @@ public class NoteResource extends ServerResource {
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
         InitialContext context = new InitialContext();
-        GetNoteByIdService getNoteByIdService = (GetNoteByIdService) context.lookup("osgi:service/org.opentaps.notes.services.GetNoteByIdService");
+        if (GenericValidator.isBlankOrNull(noteId)) {
+            GetNotesService getNotesService = (GetNotesService) context.lookup("osgi:service/org.opentaps.notes.services.GetNotesService");
 
-        if (getNoteByIdService != null) {
-            GetNoteByIdServiceInput getNoteByIdServiceInput = new GetNoteByIdServiceInput();
-            getNoteByIdServiceInput.setNoteId(noteId);
-            Note note = getNoteByIdService.getNoteById(getNoteByIdServiceInput).getNote();
+            if (getNotesService != null) {
+                GetNotesServiceInput getNotesServiceInput = new GetNotesServiceInput();
+                String fromSeq = (String) getRequest().getAttributes().get("fromSequence");
+                String num = (String) getRequest().getAttributes().get("numberOfNotes");
+                if (!GenericValidator.isBlankOrNull(fromSeq)) {
+                    getNotesServiceInput.setFromSequence(Long.valueOf(fromSeq));
+                }
+                if (!GenericValidator.isBlankOrNull(num)) {
+                    getNotesServiceInput.setNumberOfNotes(Integer.valueOf(num));
+                }
+                List<Note> notes = getNotesService.getNotes(getNotesServiceInput).getNotes();
 
-            if (note != null) {
-                setStatus(Status.SUCCESS_OK);
-                repString = getNoteJSON(note);
+                if (notes != null) {
+                    setStatus(Status.SUCCESS_OK);
+                    repString = getNotesJSON(notes);
+                } else {
+                    errorMessage = messages.getMsg("NoteNotFound");
+                    setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                    Log.logError(errorMessage);
+                }
+
             } else {
-                errorMessage = messages.getMsg("NoteNotFound", noteId);
-                setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                errorMessage = messages.get("GetNoteServiceUnavailable");
+                setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
                 Log.logError(errorMessage);
             }
-
         } else {
-            errorMessage = messages.get("GetNoteServiceUnavailable");
-            setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
-            Log.logError(errorMessage);
+            GetNoteByIdService getNoteByIdService = (GetNoteByIdService) context.lookup("osgi:service/org.opentaps.notes.services.GetNoteByIdService");
+
+            if (getNoteByIdService != null) {
+                GetNoteByIdServiceInput getNoteByIdServiceInput = new GetNoteByIdServiceInput();
+                getNoteByIdServiceInput.setNoteId(noteId);
+                Note note = getNoteByIdService.getNoteById(getNoteByIdServiceInput).getNote();
+
+                if (note != null) {
+                    setStatus(Status.SUCCESS_OK);
+                    repString = getNoteJSON(note);
+                } else {
+                    errorMessage = messages.getMsg("NoteNotFound", noteId);
+                    setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                    Log.logError(errorMessage);
+                }
+
+            } else {
+                errorMessage = messages.get("GetNoteServiceUnavailable");
+                setStatus(Status.SERVER_ERROR_SERVICE_UNAVAILABLE);
+                Log.logError(errorMessage);
+            }
         }
 
         return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
@@ -207,6 +241,24 @@ public class NoteResource extends ServerResource {
         }
 
         return new StringRepresentation(JSONUtil.getJSONResult(repString, successMessage, errorMessage), MediaType.APPLICATION_JSON);
+    }
+
+    /**
+     * Get JSON representation of the notes.
+     * @param notes a <code>List</code> of <code>Note</code>
+     * @return a <code>String</code>
+     */
+    private String getNotesJSON(List<Note> notes) {
+        if (notes == null) {
+            throw new IllegalArgumentException();
+        }
+
+        JSONBuilder jb = new JSONStringer().array();
+        for (Note note : notes) {
+            jb.value(JSONSerializer.toJSON(getNoteJSON(note)));
+        }
+        jb.endArray();
+        return jb.toString();
     }
 
     /**

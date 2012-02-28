@@ -30,6 +30,9 @@ public class NotesApplication extends Application {
 
         // Attach the resources to the router
         router.attach("/note", NoteResource.class);
+        router.attach("/notes", NoteResource.class);
+        router.attach("/notes/{numberOfNotes}", NoteResource.class);
+        router.attach("/notes/{numberOfNotes}/{fromSequence}", NoteResource.class);
         router.attach("/note/{noteId}", NoteResource.class);
         router.attach("/note/{lang}/{noteId}", NoteResource.class);
 

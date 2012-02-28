@@ -33,6 +33,16 @@
         </service-properties>
     </service>
 
+    <bean id="getNotesServiceImpl" class="org.opentaps.notes.services.impl.GetNotesServiceImpl">
+        <property name="noteRepository" ref="noteRepositoryService"/>
+        <property name="validationService" ref="validationService"/>
+    </bean>
+    <service id="notes.getNotesService" ref="getNotesServiceImpl" interface="org.opentaps.notes.services.GetNotesService">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.services.GetNotesService"/>
+        </service-properties>
+    </service>
+
     <bean id="getNoteByIdServiceImpl" class="org.opentaps.notes.services.impl.GetNoteByIdServiceImpl">
         <property name="noteRepository" ref="noteRepositoryService"/>
         <property name="validationService" ref="validationService"/>

@@ -55,8 +55,11 @@ public class NoteRepositoryImpl implements NoteRepository {
     /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes) {
         TypedQuery<Note> query = em.createQuery("SELECT o FROM NoteData o WHERE o.sequenceNum >= :sequence", Note.class);
-        if (numberOfNotes <= 0 || numberOfNotes > 100) {
+        if (numberOfNotes == null || numberOfNotes <= 0 || numberOfNotes > 100) {
             numberOfNotes = 100;
+        }
+        if (fromSequence == null) {
+            fromSequence = 0L;
         }
         query.setMaxResults(numberOfNotes);
         query.setParameter("sequence", fromSequence);
