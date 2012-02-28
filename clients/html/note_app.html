@@ -406,7 +406,10 @@ function loadNotes(noteList, replace) {
 
     for (var i = 0; i < n; i++) {
         var note = noteList[i];
+        // save to localStorage
+        localStorage.setObject(note.note.id, note.note);
         newcontainer.appendChild(createNoteElement(note.note));
+        lastNoteSequence = note.note.sequenceNum;
     }
 
     if (replace) {
@@ -415,7 +418,18 @@ function loadNotes(noteList, replace) {
     } else {
         container.appendChild(newcontainer);
     }
+
+    onNotesLoaded();
 }
+
+function onNotesLoaded() {
+    // check the list position and see if more loading is needed
+    // which is when the list did not got to the end of the page
+    loadIfScrolledToEndOfList();
+}
+
+var numberOfNotes = 30;
+var lastNoteSequence = 0;
 
 function loadNoteList() {
     // get the notes from the REST api
@@ -436,13 +450,30 @@ function loadNoteList() {
         }
     }
 
-    loadNoteReq.open("GET", "http://localhost:8080/notes/notes", true);
+    console.log("loading notes numberOfNotes = " + numberOfNotes + " , fromSequence = " + (lastNoteSequence + 1));
+    loadNoteReq.open("GET", "http://localhost:8080/notes/notes/" + numberOfNotes + "/" + (lastNoteSequence + 1), true);
     loadNoteReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     loadNoteReq.send(null);
 }
 
+var loadNotesScrollThreshold = 200;
+
+function loadIfScrolledToEndOfList() {
+    // when the window scroll to the end of the note list, try to load more notes
+    var scrollTop = window.pageYOffset;
+    var pageHeight = document.documentElement.clientHeight; 
+    var contentHeight = document.documentElement.offsetHeight;
+    console.log("scrollTop = " + scrollTop + ", pageHeight = " + pageHeight + ", contentHeight = " + contentHeight + " ==> contentHeight - pageHeight - scrollTop = " + (contentHeight - pageHeight - scrollTop));
+    if ((contentHeight - pageHeight - scrollTop) < loadNotesScrollThreshold) {
+        console.log("load more notes !");
+        loadNoteList();
+        return true;
+    }
+    return false;
+}
+
 function scroll() {
-    
+    loadIfScrolledToEndOfList();
 }
 
 function onLoadPage() {
@@ -460,7 +491,7 @@ function onLoadPage() {
     } else {
       // set the scroll handler
       window.onscroll = scroll;
-      loadNoteList();
+      loadIfScrolledToEndOfList();
     }
 }
 </script>
