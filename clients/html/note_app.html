@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!-- 
+<!--
  Copyright (c) Open Source Strategies, Inc.
 
  Opentaps is free software: you can redistribute it and/or modify it
@@ -83,14 +83,25 @@ input[disabled] {
 .fieldErrorMessage,
 .errorMessage { color:red; }
 
+#noteList { width:60em; border:1px solid #666; margin:10px; padding:10px;}
+#noteList .listHeader { font-weight:bold; margin-bottom:0.3em; border-bottom:1px dotted #AAA; }
+#noteList .listRow div { float:left; overflow:hidden; text-overflow:ellipsis; padding:.1em .4em; }
+#noteList .listRow { clear:left; height: 1.4em; }
+#noteList .noteAttribute { display:none; }
+#noteList .noteId { width:10em; }
+#noteList .noteSequence { width:6em; }
+#noteList .noteText { width:40em; }
+#noteList .listRow:nth-child(even) {background: #DDD;}
+#noteList .listRow:nth-child(odd) {background: #FFF;}
+
 </style>
 
 <script language="javascript" type="text/javascript">
 
 function createRequest() {
   var xmlhttp;
-  if (typeof XMLHttpRequest != 'undefined') { 
-    return new XMLHttpRequest(); 
+  if (typeof XMLHttpRequest != 'undefined') {
+    return new XMLHttpRequest();
   }
   try {
     xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
@@ -111,7 +122,7 @@ function parseResponse(req) {
   if (resp) {
     var json = eval('(' + resp + ')');
 
-    if (req.status == 201) { 
+    if (req.status == 201) {
       showErrorMessage("");
       showSuccessMessage(json.result.successMessage);
       document.getElementById('noteText').value = "";
@@ -120,12 +131,12 @@ function parseResponse(req) {
       showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
       if (req.status == 401) {
         showLoginPrompt();
-      }  
+      }
     }
 
   } else {
     showSuccessMessage("");
-    showErrorMessage("Cannot get response from server."); 
+    showErrorMessage("Cannot get response from server.");
   }
 
 }
@@ -160,14 +171,14 @@ function showSuccessMessage(message) {
 
 function saveNote(form){
   switchButtonDisable(document.getElementById('createNoteButton'), true, "Please Wait...");
-  var req = createRequest(); 
-  
+  var req = createRequest();
+
   // Create the callback:
-  req.onreadystatechange = function() {    
-    if (req.readyState == 4) {        
+  req.onreadystatechange = function() {
+    if (req.readyState == 4) {
         parseResponse(req);
     }
-   
+
   }
 
   var params = 'noteText=' + encodeURIComponent(form["noteText"].value);
@@ -183,7 +194,7 @@ function saveNote(form){
   req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
   req.send(params);
- 
+
 }
 
 function switchButtonDisable(button, disabled, buttonText) {
@@ -201,19 +212,8 @@ function getQueryVariable(variable) {
     if (pair[0] == variable) {
       return pair[1];
     }
-  } 
+  }
   return "";
-}
-
-function onLoadPage() {    
-    var userKey = getQueryVariable("userKey");
-    document.getElementById('userKey').value = userKey;   
-    
-    if (userKey == "") {
-        showLoginPrompt();
-    } else {
-        getUser(userKey);
-    }
 }
 
 function showLoginPrompt() {
@@ -225,12 +225,12 @@ function showLoginPrompt() {
 
 function getUser(userKey) {
     var reqUser = createRequest();
-    
+
     // Create the callback:
-    reqUser.onreadystatechange = function() {    
-        if (reqUser.readyState == 4) {        
+    reqUser.onreadystatechange = function() {
+        if (reqUser.readyState == 4) {
             parseUserResponse(reqUser);
-        }   
+        }
     }
 
     reqUser.open("GET", "http://localhost:8080/notes/user/"+userKey, true);
@@ -238,7 +238,7 @@ function getUser(userKey) {
     reqUser.send(null);
 }
 
-/** 
+/**
   Facebook Sign In integration is configured in org.opentaps.notes.rest.FacebookResource in the notes.rest module
 ***/
 function login() {
@@ -254,7 +254,7 @@ function parseUserResponse(req) {
         var json = eval('(' + resp + ')');
 
         if (req.status == 200) {
-            showUserArea(json); 
+            showUserArea(json);
         } else {
             showSuccessMessage("");
             showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
@@ -262,7 +262,7 @@ function parseUserResponse(req) {
         }
 
     } else {
-        showErrorMessage("Cannot get response from server."); 
+        showErrorMessage("Cannot get response from server.");
     }
 }
 
@@ -325,21 +325,21 @@ function parseLogoutUserResponse(req) {
             document.getElementById('userKey').value = "";
             hideUserArea();
             showLoginPrompt();
-        } 
+        }
     } else {
-        showErrorMessage("Cannot get response from server."); 
+        showErrorMessage("Cannot get response from server.");
     }
 }
 
 function logout() {
     var reqLogoutUser = createRequest();
-    var userKey = document.getElementById('userKey');    
+    var userKey = document.getElementById('userKey');
 
     // Create the callback:
-    reqLogoutUser.onreadystatechange = function() {    
-        if (reqLogoutUser.readyState == 4) {        
+    reqLogoutUser.onreadystatechange = function() {
+        if (reqLogoutUser.readyState == 4) {
             parseLogoutUserResponse(reqLogoutUser);
-        }   
+        }
     }
 
     reqLogoutUser.open("POST", "http://localhost:8080/notes/user/logout/"+userKey.value, true);
@@ -348,6 +348,121 @@ function logout() {
     reqLogoutUser.send(null);
 }
 
+// add object into HTML5 localStorage
+Storage.prototype.setObject = function(key, value) {
+    this.setItem(key, JSON.stringify(value));
+}
+
+Storage.prototype.getObject = function(key) {
+    var value = this.getItem(key);
+    return value && JSON.parse(value);
+}
+
+
+
+
+function createNoteElement(note) {
+    var noteEl = document.createElement("div");
+    noteEl.className = "note listRow";
+    noteEl.id = note.id;
+
+    var idEl = document.createElement("div");
+    idEl.className = "noteId";
+    idEl.appendChild(document.createTextNode(note.id));
+    noteEl.appendChild(idEl);
+
+    var seqEl = document.createElement("div");
+    seqEl.className = "noteSequence";
+    seqEl.appendChild(document.createTextNode(note.sequenceNum));
+    noteEl.appendChild(seqEl);
+
+    var textEl = document.createElement("div");
+    textEl.className = "noteText";
+    textEl.appendChild(document.createTextNode(note.text));
+    noteEl.appendChild(textEl);
+
+    for (var i = 0; i < 10; i++) {
+        var attEl = document.createElement("div");
+        attEl.className = "noteAttribute";
+        attEl.appendChild(document.createTextNode(note['attribute' + i]));
+        noteEl.appendChild(attEl);
+    }
+
+    return noteEl;
+}
+
+function loadNotes(noteList, replace) {
+    var n = noteList.length;
+    if (n == 0) return;
+
+    var newcontainer;
+    var container = document.getElementById("notesContainer");
+    if (replace) {
+        newcontainer = document.createElement("div");
+        newcontainer.id = "notesContainer";
+    } else {
+        newcontainer = document.createDocumentFragment();
+    }
+
+    for (var i = 0; i < n; i++) {
+        var note = noteList[i];
+        newcontainer.appendChild(createNoteElement(note.note));
+    }
+
+    if (replace) {
+        // replace the note list
+        document.getElementById("noteList").replaceChild(newcontainer, container);
+    } else {
+        container.appendChild(newcontainer);
+    }
+}
+
+function loadNoteList() {
+    // get the notes from the REST api
+    var loadNoteReq = createRequest();
+
+    // Create the callback:
+    loadNoteReq.onreadystatechange = function() {
+        if (loadNoteReq.readyState == 4) {
+            var resp = loadNoteReq.responseText;
+            if (resp) {
+                if (loadNoteReq.status == 200) {
+                    var json = eval('(' + resp + ')');
+                    loadNotes(json.result.resultValue, false);
+                }
+            } else {
+                showErrorMessage("Cannot get response from server.");
+            }
+        }
+    }
+
+    loadNoteReq.open("GET", "http://localhost:8080/notes/notes", true);
+    loadNoteReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    loadNoteReq.send(null);
+}
+
+function scroll() {
+    
+}
+
+function onLoadPage() {
+    var userKey = getQueryVariable("userKey");
+    document.getElementById("userKey").value = userKey;
+
+    if (userKey == "") {
+        showLoginPrompt();
+    } else {
+        getUser(userKey);
+    }
+
+    if (typeof localStorage == 'undefined') {
+        alert("Your browser does not support HTML 5 local storage.");
+    } else {
+      // set the scroll handler
+      window.onscroll = scroll;
+      loadNoteList();
+    }
+}
 </script>
 
 </head>
@@ -355,7 +470,7 @@ function logout() {
 <body onLoad="javascript:onLoadPage()">
 
 <div id="container">
-  <div id="content"> 
+  <div id="content">
     <table style="width:518px">
      <tr>
        <td style="width:70%">
@@ -381,11 +496,11 @@ function logout() {
     <table style="width:518px">
       <tr><td>
       <div class="fieldErrorMessage" id="noteText_error"></div>
-      <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here" style="width:100%"></textarea> 
+      <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here" style="width:100%"></textarea>
       </td></tr>
       <tr>
         <td>
-          <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
+          <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked="checked"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
         </td>
       </tr>
       <tr>
@@ -395,11 +510,22 @@ function logout() {
       </tr>
 	  <tr><td>
         <div class="message" id="successMessage"></div>
-        <div class="errorMessage" id="errorMessage"></div> 
-	  </td></tr>	  
+        <div class="errorMessage" id="errorMessage"></div>
+	  </td></tr>
     </table>
     </form>
   </div>
+
+  <div id="noteList">
+    <div class="listRow listHeader">
+      <div class="noteId">Note Id</div>
+      <div class="noteSequence">Sequence</div>
+      <div class="noteText">Text</div>
+    </div>
+    <div id="notesContainer">
+    </div>
+  </div>
+
 </div>
 
 </body>
