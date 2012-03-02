@@ -16,54 +16,105 @@
  */
 package org.opentaps.notes.domain;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.opentaps.validation.contraints.NotEmpty;
 
 
 /**
  * Represents a Note.
+ * This class has all the markups for openJPA persistence, but it can also be used as POJO under another persistence context.
  */
-public class Note {
 
-    private String id;
-    private String text;
+@Entity
+@Table(name="NOTE_DATA")
+@Inheritance(strategy=InheritanceType.JOINED)
+public class Note implements Serializable {
 
+    private static final long serialVersionUID = -4314958909722739985L;
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-hex")
+    @Column(name = "NOTE_ID", nullable = false, length = 32)
+    private String noteId;
+    
+    @Lob
+    @Basic(fetch=FetchType.LAZY)
+    @NotEmpty
+    @Column(name = "NOTE_TEXT", nullable = false)
+    private String noteText;
+
+    @Column(name = "CREATED_BY_USER_ID")
     private String createdByUserId;
+
+    @Column(name = "USER_ID_TYPE")
     private String userIdType;
 
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "SEQUENCE_NUM", nullable = false)
     private Long sequenceNum;
     
+    @Column(name = "CLIENT_DOMAIN")
     private String clientDomain;
+    
+    @NotNull
+    @Column(name = "DATE_TIME_CREATED")
     private Timestamp dateTimeCreated;
 
-    private String attribute1;
-    private String attribute2;
-    private String attribute3;
-    private String attribute4;
-    private String attribute5;
-    private String attribute6;
-    private String attribute7;
-    private String attribute8;
-    private String attribute9;
-    private String attribute10;
 
+    @Column(name = "ATTRIBUTE_1")
+    private String attribute1;
+    @Column(name = "ATTRIBUTE_2")
+    private String attribute2;
+    @Column(name = "ATTRIBUTE_3")
+    private String attribute3;
+    @Column(name = "ATTRIBUTE_4")
+    private String attribute4;
+    @Column(name = "ATTRIBUTE_5")
+    private String attribute5;
+    @Column(name = "ATTRIBUTE_6")
+    private String attribute6;
+    @Column(name = "ATTRIBUTE_7")
+    private String attribute7;
+    @Column(name = "ATTRIBUTE_8")
+    private String attribute8;
+    @Column(name = "ATTRIBUTE_9")
+    private String attribute9;
+    @Column(name = "ATTRIBUTE_10")
+    private String attribute10;
+    
     public Note() {}
 
-    public String getId() {
-        return id;
+    public String getNoteId() {
+        return noteId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNoteId(String noteId) {
+        this.noteId = noteId;
     }
 
-    public String getText() {
-        return text;
+    public String getNoteText() {
+        return noteText;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setNoteText(String noteText) {
+        this.noteText = noteText;
     }
-
+    
     public String getClientDomain() {
 		return clientDomain;
 	}
