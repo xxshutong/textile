@@ -38,7 +38,7 @@ public class NoteRepositoryTest extends NotesTestConfig {
         log("NoteRepositoryTest :: testRepository : Got the NoteRepository OSGI service : " + noteRepository.getClass());
 
         Note note = new Note();
-        note.setText("NoteRepository test note text");
+        note.setNoteText("NoteRepository test note text");
         note.setAttribute1("attribute 1");
         note.setAttribute2("attribute 2");
         note.setAttribute3("attribute 3");
@@ -51,7 +51,7 @@ public class NoteRepositoryTest extends NotesTestConfig {
         note.setAttribute10("attribute 10");
 
         noteRepository.persist(note);
-        String noteId = note.getId();
+        String noteId = note.getNoteId();
 
         log("NoteRepositoryTest :: testRepository : Persisted note [" + noteId + "]");
 
@@ -61,8 +61,8 @@ public class NoteRepositoryTest extends NotesTestConfig {
 
         log("NoteRepositoryTest :: testRepository : Found note [" + noteId + "], checking values ...");
 
-        assertEquals("note id mismatch", noteId, note.getId());
-        assertEquals("note text mismatch", "NoteRepository test note text", note.getText());
+        assertEquals("note id mismatch", noteId, note.getNoteId());
+        assertEquals("note text mismatch", "NoteRepository test note text", note.getNoteText());
         assertEquals("attribute 1 mismatch", "attribute 1", note.getAttribute1());
         assertEquals("attribute 2 mismatch", "attribute 2", note.getAttribute2());
         assertEquals("attribute 3 mismatch", "attribute 3", note.getAttribute3());

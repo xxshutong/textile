@@ -58,7 +58,6 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
                         <Export-Package>org.opentaps.notes.entity</Export-Package>
                         <Private-Package>org.opentaps.notes.repository.impl</Private-Package>
                     </instructions>

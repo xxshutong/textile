@@ -78,7 +78,7 @@ public class NotesTests extends RemoteTestCase {
         assertTrue("It looks like the response is not a JSON string", JSONUtils.mayBeJSON(content));
 
         Note note = toNote(content);
-        String noteId = note.getId();
+        String noteId = note.getNoteId();
         assertTrue("Note ID is not found", !GenericValidator.isBlankOrNull(noteId));
 
         /*
@@ -91,7 +91,7 @@ public class NotesTests extends RemoteTestCase {
         note = toNote(content);
         assertNotNull(note);
 
-        assertEquals("Checking text property", TEXT, note.getText());
+        assertEquals("Checking text property", TEXT, note.getNoteText());
         assertEquals("Checking attribute1 property", ATTR1, note.getAttribute1());
         assertEquals("Checking attribute2 property", ATTR2, note.getAttribute2());
         assertEquals("Checking attribute3 property", ATTR3, note.getAttribute3());
@@ -115,7 +115,7 @@ public class NotesTests extends RemoteTestCase {
     /**
      * Notes application responds with JSON string that meets the following:<br/>
      * <pre>
-     * {"result":{"resultValue":{"note":{"id":"NOTEID", ...}},"successMessage":"","errorMessage":""}}"
+     * {"result":{"resultValue":{"note":{"noteId":"NOTEID", ...}},"successMessage":"","errorMessage":""}}"
      * </pre>
      * This method extract JSON object with key "note" and convert it into an instance of Note class.
      *

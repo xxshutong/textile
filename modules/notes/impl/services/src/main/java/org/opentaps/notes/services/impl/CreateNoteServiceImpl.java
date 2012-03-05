@@ -75,7 +75,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         }
 
         Note note = new Note();
-        note.setText(input.getText());
+        note.setNoteText(input.getText());
         note.setAttribute1(input.getAttribute1());
         note.setAttribute2(input.getAttribute2());
         note.setAttribute3(input.getAttribute3());
@@ -99,14 +99,14 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         }
 
         CreateNoteServiceOutput out = new CreateNoteServiceOutput();
-        out.setNoteId(note.getId());
+        out.setNoteId(note.getNoteId());
 
         Set<ConstraintViolation<CreateNoteServiceOutput>> outputViolations = validationService.getValidator().validate(out);
         if (outputViolations.size() > 0) {
             throw new ServiceValidationException("Could not create note.", (Set) outputViolations);
         }
 
-        Log.logDebug("Note created with id [" + note.getId() + "]");
+        Log.logDebug("Note created with id [" + note.getNoteId() + "]");
         return out;
     }
 

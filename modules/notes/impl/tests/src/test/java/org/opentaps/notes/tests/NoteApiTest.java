@@ -75,8 +75,8 @@ public class NoteApiTest extends NotesTestConfig {
 
         log("NoteApiTest :: testCreateNote : Found Note [" + noteId + "], checking values ...");
 
-        assertEquals("note id mismatch", noteId, note.getId());
-        assertEquals("note text mismatch", "This is the note text", note.getText());
+        assertEquals("note id mismatch", noteId, note.getNoteId());
+        assertEquals("note text mismatch", "This is the note text", note.getNoteText());
         assertEquals("attribute 1 mismatch", "attribute 1", note.getAttribute1());
         assertEquals("attribute 2 mismatch", "attribute 2", note.getAttribute2());
         assertEquals("attribute 3 mismatch", "attribute 3", note.getAttribute3());
@@ -114,8 +114,8 @@ public class NoteApiTest extends NotesTestConfig {
 
         log("NoteApiTest :: testCreateNote : Found Note [" + noteId + "], checking values ...");
 
-        assertEquals("note id mismatch", noteId, note.getId());
-        assertEquals("note text mismatch", "This is another note text", note.getText());
+        assertEquals("note id mismatch", noteId, note.getNoteId());
+        assertEquals("note text mismatch", "This is another note text", note.getNoteText());
         assertEquals("attribute 1 mismatch", "attribute 1", note.getAttribute1());
         assertEquals("attribute 2 mismatch", null, note.getAttribute2());
         assertEquals("attribute 3 mismatch", "attribute 3", note.getAttribute3());
@@ -168,7 +168,7 @@ public class NoteApiTest extends NotesTestConfig {
 
             log("NoteApiTest :: testCreateNoteSequence : Found Note [" + noteId + "], checking sequence Number ...");
 
-            assertEquals("note id mismatch", noteId, note.getId());
+            assertEquals("note id mismatch", noteId, note.getNoteId());
             Long sequenceNum = note.getSequenceNum();
             log("NoteApiTest :: testCreateNoteSequence : Current sequence number [" + sequenceNum + "], previous sequence number [" + previousSequenceNum + "]");
 
