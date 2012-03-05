@@ -24,7 +24,7 @@ import javax.validation.metadata.BeanDescriptor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.opentaps.notes.entity.NoteData;
+import org.opentaps.notes.domain.Note;
 import org.opentaps.validation.services.ValidationService;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
@@ -42,14 +42,14 @@ public class ValidationTest extends NotesTestConfig {
 
         log("ValidationTest :: testValidation : Got validator " + validationService.getValidator().getClass().getName());
 
-        BeanDescriptor desc = validationService.getValidator().getConstraintsForClass(NoteData.class);
-        assertTrue("NoteData should have validation setup", desc.isBeanConstrained());
-        assertEquals("Should have 2 constraints on NoteData", desc.getConstrainedProperties().size(), 2);
+        BeanDescriptor desc = validationService.getValidator().getConstraintsForClass(Note.class);
+        assertTrue("Note should have validation setup", desc.isBeanConstrained());
+        assertEquals("Should have 2 constraints on Note", desc.getConstrainedProperties().size(), 2);
 
-        log("ValidationTest :: testValidation : Got all NoteData constraints on " + desc.getConstrainedProperties());
+        log("ValidationTest :: testValidation : Got all Note constraints on " + desc.getConstrainedProperties());
 
-        NoteData note = new NoteData();
-        Set<ConstraintViolation<NoteData>> constraintViolations = validationService.getValidator().validate(note);
+        Note note = new Note();
+        Set<ConstraintViolation<Note>> constraintViolations = validationService.getValidator().validate(note);
 
         log("ValidationTest :: testValidation : Got note constraint violations " + constraintViolations);
 
