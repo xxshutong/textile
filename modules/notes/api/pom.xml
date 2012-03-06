@@ -32,7 +32,6 @@
 
     <modules>
     	<module>services</module>
-    	<module>repository</module>
     </modules>
 
 </project>
