@@ -93,6 +93,9 @@ input[disabled] {
 #noteList .noteText { width:40em; }
 #noteList .listRow:nth-child(even) {background: #DDD;}
 #noteList .listRow:nth-child(odd) {background: #FFF;}
+#loadingSpinner { padding:20px; text-align:center; }
+
+.hidden { display:none; }
 
 </style>
 
@@ -353,11 +356,14 @@ Storage.prototype.setObject = function(key, value) {
     this.setItem(key, JSON.stringify(value));
 }
 
-Storage.prototype.getObject = function(key) {
+Storage.prototype.getObject = function(key, defaultValue) {
     var value = this.getItem(key);
-    return value && JSON.parse(value);
+    if (value) {
+       return JSON.parse(value);
+    } else {
+       return defaultValue;
+    }
 }
-
 
 
 
@@ -406,11 +412,13 @@ function loadNotes(noteList, replace) {
 
     for (var i = 0; i < n; i++) {
         var note = noteList[i];
+        if (note.note) note = note.note;
         // save to localStorage
-        localStorage.setObject(note.note.id, note.note);
-        newcontainer.appendChild(createNoteElement(note.note));
-        lastNoteSequence = note.note.sequenceNum;
+        notes.loadedNotes[note.id] = note;
+        newcontainer.appendChild(createNoteElement(note));
+        notes.lastNoteSequence = note.sequenceNum;
     }
+    notes.loadedNotesCount += n;
 
     if (replace) {
         // replace the note list
@@ -423,15 +431,82 @@ function loadNotes(noteList, replace) {
 }
 
 function onNotesLoaded() {
+    //localStorage.setObject("lastNoteSequence", notes.lastNoteSequence);
+    localStorage.setObject("notes", notes.loadedNotes);
     // check the list position and see if more loading is needed
     // which is when the list did not got to the end of the page
     loadIfScrolledToEndOfList();
 }
 
-var numberOfNotes = 30;
-var lastNoteSequence = 0;
+var notes = {};
+notes.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
+notes.lastNoteSequence = -1; //localStorage.getObject("lastNoteSequence", 0);
+notes.loadedNotes = localStorage.getObject("notes", {});
+notes.loadedNotesCount = 0;
+notes.loadedNotesArray = new Array();
+notes.loadedNotesLast = {};
+notes.loadNotesScrollThreshold = 200;
+notes.loading = false;
+
+function initLoadedNotesArray() {
+    // notes are stored in localStorage as id -> note
+    // first we want to order them back by sequenceNum
+    for (var id in notes.loadedNotes) {
+        notes.loadedNotesArray.push(notes.loadedNotes[id]);
+    }
+    notes.loadedNotesArray.sort(compareNoteSequence);
+    notes.loadedNotesCount = notes.loadedNotesArray.length;
+    notes.loadedNotesLast = notes.loadedNotesArray[notes.loadedNotesCount - 1];
+}
+
+// binary search in notes.loadedNotesArray, returns the biggest index of the note element where note.sequenceNum >= given sequenceNum
+function searchLoadedNote(sequence) {
+    var low = 0, n = notes.loadedNotesArray.length, i = -1, high = n - 1;
+    while (low <= high) {
+        i = Math.floor((low + high) / 2);
+        if(notes.loadedNotesArray[i].sequenceNum < sequence) { low = i + 1; continue; }
+        else if(notes.loadedNotesArray[i].sequenceNum > sequence) { high = i - 1; continue; };
+        return i;
+    }
+    if (i == -1) return i;
+    if (notes.loadedNotesArray[i].sequenceNum < sequence && i < (n - 1)) return i + 1;
+    return i;
+}
+
+function compareNoteSequence(a, b) {
+    return a.sequenceNum - b.sequenceNum;
+}
+
+function notesLoadingStart() {
+    var spinner = document.getElementById("loadingSpinner");
+    if (spinner) spinner.className = "";
+    notes.loading = true;
+}
+
+function notesLoadingDone() {
+    var spinner = document.getElementById("loadingSpinner");
+    if (spinner) spinner.className = "hidden";
+    notes.loading = false;
+}
 
 function loadNoteList() {
+    if (notes.loading) {
+        console.log("loadNoteList : not loading more, request still in progress ...");
+        return;
+    }
+
+    console.log("loading notes numberOfNotesPerPage = " + notes.numberOfNotesPerPage + " , fromSequence = " + (notes.lastNoteSequence + 1));
+
+    // check if we have them in local storage already
+    if (notes.loadedNotesLast && notes.loadedNotesLast.sequenceNum > (notes.lastNoteSequence + 1)) {
+        console.log("loading notes using local storage ...");
+        var i = searchLoadedNote(notes.lastNoteSequence + 1);
+        loadNotes(notes.loadedNotesArray.slice(i, i + notes.numberOfNotesPerPage), false);
+        return;
+    }
+
+    console.log("loading notes using AJAX ...");
+
     // get the notes from the REST api
     var loadNoteReq = createRequest();
 
@@ -447,24 +522,24 @@ function loadNoteList() {
             } else {
                 showErrorMessage("Cannot get response from server.");
             }
+            notesLoadingDone();
         }
     }
 
-    console.log("loading notes numberOfNotes = " + numberOfNotes + " , fromSequence = " + (lastNoteSequence + 1));
-    loadNoteReq.open("GET", "http://localhost:8080/notes/notes/" + numberOfNotes + "/" + (lastNoteSequence + 1), true);
+    loadNoteReq.open("GET", "http://localhost:8080/notes/notes/" + notes.numberOfNotesPerPage + "/" + (notes.lastNoteSequence + 1), true);
     loadNoteReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    notesLoadingStart();
     loadNoteReq.send(null);
 }
 
-var loadNotesScrollThreshold = 200;
 
 function loadIfScrolledToEndOfList() {
     // when the window scroll to the end of the note list, try to load more notes
     var scrollTop = window.pageYOffset;
     var pageHeight = document.documentElement.clientHeight; 
     var contentHeight = document.documentElement.offsetHeight;
-    console.log("scrollTop = " + scrollTop + ", pageHeight = " + pageHeight + ", contentHeight = " + contentHeight + " ==> contentHeight - pageHeight - scrollTop = " + (contentHeight - pageHeight - scrollTop));
-    if ((contentHeight - pageHeight - scrollTop) < loadNotesScrollThreshold) {
+    //console.log("scrollTop = " + scrollTop + ", pageHeight = " + pageHeight + ", contentHeight = " + contentHeight + " ==> contentHeight - pageHeight - scrollTop = " + (contentHeight - pageHeight - scrollTop));
+    if ((contentHeight - pageHeight - scrollTop) < notes.loadNotesScrollThreshold) {
         console.log("load more notes !");
         loadNoteList();
         return true;
@@ -473,7 +548,7 @@ function loadIfScrolledToEndOfList() {
 }
 
 function scroll() {
-    loadIfScrolledToEndOfList();
+    if (!notes.loading) loadIfScrolledToEndOfList();
 }
 
 function onLoadPage() {
@@ -489,6 +564,8 @@ function onLoadPage() {
     if (typeof localStorage == 'undefined') {
         alert("Your browser does not support HTML 5 local storage.");
     } else {
+      // first display the notes from local storage
+      initLoadedNotesArray();
       // set the scroll handler
       window.onscroll = scroll;
       loadIfScrolledToEndOfList();
@@ -553,8 +630,8 @@ function onLoadPage() {
       <div class="noteSequence">Sequence</div>
       <div class="noteText">Text</div>
     </div>
-    <div id="notesContainer">
-    </div>
+    <div id="notesContainer"></div>
+    <div id="loadingSpinner" class="hidden"><img src="http://www.opentaps.org/images/spinner.gif"/></div>
   </div>
 
 </div>
