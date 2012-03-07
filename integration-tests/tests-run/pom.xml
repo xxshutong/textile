@@ -136,11 +136,6 @@
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
-            <artifactId>notes.repository.api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.opentaps</groupId>
             <artifactId>notes.repository.impl</artifactId>
             <version>${project.version}</version>
         </dependency>
