@@ -53,15 +53,35 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes) {
-        TypedQuery<Note> query = em.createQuery("SELECT o FROM NoteData o WHERE o.sequenceNum >= :sequence ORDER BY o.sequenceNum", Note.class);
+        return getNotesPaginated(fromSequence, numberOfNotes, null);
+    }
+
+    /** {@inheritDoc} */
+    public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes, Integer order) {
+        StringBuilder sb = new StringBuilder("SELECT o FROM NoteData o");
+        if (fromSequence != null) {
+            sb.append(" WHERE o.sequenceNum ");
+            if (order == null || order >= 0) {
+                sb.append(">=");
+            } else {
+                sb.append("<=");
+            }
+            sb.append(" :sequence ");
+        }
+        sb.append(" ORDER BY o.sequenceNum ");
+        if (order == null || order >= 0) {
+            sb.append("ASC");
+        } else {
+            sb.append("DESC");
+        }
+        TypedQuery<Note> query = em.createQuery(sb.toString(), Note.class);
         if (numberOfNotes == null || numberOfNotes <= 0 || numberOfNotes > 100) {
             numberOfNotes = 100;
         }
-        if (fromSequence == null) {
-            fromSequence = 0L;
+        if (fromSequence != null) {
+            query.setParameter("sequence", fromSequence);
         }
         query.setMaxResults(numberOfNotes);
-        query.setParameter("sequence", fromSequence);
         return query.getResultList();
     }
 

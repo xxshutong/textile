@@ -22,9 +22,12 @@ public class GetNotesServiceInput implements ServiceInput {
 
     private Long fromSequence;
     private Integer numberOfNotes;
+    private Integer orderDirection;
 
     public Long getFromSequence() { return fromSequence; }
     public void setFromSequence(Long fromSequence) { this.fromSequence = fromSequence; }
     public Integer getNumberOfNotes() { return numberOfNotes; }
     public void setNumberOfNotes(Integer numberOfNotes) { this.numberOfNotes = numberOfNotes; }
+    public Integer getOrderDirection() { return orderDirection; }
+    public void setOrderDirection(Integer orderDirection) { this.orderDirection = orderDirection; }
 }

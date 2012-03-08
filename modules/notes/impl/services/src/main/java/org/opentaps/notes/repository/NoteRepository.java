@@ -21,6 +21,15 @@ public interface NoteRepository {
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes);
 
     /**
+     * Gets a paginated list of Notes.
+     * @param fromSequence the starting sequence <code>Long</code> value
+     * @param numberOfNotes the maximum number of notes to return, an <code>Integer</code> value
+     * @param order an <code>integer</code> to indicate the order in which records are returned, null or positive for ascendnig sequence, negative for descending
+     * @return the list of <code>Note</code> starting at the given fromSequence
+     */
+    public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes, Integer order);
+
+    /**
      * Persists a Note.
      * @param note a <code>Note</code> value
      */

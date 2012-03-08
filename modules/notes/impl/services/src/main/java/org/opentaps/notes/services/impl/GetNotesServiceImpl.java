@@ -72,7 +72,7 @@ public class GetNotesServiceImpl implements GetNotesService {
         }
 
         GetNotesServiceOutput out = new GetNotesServiceOutput();
-        out.setNotes(repository.getNotesPaginated(input.getFromSequence(), input.getNumberOfNotes()));
+        out.setNotes(repository.getNotesPaginated(input.getFromSequence(), input.getNumberOfNotes(), input.getOrderDirection()));
 
         Set<ConstraintViolation<GetNotesServiceOutput>> outputViolations = validationService.getValidator().validate(out);
         if (outputViolations.size() > 0) {

@@ -96,6 +96,14 @@ public class NoteResource extends ServerResource {
                 if (!GenericValidator.isBlankOrNull(num)) {
                     getNotesServiceInput.setNumberOfNotes(Integer.valueOf(num));
                 }
+                String order = getQuery().getValues("order");
+                if (!GenericValidator.isBlankOrNull(order)) {
+                    order = order.trim();
+                    if (order.equalsIgnoreCase("DESC")) {
+                        getNotesServiceInput.setOrderDirection(-1);
+                    }
+                }
+
                 List<Note> notes = getNotesService.getNotes(getNotesServiceInput).getNotes();
 
                 if (notes != null) {
