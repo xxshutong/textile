@@ -46,7 +46,7 @@ public class Note implements Serializable {
     @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-hex")
     @Column(name = "NOTE_ID", nullable = false, length = 32)
     private String noteId;
-    
+
     @Lob
     @NotEmpty
     @Column(name = "NOTE_TEXT", nullable = false)
@@ -61,10 +61,10 @@ public class Note implements Serializable {
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "SEQUENCE_NUM", nullable = false)
     private Long sequenceNum;
-    
+
     @Column(name = "CLIENT_DOMAIN")
     private String clientDomain;
-    
+
     @NotNull
     @Column(name = "DATE_TIME_CREATED")
     private Timestamp dateTimeCreated;
@@ -90,7 +90,7 @@ public class Note implements Serializable {
     private String attribute9;
     @Column(name = "ATTRIBUTE_10")
     private String attribute10;
-    
+
     public Note() {}
 
     public String getNoteId() {
@@ -108,16 +108,16 @@ public class Note implements Serializable {
     public void setNoteText(String noteText) {
         this.noteText = noteText;
     }
-    
+
     public String getClientDomain() {
-		return clientDomain;
-	}
+        return clientDomain;
+    }
 
-	public void setClientDomain(String clientDomain) {
-		this.clientDomain = clientDomain;
-	}
+    public void setClientDomain(String clientDomain) {
+        this.clientDomain = clientDomain;
+    }
 
-	public Timestamp getDateTimeCreated() {
+    public Timestamp getDateTimeCreated() {
         return dateTimeCreated;
     }
 
@@ -140,11 +140,11 @@ public class Note implements Serializable {
     public void setUserIdType(String userIdType) {
         this.userIdType = userIdType;
     }
-    
+
     public Long getSequenceNum() {
         return sequenceNum;
     }
-    
+
     public void setSequenceNum(Long sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
