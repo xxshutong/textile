@@ -288,6 +288,8 @@ public class NoteResource extends ServerResource {
                                              .key("noteText").value(note.getNoteText())
                                              .key("sequenceNum").value(note.getSequenceNum())
                                              .key("dateTimeCreated").value(note.getDateTimeCreated())
+                                             .key("createdByUserId").value(note.getCreatedByUserId())
+                                             .key("userIdType").value(note.getUserIdType())
                                              .key("attribute1").value(note.getAttribute1())
                                              .key("attribute2").value(note.getAttribute2())
                                              .key("attribute3").value(note.getAttribute3())
@@ -340,13 +342,13 @@ public class NoteResource extends ServerResource {
     }
 
     /**
-     * Post note on the user wall
+     * Post note on the user wall.
      * @param user a <code>FacebookUser</code>
      * @param noteText a <code>String</code>
      * @return a <code>Representation</code>
      */
     private Representation postNoteOnMyWall(FacebookUser user, String noteText) {
-        Reference ref = new Reference(FacebookResource.FB_GRAPH_API_URL + user.getId() + "/"+ FacebookResource.FB_FEED_CALL);
+        Reference ref = new Reference(FacebookResource.FB_GRAPH_API_URL + user.getId() + "/" + FacebookResource.FB_FEED_CALL);
         Form form = new Form();
         form.add("access_token", user.getAccessToken());
         form.add("message", noteText);

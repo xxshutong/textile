@@ -85,12 +85,14 @@ input[disabled] {
 
 #noteList { width:60em; border:1px solid #666; margin:10px; padding:10px;}
 #noteList .listHeader { font-weight:bold; margin-bottom:0.3em; border-bottom:1px dotted #AAA; }
-#noteList .listRow div { float:left; overflow:hidden; text-overflow:ellipsis; padding:.1em .4em; }
-#noteList .listRow { clear:left; height: 1.4em; }
+#noteList .listRow > div { float:left; overflow:hidden; text-overflow:ellipsis; padding: .4em; }
+#noteList .listRow .noteHeader { float:none; }
+#noteList .listRow .noteHeader div { display:inline; }
+#noteList .listRow .noteEnd { clear:left; float:none; padding:0; }
 #noteList .noteAttribute { display:none; }
-#noteList .noteId { width:10em; }
-#noteList .noteSequence { width:6em; }
-#noteList .noteText { width:40em; }
+#noteList .noteId { display:none; }
+#noteList .noteSequence { display:none; }
+#noteList .noteText { }
 #noteList .listRow:nth-child(even) {background: #DDD;}
 #noteList .listRow:nth-child(odd) {background: #FFF;}
 #loadingSpinner { padding:20px; text-align:center; }
@@ -382,7 +384,21 @@ notes.direction = "DESC";
 notes.latestDisplayedNoteSequence = undefined;
 notes.earliestDisplayedNoteSequence = undefined;
 
+function formateDate(d) {
+    if (!d) return "";
+    var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    var days = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+    return months[d.getMonth()] + " " + d.getDay() + ", " + d.getFullYear() + " " + ((d.getHours() < 10 ? '0' : '') + d.getHours()) + ":" + ((d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
+}
+
 function createNoteElement(note) {
+
+    var dateCreated = formateDate(new Date(note.dateTimeCreated));
+    var userName = "anonymous";
+    if (note.createdByUserId && note.createdByUserId != "") {
+       userName = note.createdByUserId;
+    }
+
     var noteEl = document.createElement("div");
     noteEl.className = "note listRow";
     noteEl.id = note.id;
@@ -392,12 +408,30 @@ function createNoteElement(note) {
     idEl.appendChild(document.createTextNode(note.id));
     noteEl.appendChild(idEl);
 
+    // the header includes date and user name
+    var headerEl = document.createElement("div");
+    headerEl.className = "noteHeader";
+
+    var dateEl = document.createElement("div");
+    dateEl.className = "date";
+    dateEl.appendChild(document.createTextNode(dateCreated));
+
+    var userEl = document.createElement("div");
+    userEl.className = "userName";
+    userEl.appendChild(document.createTextNode(userName));
+
+    headerEl.appendChild(dateEl);
+    headerEl.appendChild(document.createTextNode(" by "));
+    headerEl.appendChild(userEl);
+    headerEl.appendChild(document.createTextNode(" : "));
+    noteEl.appendChild(headerEl);
+
     var imgCtEl = document.createElement("div");
     imgCtEl.className = "userPicture";
     var imgEl;
-    if (note.createdByUserId) {
+    if (note.createdByUserId && note.createdByUserId != "") {
       imgEl = document.createElement("img");
-      imgEl.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=square";
+      imgEl.src = "https://graph.facebook.com/" + note.createdByUserId + "/picture?type=square";
     } else {
       imgEl = document.createElement("div");
       imgEl.className = "noImage";
@@ -415,12 +449,16 @@ function createNoteElement(note) {
     textEl.appendChild(document.createTextNode(note.text));
     noteEl.appendChild(textEl);
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 1; i <= 10; i++) {
         var attEl = document.createElement("div");
         attEl.className = "noteAttribute";
         attEl.appendChild(document.createTextNode(note['attribute' + i]));
         noteEl.appendChild(attEl);
     }
+
+    var endEl = document.createElement("div");
+    endEl.className = "noteEnd";
+    noteEl.appendChild(endEl);
 
     return noteEl;
 }
@@ -761,11 +799,6 @@ function onLoadPage() {
   </div>
 
   <div id="noteList">
-    <div class="listRow listHeader">
-      <div class="noteId">Note Id</div>
-      <div class="noteSequence">Sequence</div>
-      <div class="noteText">Text</div>
-    </div>
     <div id="notesContainer"></div>
     <div id="loadingSpinner" class="hidden"><img src="http://www.opentaps.org/images/spinner.gif"/></div>
   </div>
