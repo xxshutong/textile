@@ -29,11 +29,13 @@ import org.opentaps.notes.repository.NoteRepository;
 import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.CreateNoteServiceOutput;
+import org.opentaps.notes.security.NoteSecurity;
 import org.opentaps.validation.services.ValidationService;
 
 public class CreateNoteServiceImpl implements CreateNoteService {
 
     private volatile NoteRepository repository = null;
+    private volatile NoteSecurity security = null;
     private volatile ValidationService validationService = null;
 
     public CreateNoteServiceImpl() { }
@@ -48,6 +50,17 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         }
     }
 
+    public void setNoteSecurity(NoteSecurity noteSecurity) {
+        if (security == null && noteSecurity != null) {
+            synchronized (this) {
+                if (security == null) {
+                    security = noteSecurity;
+                }
+            }
+        }
+    }
+
+    
     public void setValidationService(ValidationService validationService) {
         if (this.validationService == null && validationService != null) {
             synchronized (this) {
@@ -90,6 +103,10 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         note.setUserIdType(input.getUserIdType());
         note.setClientDomain(input.getClientDomain());
 
+        if (!security.hasPermission(note, NoteSecurity.Operation.CREATE)) {
+            throw new ServiceException(security.getErrorMessage());
+        }
+        
         try {
             repository.persist(note);
         } catch (ConstraintViolationException e) {

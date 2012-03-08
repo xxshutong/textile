@@ -33,6 +33,7 @@
     <modules>
     	<module>repository</module>
     	<module>services</module>
+        <module>security</module>
     	<module>tests</module>
     </modules>
 
