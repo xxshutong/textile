@@ -129,6 +129,8 @@ function parseResponse(req) {
       showErrorMessage("");
       showSuccessMessage(json.result.successMessage);
       document.getElementById('noteText').value = "";
+      // fetch new notes for display in the list
+      ajaxLoadLaterNotes();
     } else {
       showSuccessMessage("");
       showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
@@ -367,6 +369,19 @@ Storage.prototype.getObject = function(key, defaultValue) {
 
 
 
+var notes = {};
+notes.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
+notes.latestNote = undefined;
+notes.earliestNote = undefined;
+notes.loadedNotes = localStorage.getObject("notes", {});
+notes.loadedNotesCount = 0;
+notes.cachedNotesArray = new Array();
+notes.loadNotesScrollThreshold = 200;
+notes.loading = false;
+notes.direction = "DESC";
+notes.latestDisplayedNoteSequence = undefined;
+notes.earliestDisplayedNoteSequence = undefined;
+
 function createNoteElement(note) {
     var noteEl = document.createElement("div");
     noteEl.className = "note listRow";
@@ -376,6 +391,19 @@ function createNoteElement(note) {
     idEl.className = "noteId";
     idEl.appendChild(document.createTextNode(note.id));
     noteEl.appendChild(idEl);
+
+    var imgCtEl = document.createElement("div");
+    imgCtEl.className = "userPicture";
+    var imgEl;
+    if (note.createdByUserId) {
+      imgEl = document.createElement("img");
+      imgEl.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=square";
+    } else {
+      imgEl = document.createElement("div");
+      imgEl.className = "noImage";
+    }
+    imgCtEl.appendChild(imgEl);
+    noteEl.appendChild(imgCtEl);
 
     var seqEl = document.createElement("div");
     seqEl.className = "noteSequence";
@@ -397,79 +425,117 @@ function createNoteElement(note) {
     return noteEl;
 }
 
-function loadNotes(noteList, replace) {
+function loadNotes(noteList) {
     var n = noteList.length;
-    if (n == 0) return;
 
-    var newcontainer;
-    var container = document.getElementById("notesContainer");
-    if (replace) {
-        newcontainer = document.createElement("div");
-        newcontainer.id = "notesContainer";
-    } else {
-        newcontainer = document.createDocumentFragment();
+    if (n > 0) {
+       var prev = document.createDocumentFragment();
+       var firstNew;
+       var next = document.createDocumentFragment();
+       var container = document.getElementById("notesContainer");
+
+       // in case the noteList includes the already displayed list we would have to insert the new notes
+       // before or after according to their sequence, using notes.latestDisplayedNoteSequence / notes.earliestDisplayedNoteSequence
+
+       for (var i = 0; i < n; i++) {
+           var note = noteList[i];
+           if (note.note) note = note.note;
+           // save to localStorage
+           notes.loadedNotes[note.id] = note;
+           var noteEl = createNoteElement(note);
+           var existing = document.getElementById(note.id);
+           if (existing) {
+               console.log("replacing existing note Node for " + note.sequenceNum);
+               existing.parentNode.replaceChild(noteEl, existing);
+           } else {
+               if ("DESC" != notes.direction) {
+                   if (note.sequenceNum >= notes.latestDisplayedNoteSequence) {
+                       console.log("appending note " + note.sequenceNum);
+                       next.appendChild(noteEl);
+                   } else {
+                       console.log("prepending note " + note.sequenceNum);
+                       if (firstNew) prev.insertBefore(noteEl, firstNew);
+                       else prev.appendChild(noteEl);
+                   }
+               } else {
+                   if (note.sequenceNum >= notes.latestDisplayedNoteSequence) {
+                       console.log("prepending note " + note.sequenceNum);
+                       if (firstNew) prev.insertBefore(noteEl, firstNew);
+                       else prev.appendChild(noteEl);
+                   } else {
+                       console.log("appending note " + note.sequenceNum);
+                       next.appendChild(noteEl);
+                   }
+               }
+           }
+           onNoteLoaded(note, true);
+       }
+       notes.loadedNotesCount += n;
+       container.appendChild(next);
+       container.insertBefore(prev, container.firstChild);
     }
 
-    for (var i = 0; i < n; i++) {
-        var note = noteList[i];
-        if (note.note) note = note.note;
-        // save to localStorage
-        notes.loadedNotes[note.id] = note;
-        newcontainer.appendChild(createNoteElement(note));
-        notes.lastNoteSequence = note.sequenceNum;
-    }
-    notes.loadedNotesCount += n;
-
-    if (replace) {
-        // replace the note list
-        document.getElementById("noteList").replaceChild(newcontainer, container);
-    } else {
-        container.appendChild(newcontainer);
-    }
-
-    onNotesLoaded();
+    console.log("loaded " + n + " new notes");
+    onNotesLoaded(n);
 }
 
-function onNotesLoaded() {
-    //localStorage.setObject("lastNoteSequence", notes.lastNoteSequence);
+function onNoteLoaded(note, displayed) {
+    if (!note) {
+        console.log("onNoteLoaded called on empty note !");
+        return;
+    }
+    if (!notes.earliestNote || notes.earliestNote.sequenceNum > note.sequenceNum) notes.earliestNote = note;
+    if (!notes.latestNote || notes.latestNote.sequenceNum < note.sequenceNum) notes.latestNote = note;
+    if (displayed) {
+        if (!notes.earliestDisplayedNoteSequence || notes.earliestNote.sequenceNum > notes.earliestDisplayedNoteSequence) notes.earliestDisplayedNoteSequence = note.sequenceNum;
+        if (!notes.latestDisplayedNoteSequence || notes.latestDisplayedNoteSequence.sequenceNum < note.sequenceNum) notes.latestDisplayedNoteSequence = note.sequenceNum;
+    }
+}
+
+function onNotesLoaded(n) {
     localStorage.setObject("notes", notes.loadedNotes);
+    notesLoadingDone();
     // check the list position and see if more loading is needed
     // which is when the list did not got to the end of the page
-    loadIfScrolledToEndOfList();
+    if (n > 0) loadIfScrolledToEndOfList();
 }
 
-var notes = {};
-notes.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
-notes.lastNoteSequence = -1; //localStorage.getObject("lastNoteSequence", 0);
-notes.loadedNotes = localStorage.getObject("notes", {});
-notes.loadedNotesCount = 0;
-notes.loadedNotesArray = new Array();
-notes.loadedNotesLast = {};
-notes.loadNotesScrollThreshold = 200;
-notes.loading = false;
-
-function initLoadedNotesArray() {
+function initCachedNotesArray() {
     // notes are stored in localStorage as id -> note
     // first we want to order them back by sequenceNum
     for (var id in notes.loadedNotes) {
-        notes.loadedNotesArray.push(notes.loadedNotes[id]);
+        var note = notes.loadedNotes[id];
+        notes.cachedNotesArray.push(note);
+        onNoteLoaded(note);
     }
-    notes.loadedNotesArray.sort(compareNoteSequence);
-    notes.loadedNotesCount = notes.loadedNotesArray.length;
-    notes.loadedNotesLast = notes.loadedNotesArray[notes.loadedNotesCount - 1];
+    notes.cachedNotesArray.sort(compareNoteSequence);
+    if ("DESC" == notes.direction) notes.cachedNotesArray.reverse();
+    notes.loadedNotesCount = notes.cachedNotesArray.length;
+    console.log("initCachedNotesArray complete, loaded [" + notes.loadedNotesCount + "] in [" + notes.direction + "] order");
 }
 
-// binary search in notes.loadedNotesArray, returns the biggest index of the note element where note.sequenceNum >= given sequenceNum
+// binary search in notes.cachedNotesArray, returns the biggest index of the note element
+// where note.sequenceNum >= given sequenceNum
+//  or   note.sequenceNum <= given sequenceNum  if direction is DESC
 function searchLoadedNote(sequence) {
-    var low = 0, n = notes.loadedNotesArray.length, i = -1, high = n - 1;
+    var low = 0, n = notes.cachedNotesArray.length, i = -1, high = n - 1;
     while (low <= high) {
         i = Math.floor((low + high) / 2);
-        if(notes.loadedNotesArray[i].sequenceNum < sequence) { low = i + 1; continue; }
-        else if(notes.loadedNotesArray[i].sequenceNum > sequence) { high = i - 1; continue; };
+        if ("DESC" == notes.direction) {
+          if(notes.cachedNotesArray[i].sequenceNum > sequence) { low = i + 1; continue; }
+          else if(notes.cachedNotesArray[i].sequenceNum < sequence) { high = i - 1; continue; };
+        } else {
+          if(notes.cachedNotesArray[i].sequenceNum < sequence) { low = i + 1; continue; }
+          else if(notes.cachedNotesArray[i].sequenceNum > sequence) { high = i - 1; continue; };
+        }
         return i;
     }
     if (i == -1) return i;
-    if (notes.loadedNotesArray[i].sequenceNum < sequence && i < (n - 1)) return i + 1;
+    if ("DESC" == notes.direction) {
+      if (notes.cachedNotesArray[i].sequenceNum > sequence && i < (n - 1)) return i + 1;
+    } else {
+      if (notes.cachedNotesArray[i].sequenceNum < sequence && i < (n - 1)) return i + 1;
+    }
     return i;
 }
 
@@ -487,6 +553,7 @@ function notesLoadingDone() {
     var spinner = document.getElementById("loadingSpinner");
     if (spinner) spinner.className = "hidden";
     notes.loading = false;
+    console.log("Done loading.");
 }
 
 function loadNoteList() {
@@ -495,17 +562,56 @@ function loadNoteList() {
         return;
     }
 
-    console.log("loading notes numberOfNotesPerPage = " + notes.numberOfNotesPerPage + " , fromSequence = " + (notes.lastNoteSequence + 1));
-
-    // check if we have them in local storage already
-    if (notes.loadedNotesLast && notes.loadedNotesLast.sequenceNum > (notes.lastNoteSequence + 1)) {
-        console.log("loading notes using local storage ...");
-        var i = searchLoadedNote(notes.lastNoteSequence + 1);
-        loadNotes(notes.loadedNotesArray.slice(i, i + notes.numberOfNotesPerPage), false);
-        return;
+    if (notes.latestNote) {
+        console.log("cached : [" + notes.earliestNote.sequenceNum + " - " + notes.latestNote.sequenceNum + "] displayed : [" + notes.earliestDisplayedNoteSequence + " - " + notes.latestDisplayedNoteSequence + "]");
     }
 
-    console.log("loading notes using AJAX ...");
+    // if we are loading the latest first we have to it the server first to get the newest notes
+    if ("DESC" == notes.direction && !notes.earliestDisplayedNoteSequence) {
+       ajaxLoadNotes();
+       //return;
+    }
+
+    // check if we have them in local storage already
+    if (notes.latestNote) {
+        var from, to;
+        if ("DESC" != notes.direction) {
+          if (!notes.earliestDisplayedNoteSequence || notes.earliestNote.sequenceNum > (notes.earliestDisplayedNoteSequence + 1)) {
+            console.log("loading [" + notes.numberOfNotesPerPage + "] notes ASC using local storage ...");
+            if (!notes.earliestDisplayedNoteSequence) {
+              from = 0;
+            } else {
+              from = searchLoadedNote(notes.earliestDisplayedNoteSequence + 1);
+            }
+            to = from + notes.numberOfNotesPerPage;
+            loadNotes(notes.cachedNotesArray.slice(from, to + 1));
+            return;
+          }
+        } else {
+          if (!notes.latestDisplayedNoteSequence || notes.latestNote.sequenceNum < (notes.latestDisplayedNoteSequence - 1)) {
+            console.log("loading [" + notes.numberOfNotesPerPage + "] notes DESC using local storage ...");
+            if (!notes.latestDisplayedNoteSequence) {
+              from = 0;
+              to = from + notes.numberOfNotesPerPage;
+            } else {
+              to = searchLoadedNote(notes.latestDisplayedNoteSequence - 1);
+              from = to - notes.numberOfNotesPerPage;
+            }
+            if (from < 0) from = 0;
+            loadNotes(notes.cachedNotesArray.slice(from, to + 1));
+            return;
+          }
+        }
+    }
+
+    ajaxLoadNextPage();
+}
+
+function ajaxLoadNotes(from, order) {
+
+    if (!order) order = notes.direction;
+
+    console.log("loading [" + notes.numberOfNotesPerPage + "] notes using AJAX from [" + from + "] order [" + order + "]");
 
     // get the notes from the REST api
     var loadNoteReq = createRequest();
@@ -517,19 +623,49 @@ function loadNoteList() {
             if (resp) {
                 if (loadNoteReq.status == 200) {
                     var json = eval('(' + resp + ')');
-                    loadNotes(json.result.resultValue, false);
+                    loadNotes(json.result.resultValue);
                 }
             } else {
                 showErrorMessage("Cannot get response from server.");
+                notesLoadingDone();
             }
-            notesLoadingDone();
         }
     }
 
-    loadNoteReq.open("GET", "http://localhost:8080/notes/notes/" + notes.numberOfNotesPerPage + "/" + (notes.lastNoteSequence + 1), true);
+    var query = "http://localhost:8080/notes/notes/" + notes.numberOfNotesPerPage;
+    if (from) {
+        query += "/" + from;
+    }
+    query += "?order=" + order;
+    loadNoteReq.open("GET", query, true);
     loadNoteReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     notesLoadingStart();
     loadNoteReq.send(null);
+
+}
+
+function ajaxLoadNextPage() {
+    if ("DESC" == notes.direction) {
+        ajaxLoadEarlierNotes();
+    } else {
+        ajaxLoadLaterNotes();
+    }
+}
+
+function ajaxLoadLaterNotes() {
+    var next;
+    if (notes.latestNote) {
+        next = notes.latestNote.sequenceNum + 1;
+    }
+    ajaxLoadNotes(next);
+}
+
+function ajaxLoadEarlierNotes() {
+    var next;
+    if (notes.earliestNote) {
+        next = notes.earliestNote.sequenceNum - 1;
+    }
+    ajaxLoadNotes(next);
 }
 
 
@@ -540,7 +676,7 @@ function loadIfScrolledToEndOfList() {
     var contentHeight = document.documentElement.offsetHeight;
     //console.log("scrollTop = " + scrollTop + ", pageHeight = " + pageHeight + ", contentHeight = " + contentHeight + " ==> contentHeight - pageHeight - scrollTop = " + (contentHeight - pageHeight - scrollTop));
     if ((contentHeight - pageHeight - scrollTop) < notes.loadNotesScrollThreshold) {
-        console.log("load more notes !");
+        console.log("have not reached the bottom of the page, load more notes");
         loadNoteList();
         return true;
     }
@@ -565,7 +701,7 @@ function onLoadPage() {
         alert("Your browser does not support HTML 5 local storage.");
     } else {
       // first display the notes from local storage
-      initLoadedNotesArray();
+      initCachedNotesArray();
       // set the scroll handler
       window.onscroll = scroll;
       loadIfScrolledToEndOfList();
