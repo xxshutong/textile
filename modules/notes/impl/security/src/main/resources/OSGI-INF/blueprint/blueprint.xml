@@ -19,17 +19,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <!-- 
-    this construction create instance of org.opentaps.notes.services.impl.SecurityImpl
-    like "new org.opentaps.notes.services.impl.SecurityImpl()"
+    this construction create instance of org.opentaps.notes.security.impl.SecurityImpl
+    like "new org.opentaps.notes.security.impl.SecurityImpl()"
     -->
     <bean id="noteSecurityImpl" class="org.opentaps.notes.security.impl.NoteSecurityImpl">
     </bean>
 
-    <!-- this construction register instance of class org.opentaps.notes.services.impl.SecurityImpl as a service under name "org.opentaps.notes.services.api.SecurityInterface" -->
+    <!-- this construction register instance of class org.opentaps.notes.security.impl.SecurityImpl as a service under name "org.opentaps.notes.security.NoteSecurity" -->
     <service id="noteSecurityService" ref="noteSecurityImpl" interface="org.opentaps.notes.security.NoteSecurity">
         <service-properties>
             <!-- Unfortunately this name can be used to find service with service registry but not with JNDI lookup
-You must add a predefined property in order JNDI can find it -->
+            You must add a predefined property in order JNDI can find it -->
             <entry key="osgi.jndi.service.name" value="org.opentaps.notes.security.NoteSecurity"/>
         </service-properties>
     </service>
