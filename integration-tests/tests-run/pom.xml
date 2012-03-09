@@ -145,6 +145,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.opentaps</groupId>
+            <artifactId>notes.security.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet</artifactId>
         </dependency>
