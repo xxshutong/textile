@@ -1,9 +1,8 @@
 package org.opentaps.notes.security.impl;
 
+import org.opentaps.core.log.Log;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.security.NoteSecurity;
-import org.opentaps.notes.security.NoteSecurity.Operation;
-import org.opentaps.core.log.Log;
 
 public class NoteSecurityImpl implements NoteSecurity {
 
