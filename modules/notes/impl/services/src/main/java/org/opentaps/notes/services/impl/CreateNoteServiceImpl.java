@@ -103,10 +103,14 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         note.setUserIdType(input.getUserIdType());
         note.setClientDomain(input.getClientDomain());
 
-        if (!security.hasPermission(note, NoteSecurity.Operation.CREATE)) {
-            throw new ServiceException(security.getErrorMessage());
+        if (security != null) {
+            if (!security.hasPermission(note, NoteSecurity.Operation.CREATE)) {
+                throw new ServiceException(security.getErrorMessage());
+            }
+        } else {
+            throw new ServiceException("Security subsystem in broken.");
         }
-        
+
         try {
             repository.persist(note);
         } catch (ConstraintViolationException e) {
