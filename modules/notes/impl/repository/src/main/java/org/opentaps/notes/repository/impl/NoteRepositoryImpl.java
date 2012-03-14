@@ -58,7 +58,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes, Integer order) {
-        StringBuilder sb = new StringBuilder("SELECT o FROM NoteData o");
+        StringBuilder sb = new StringBuilder("SELECT o FROM Note o");
         if (fromSequence != null) {
             sb.append(" WHERE o.sequenceNum ");
             if (order == null || order >= 0) {
