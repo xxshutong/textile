@@ -89,9 +89,9 @@ public class NoteRepositoryTest extends NotesTestConfig {
         List<String> noteIds = new ArrayList<String>(numOfNotes);
         for (int i = 1; i <= numOfNotes; i++) {
             Note note = new Note();
-            note.setText("NoteRepository test note sequence " + i);
+            note.setNoteText("NoteRepository test note sequence " + i);
             noteRepository.persist(note);
-            noteIds.add(note.getId());
+            noteIds.add(note.getNoteId());
         }
 
         log("NoteRepositoryTest :: testRepository : Persisted notes [" + noteIds + "]");
@@ -104,7 +104,7 @@ public class NoteRepositoryTest extends NotesTestConfig {
             Note note = noteRepository.getNoteById(noteId);
             assertNotNull("getNoteById should have returned the note [" + noteId + "]", note);
             log("NoteRepositoryTest :: testRepository : Found note [" + noteId + "], checking values ...");
-            assertEquals("note text mismatch", "NoteRepository test note sequence " + i, note.getText());
+            assertEquals("note text mismatch", "NoteRepository test note sequence " + i, note.getNoteText());
             // test the sequencing
             if (lastSequence > 0) {
                 assertEquals("note sequence incorrect, should be a continuous sequence of numbers", (Long) (lastSequence + 1L), note.getSequenceNum());
@@ -124,7 +124,7 @@ public class NoteRepositoryTest extends NotesTestConfig {
             Note note = noteRepository.getNoteById(noteId);
             assertNotNull("getNoteById should have returned the note [" + noteId + "]", note);
             log("NoteRepositoryTest :: testRepository : Found note [" + noteId + "], checking values ...");
-            assertEquals("note text mismatch", "NoteRepository test note sequence " + (i + 1), note.getText());
+            assertEquals("note text mismatch", "NoteRepository test note sequence " + (i + 1), note.getNoteText());
             // test the sequencing
             assertEquals("note sequence incorrect, should be a continuous sequence of numbers", (Long) (firstSequence + i), note.getSequenceNum());
         }
@@ -138,7 +138,7 @@ public class NoteRepositoryTest extends NotesTestConfig {
             Note note = noteRepository.getNoteById(noteId);
             assertNotNull("getNoteById should have returned the note [" + noteId + "]", note);
             log("NoteRepositoryTest :: testRepository : Found note [" + noteId + "], checking values ...");
-            assertEquals("note text mismatch", "NoteRepository test note sequence " + (i + 1), note.getText());
+            assertEquals("note text mismatch", "NoteRepository test note sequence " + (i + 1), note.getNoteText());
             // test the sequencing
             assertEquals("note sequence incorrect, should be a continuous sequence of numbers", (Long) (firstSequence + i), note.getSequenceNum());
         }
