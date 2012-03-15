@@ -476,6 +476,39 @@ notes.direction = "DESC";
 notes.latestDisplayedNoteSequence = undefined;
 notes.oldestDisplayedNoteSequence = undefined;
 
+function parseDate(dateStr) {
+    var date = new Date();
+
+    var parts = dateStr.split(" ");
+
+    if (parts.length < 2) {
+      console.log("Date [" + dateStr + "] did not split into a Date + Time");
+      return date;
+    }
+
+    var dateParts = parts[0].split("-");
+    if (dateParts.length < 3) {
+      console.log("Date part [" + parts[0] + "] did not split into Year - Month - Day");
+      return date;
+    }
+
+    date.setFullYear(dateParts[0]);
+    date.setMonth(dateParts[1] - 1);
+    date.setDate(dateParts[2]);
+
+    var timeParts = parts[1].split(":");
+    if (timeParts.length < 3) {
+      console.log("Time [" + dateStr + "] did not split into Hours : Minutes : Seconds");
+      return date;
+    }
+
+    date.setHours(timeParts[0]);
+    date.setMinutes(timeParts[1]);
+    date.setSeconds(timeParts[2]);
+
+    return date;
+}
+
 function formatDate(d) {
     if (!d) return "";
     var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
@@ -499,7 +532,7 @@ function createNoteElement(note) {
        }
     }
 
-    var dateCreated = formatDate(new Date(note.dateTimeCreated));
+    var dateCreated = formatDate(parseDate(note.dateTimeCreated));
     var userName = "anonymous";
 
     var noteEl = document.createElement("div");
