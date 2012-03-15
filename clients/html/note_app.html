@@ -230,7 +230,7 @@ function showLoginPrompt() {
     }
 }
 
-function getUser(userKey) {
+function getAppUser(userKey) {
     var reqUser = createRequest();
 
     // Create the callback:
@@ -280,7 +280,7 @@ function showUserArea(json) {
     }
     var userAreaPhoto = document.getElementById('userAreaPhoto');
     if (userAreaPhoto) {
-        userAreaPhoto.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=square";
+        userAreaPhoto.src = getFacebookUserPictureUrl(json.result.resultValue.user.id);
         userAreaPhoto.style.display = "inline";
     }
     var userLogout = document.getElementById('userLogout');
@@ -369,6 +369,97 @@ Storage.prototype.getObject = function(key, defaultValue) {
     }
 }
 
+function getFacebookUserPictureUrl(userId) {
+    return "https://graph.facebook.com/" + userId + "/picture?type=square";
+}
+
+function createUserPictureElement(user) {
+    var imgCtEl = document.createElement("div");
+    imgCtEl.className = "userPicture";
+    if (user) imgCtEl.dataset["userId"] = user.userId;
+    if (user && user.pictureUrl) {
+        imgEl = document.createElement("img");
+        imgEl.src = user.pictureUrl;
+    } else {
+        imgEl = document.createElement("div");
+        imgEl.className = "noImage";
+    }
+    imgCtEl.appendChild(imgEl);
+    return imgCtEl;
+}
+
+function onUserLoaded(user) {
+    if (!user) {
+        console.log("onUserLoaded called on empty user !");
+        return;
+    }
+    user.loading = false;
+    user.loaded = true;
+    localStorage.setObject("users", notes.users);
+    // call the callbacks
+    var l = user.onLoadCbs.length;
+    for (var i = 0; i < l; i++) {
+        user.onLoadCbs[i](user);
+    }
+}
+
+function getUserForNote(note) {
+    return getUser(note.createdByUserId, note.userIdType);
+}
+
+function getUser(userId, type) {
+    console.log("getUser id = " + userId + " type = " + type);
+
+    var user;
+
+    // first look in the cache
+    if (notes.users && notes.users[userId]) {
+        user = notes.users[userId];
+        console.log("getUser id = " + userId + " type = " + type + " found in cache (loaded = " + user.loaded + ", loading = " + user.loading + ")");
+    } else {
+        user = {};
+        console.log("getUser id = " + userId + " type = " + type + " not found, initializing ...");
+    }
+
+    if (user.loaded || user.loading) {
+        return user;
+    }
+
+    user.onLoadCbs = new Array();
+    user.userId = userId;
+    user.userIdType = type;
+    user.loading = true;
+    notes.users[user.userId] = user;
+    
+    if ("facebook" == user.userIdType) {
+        user.pictureUrl = getFacebookUserPictureUrl(user.userId);
+        // get user info from facebook
+        console.log("getUser id = " + userId + " type = " + type + " is a Facebook user, fetching info ...");
+        var userReq = createRequest();
+        userReq.onreadystatechange = function() {
+            if (userReq.readyState == 4) {
+                var resp = userReq.responseText;
+                if (resp) {
+                    if (userReq.status == 200) {
+                        var json = eval('(' + resp + ')');
+                        user.name = json.name;
+                        user.firstName = json.first_name;
+                        user.lastName = json.last_name;
+                        user.gender = json.gender;
+                        user.pageUrl = json.link;
+                        user.locale = json.locale;
+                        onUserLoaded(user);
+                    }
+                }
+            }
+        }
+        userReq.open("GET", "https://graph.facebook.com/" + user.userId, true);
+        userReq.send(null);
+    } else {
+        onUserLoaded(user);
+    }
+    return user;
+}
 
 
 var notes = {};
@@ -376,6 +467,7 @@ notes.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
 notes.latestNote = undefined;
 notes.oldestNote = undefined;
 notes.loadedNotes = localStorage.getObject("notes", {});
+notes.users = localStorage.getObject("users", {});
 notes.loadedNotesCount = 0;
 notes.cachedNotesArray = new Array();
 notes.loadNotesScrollThreshold = 200;
@@ -393,11 +485,22 @@ function formatDate(d) {
 
 function createNoteElement(note) {
 
+    var user;
+    if (note.createdByUserId && note.createdByUserId != "") {
+       user = getUserForNote(note);
+       // if the user is not loaded yet, plug a callback so it will know to update this note
+       if (user.loading) {
+           user.onLoadCbs.push(function(u) {
+               if (u.name) {
+                   var userNameEl = document.getElementById(note.noteId + "_userName");
+                   userNameEl.innerHTML = u.name;
+               }
+           });
+       }
+    }
+
     var dateCreated = formatDate(new Date(note.dateTimeCreated));
     var userName = "anonymous";
-    if (note.createdByUserId && note.createdByUserId != "") {
-       userName = note.createdByUserId;
-    }
 
     var noteEl = document.createElement("div");
     noteEl.className = "note listRow";
@@ -418,6 +521,13 @@ function createNoteElement(note) {
 
     var userEl = document.createElement("div");
     userEl.className = "userName";
+    userEl.id = note.noteId + "_userName";
+    if (user) {
+        userEl.dataset["userId"] = user.userId;
+        if (user.name) userName = user.name;
+        else userName = user.userId;
+    }
+    
     userEl.appendChild(document.createTextNode(userName));
 
     headerEl.appendChild(dateEl);
@@ -426,17 +536,7 @@ function createNoteElement(note) {
     headerEl.appendChild(document.createTextNode(" : "));
     noteEl.appendChild(headerEl);
 
-    var imgCtEl = document.createElement("div");
-    imgCtEl.className = "userPicture";
-    var imgEl;
-    if (note.createdByUserId && note.createdByUserId != "") {
-      imgEl = document.createElement("img");
-      imgEl.src = "https://graph.facebook.com/" + note.createdByUserId + "/picture?type=square";
-    } else {
-      imgEl = document.createElement("div");
-      imgEl.className = "noImage";
-    }
-    imgCtEl.appendChild(imgEl);
+    var imgCtEl = createUserPictureElement(user);
     noteEl.appendChild(imgCtEl);
 
     var seqEl = document.createElement("div");
@@ -747,7 +847,7 @@ function onLoadPage() {
     if (userKey == "") {
         showLoginPrompt();
     } else {
-        getUser(userKey);
+        getAppUser(userKey);
     }
 
     if (typeof localStorage == 'undefined') {
