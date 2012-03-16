@@ -92,15 +92,16 @@ img.userPicture,
 .userPicture img { height:25px; width:25px; }
 
 
-#createNote { width:520px;float:left; }
+#createNote { width:520px;float:left;margin-right:10px;  }
 #header { width:520px; }
+#notesContainer { width:500px; }
 
 #header table { width:100%; }
 #createNote table,
 #createNote form,
 #createNote textarea { width:100%; }
 
-#noteList { float:left;font-size: 80%;width:450px; border:1px solid #666; margin-left:10px; margin-bottom:40px; padding:10px;}
+#noteList { float:left;font-size: 80%;border:1px solid #666; margin-bottom:40px; padding:10px;}
 #noteList .listRow > div { float:left; overflow:hidden; text-overflow:ellipsis; padding: .4em; }
 #noteList .listRow .noteHeader { float:none; }
 #noteList .listRow .noteHeader div { display:inline; }
@@ -108,7 +109,7 @@ img.userPicture,
 #noteList .noteAttribute { display:none; }
 #noteList .noteId { display:none; }
 #noteList .noteSequence { display:none; }
-#noteList .noteText { width:380px; }
+#noteList .noteText { width:450px; }
 #noteList .listRow:nth-child(even) {background: #DDD;}
 #noteList .listRow:nth-child(odd) {background: #FFF;}
 #loadingSpinner { padding:20px; text-align:center; }
@@ -168,7 +169,7 @@ function parseResponse(req) {
 function showErrorMessage(message, details) {
     document.getElementById('errorMessage').innerHTML = message;
     // reset field errors
-    var els = document.getElementById('createNote').getElementsByTagName("div");
+    var els = document.getElementById("createNoteForm").getElementsByTagName("div");
     var elsLen = els.length;
     var pattern = new RegExp("(^|\\s)fieldErrorMessage(\\s|$)");
     for (i = 0, j = 0; i < elsLen; i++) {
@@ -964,7 +965,7 @@ function onLoadPage() {
       <label id="userArea"></label>
       <img style="display:none" id="userAreaPhoto" src="" class="userPicture"/>
       <input type="hidden" name="userKey" id="userKey"/>
-      <form name="createNote" id="createNote" action="createNote" method="post">
+      <form name="createNoteForm" id="createNoteForm" action="createNote" method="post">
         <table>
           <tr>
             <td>
