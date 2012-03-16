@@ -101,7 +101,7 @@ img.userPicture,
 #createNote form,
 #createNote textarea { width:100%; }
 
-#noteList { float:left;font-size: 80%;border:1px solid #666; margin-bottom:40px; padding:10px;}
+#noteList { float:left;font-size: 80%;border:0px solid #666; margin-bottom:40px; padding:10px;}
 #noteList .listRow > div { float:left; overflow:hidden; text-overflow:ellipsis; padding: .4em; }
 #noteList .listRow .noteHeader { float:none; }
 #noteList .listRow .noteHeader div { display:inline; }
@@ -110,8 +110,8 @@ img.userPicture,
 #noteList .noteId { display:none; }
 #noteList .noteSequence { display:none; }
 #noteList .noteText { width:450px; }
-#noteList .listRow:nth-child(even) {background: #DDD;}
-#noteList .listRow:nth-child(odd) {background: #FFF;}
+#noteList .listRow:nth-child(even) {background: #FFF;}
+#noteList .listRow:nth-child(odd) {background: #DDD;}
 #loadingSpinner { padding:20px; text-align:center; }
 #noMoreNotes {text-align:center; font-style: italic; }
 
@@ -585,7 +585,7 @@ function createNoteElement(note) {
     headerEl.appendChild(dateEl);
     headerEl.appendChild(document.createTextNode(" by "));
     headerEl.appendChild(userEl);
-    headerEl.appendChild(document.createTextNode(" : "));
+    headerEl.appendChild(document.createTextNode(": "));
     noteEl.appendChild(headerEl);
 
     var imgCtEl = createUserPictureElement(user);
