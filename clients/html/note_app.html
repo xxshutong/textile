@@ -100,7 +100,7 @@ img.userPicture,
 #createNote form,
 #createNote textarea { width:100%; }
 
-#noteList { float:left;font-size: 80%;width:450px; border:1px solid #666; margin-left:10px; padding:10px;}
+#noteList { float:left;font-size: 80%;width:450px; border:1px solid #666; margin-left:10px; margin-bottom:40px; padding:10px;}
 #noteList .listRow > div { float:left; overflow:hidden; text-overflow:ellipsis; padding: .4em; }
 #noteList .listRow .noteHeader { float:none; }
 #noteList .listRow .noteHeader div { display:inline; }
@@ -112,6 +112,7 @@ img.userPicture,
 #noteList .listRow:nth-child(even) {background: #DDD;}
 #noteList .listRow:nth-child(odd) {background: #FFF;}
 #loadingSpinner { padding:20px; text-align:center; }
+#noMoreNotes {text-align:center; font-style: italic; }
 
 .hidden { display:none; }
 
@@ -489,6 +490,7 @@ notes.cachedNotesArray = new Array();
 notes.loadNotesScrollThreshold = 200;
 notes.loading = false;
 notes.direction = "DESC";
+notes.oldestNoteLoaded = false;
 notes.latestDisplayedNoteSequence = undefined;
 notes.oldestDisplayedNoteSequence = undefined;
 
@@ -612,7 +614,7 @@ function createNoteElement(note) {
     return noteEl;
 }
 
-function loadNotes(noteList) {
+function loadNotes(noteList, remote, direction) {
     var n = noteList.length;
     var loaded = 0;
 
@@ -670,7 +672,7 @@ function loadNotes(noteList) {
     }
 
     console.log("loaded " + loaded + " new notes");
-    onNotesLoaded(loaded);
+    onNotesLoaded(loaded, remote, direction);
 }
 
 function onNoteLoaded(note, displayed) {
@@ -690,12 +692,21 @@ function onNoteLoaded(note, displayed) {
     }
 }
 
-function onNotesLoaded(n) {
+function onNotesLoaded(n, remote, direction) {
     localStorage.setObject("notes", notes.loadedNotes);
     notesLoadingDone();
     // check the list position and see if more loading is needed
     // which is when the list did not got to the end of the page
-    if (n > 0) loadIfScrolledToEndOfList();
+    if (n > 0) {
+        loadIfScrolledToEndOfList();
+    } else if (remote && "DESC" == notes.direction && direction == notes.direction) {
+        // special case when we loaded the oldest note from the server
+        // indicate to the user that there are no more notes to load
+        // and we can skip trying to load older notes from now on
+        notes.oldestNoteLoaded = true;
+        var el = document.getElementById("noMoreNotes");
+        if (el) el.className = "";
+    }
 }
 
 function initCachedNotesArray() {
@@ -832,7 +843,9 @@ function ajaxLoadNotes(from, order) {
             if (resp) {
                 if (loadNoteReq.status == 200) {
                     var json = eval('(' + resp + ')');
-                    loadNotes(json.result.resultValue);
+                    loadNotes(json.result.resultValue, true, order);
+                    // if we are loading ASC without a from that includes the oldest note
+                    if ("DESC" != order && !from) notes.oldestNoteLoaded = true;
                 }
             } else {
                 showErrorMessage("Cannot get response from server.");
@@ -881,6 +894,8 @@ function ajaxLoadOlderNotes() {
 
 
 function loadIfScrolledToEndOfList() {
+    // check if there are more notes to load
+    if (notes.direction == "DESC" && notes.oldestNoteLoaded) return false;
     // when the window scroll to the end of the note list, try to load more notes
     var scrollTop = window.pageYOffset;
     var pageHeight = document.documentElement.clientHeight; 
@@ -980,6 +995,7 @@ function onLoadPage() {
     <div id="noteList">
       <div id="notesContainer"></div>
       <div id="loadingSpinner" class="hidden"><img src="http://www.opentaps.org/images/spinner.gif"/></div>
+      <div id="noMoreNotes" class="hidden"><p>There are no more notes to show right now.</p></div>
     </div>
 
   </div>
