@@ -488,9 +488,9 @@ notes.loadedNotes = localStorage.getObject("notes", {});
 notes.users = localStorage.getObject("users", {});
 notes.loadedNotesCount = 0;
 notes.cachedNotesArray = new Array();
-notes.loadNotesScrollThreshold = 200;
+notes.loadNotesScrollThreshold = 200;  // in pixels, the amount of vertical height left at bottom of page before loading more notes
 notes.loading = false;
-notes.direction = "DESC";
+notes.direction = "DESC";  // ordering of the sequenceNum of notes when they are loading.  DESC means newest note (with highest sequenceNum) is loaded first
 notes.oldestNoteLoaded = false;
 notes.latestDisplayedNoteSequence = undefined;
 notes.oldestDisplayedNoteSequence = undefined;
@@ -535,6 +535,7 @@ function formatDate(d) {
     return months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear() + " " + ((d.getHours() < 10 ? '0' : '') + d.getHours()) + ":" + ((d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
 }
 
+// creates an HTML element for a note that has been loaded
 function createNoteElement(note) {
 
     var user;
@@ -615,6 +616,9 @@ function createNoteElement(note) {
     return noteEl;
 }
 
+    
+// loads the notes and puts them into noteList, updating the notes.latestDisplayedNoteSequence
+// if the note already exists then replaces it
 function loadNotes(noteList, remote, direction) {
     var n = noteList.length;
     var loaded = 0;
@@ -676,11 +680,13 @@ function loadNotes(noteList, remote, direction) {
     onNotesLoaded(loaded, remote, direction);
 }
 
+// runs after the notes are loaded
 function onNoteLoaded(note, displayed) {
     if (!note) {
         console.log("onNoteLoaded called on empty note !");
         return;
     }
+    // update the variables which store the oldest and latest note that is displayed
     if (!notes.oldestNote || (notes.oldestNote.sequenceNum > note.sequenceNum)) notes.oldestNote = note;
     if (!notes.latestNote || (notes.latestNote.sequenceNum < note.sequenceNum)) notes.latestNote = note;
     if (displayed) {
@@ -710,6 +716,7 @@ function onNotesLoaded(n, remote, direction) {
     }
 }
 
+// gets the notes stored in local storage back into notes.cachedNotesArray
 function initCachedNotesArray() {
     // notes are stored in localStorage as id -> note
     // first we want to order them back by sequenceNum
@@ -768,6 +775,7 @@ function notesLoadingDone() {
     console.log("Done loading.");
 }
 
+// manages the loading of notes from both local storage and remote (ajax) server
 function loadNoteList() {
     if (notes.loading) {
         console.log("loadNoteList : not loading more, request still in progress ...");
@@ -828,6 +836,10 @@ function loadNoteList() {
     ajaxLoadNextPage();
 }
 
+// load notes from server (ajax)
+// from = sequenceNumber to start loading at on server side
+// order = ordering of load (DESC or ASC)
+// notes.numberOfNotesPerPage = controls how many notes are loaded at once
 function ajaxLoadNotes(from, order) {
 
     if (!order) order = notes.direction;
@@ -867,6 +879,7 @@ function ajaxLoadNotes(from, order) {
 
 }
 
+// load the next page of notes, which depending on the notes.direction would be older (for DESC) or newer (ASC)
 function ajaxLoadNextPage() {
     if ("DESC" == notes.direction) {
         ajaxLoadOlderNotes();
@@ -875,6 +888,7 @@ function ajaxLoadNextPage() {
     }
 }
 
+// load notes using ajaxLoadNotes which are newer than the notes.latestNote.sequenceNum
 function ajaxLoadLaterNotes() {
     var next;
     if (notes.latestNote) {
@@ -884,6 +898,7 @@ function ajaxLoadLaterNotes() {
     ajaxLoadNotes(next, "ASC");
 }
 
+// load notes using ajaxLoadNotes which are older than the notes.oldestNote.sequenceNum
 function ajaxLoadOlderNotes() {
     var next;
     if (notes.oldestNote) {
@@ -893,20 +908,26 @@ function ajaxLoadOlderNotes() {
     ajaxLoadNotes(next, "DESC");
 }
 
-
+// this is called when the page first loads and the page is scrolled to load more notes as we get near the bottom of the page
 function loadIfScrolledToEndOfList() {
     // check if there are more notes to load
-    if (notes.direction == "DESC" && notes.oldestNoteLoaded) return false;
+    if (notes.direction == "DESC" && notes.oldestNoteLoaded) {
+        console.log("Notes.direction is [" + notes.direction + "] and notes.oldestNoteLoaded is [" + notes.oldestNoteLoaded + "], so there are no more notes to load");
+        return false;
+    }
     // when the window scroll to the end of the note list, try to load more notes
-    var scrollTop = window.pageYOffset;
-    var pageHeight = document.documentElement.clientHeight; 
-    var contentHeight = document.documentElement.offsetHeight;
-    //console.log("scrollTop = " + scrollTop + ", pageHeight = " + pageHeight + ", contentHeight = " + contentHeight + " ==> contentHeight - pageHeight - scrollTop = " + (contentHeight - pageHeight - scrollTop));
-    if ((contentHeight - pageHeight - scrollTop) < notes.loadNotesScrollThreshold) {
-        console.log("have not reached the bottom of the page, load more notes");
+    var scrollTop = window.pageYOffset;   // where we are (pixels) from the top of the current window
+    var pageHeight = document.documentElement.clientHeight;   // height of the page in pixels
+    var contentHeight = document.documentElement.offsetHeight;   // height of the content element in pixels
+    // console.log("scrollTop = " + scrollTop + ", pageHeight = " + pageHeight + ", contentHeight = " + contentHeight + " ==> contentHeight - pageHeight - scrollTop = " + (contentHeight - pageHeight - scrollTop));
+
+    // once we are within notes.loadNotesScrollThreshold pixels of the bottom of the page, more notes are loaded and cached
+    heightFromBottom = contentHeight - pageHeight - scrollTop;
+    if (heightFromBottom < notes.loadNotesScrollThreshold) {
+        console.log("There are [" + heightFromBottom + "] px left in scrollable height which is less than threshold of [" + notes.loadNotesScrollThreshold + "].  We are nearing the bottom of the page and the oldest note is not loaded yet, so load more notes");
         loadNoteList();
         return true;
-    }
+    } 
     return false;
 }
 
@@ -931,6 +952,7 @@ function onLoadPage() {
       initCachedNotesArray();
       // set the scroll handler
       window.onscroll = scroll;
+      // load more notes if there is room for it
       loadIfScrolledToEndOfList();
     }
 }
