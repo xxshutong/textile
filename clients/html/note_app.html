@@ -96,8 +96,9 @@ img.userPicture,
 #header { width:520px; }
 #notesContainer { width:500px; }
 
-#header table { width:100%; }
-#createNote table,
+#header .logo { float:left; }
+#header .login { float:right; margin-top:13px; }
+
 #createNote form,
 #createNote textarea { width:100%; }
 
@@ -116,6 +117,7 @@ img.userPicture,
 #noMoreNotes {text-align:center; font-style: italic; }
 
 .hidden { display:none; }
+.floatEnd { clear:both; }
 
 </style>
 
@@ -184,7 +186,7 @@ function showErrorMessage(message, details) {
             var detail = details[i];
             var el = document.getElementById(detail.field + '_error');
             if (el) {
-                el.innerHTML = detail.message;
+                el.innerHTML = detail.field + ': ' + detail.message;
             }
         }
     }
@@ -962,68 +964,50 @@ function onLoadPage() {
 
 <body onLoad="javascript:onLoadPage()">
 
-<div id="container">
   <div id="content">
 
     <div id="header">
-      <table>
-        <tr>
-          <td style="width:70%">
-            <img src="http://www.opentaps.org/images/opentaps_logo.png"/>
-          </td>
-          <td align="right" style="width:30%">
-            <div id="userLogin" style="display:none">
-              <a href="javascript:login()"><img src="images/fb_login.png"/></a>
-            </div>
-            <div id="userLogout" style="display:none">
-              <input type="button" name="logoutButton" id="logoutButton" value="Logout" onClick="logout()" class="logoutbutton"/>
-            </div>
-          </td>
-        </tr>
-      </table>
+      <div class="logo">
+        <img src="http://www.opentaps.org/images/opentaps_logo.png"/>
+      </div>
+      <div class="login">
+        <div id="userLogin" style="display:none">
+          <a href="javascript:login()"><img src="images/fb_login.png"/></a>
+        </div>
+        <div id="userLogout" style="display:none">
+          <input type="button" name="logoutButton" id="logoutButton" value="Logout" onClick="logout()" class="logoutbutton"/>
+        </div>
+      </div>
+      <div class="floatEnd"></div>
     </div>
 
-    <div id="createNote">
-      <label id="userArea"></label>
-      <img style="display:none" id="userAreaPhoto" src="" class="userPicture"/>
-      <input type="hidden" name="userKey" id="userKey"/>
-      <form name="createNoteForm" id="createNoteForm" action="createNote" method="post">
-        <table>
-          <tr>
-            <td>
-              <div class="fieldErrorMessage" id="noteText_error"></div>
-              <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked="checked"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
-            </td>
-          </tr>
-	  <tr>
-            <td>
-              <div class="message" id="successMessage"></div>
-              <div class="errorMessage" id="errorMessage"></div>
-	    </td>
-          </tr>
-        </table>
-      </form>
-    </div>
+    <div id="mainContainer">
 
-    <div id="noteList">
-      <div id="notesContainer"></div>
-      <div id="loadingSpinner" class="hidden"><img src="http://www.opentaps.org/images/spinner.gif"/></div>
-      <div id="noMoreNotes" class="hidden"><p>There are no more notes to show right now.</p></div>
+      <div id="createNote">
+        <label id="userArea"></label>
+        <img style="display:none" id="userAreaPhoto" src="" class="userPicture"/>
+        <input type="hidden" name="userKey" id="userKey"/>
+        <form name="createNoteForm" id="createNoteForm" action="createNote" method="post">
+          <div class="fieldErrorMessage" id="noteText_error"></div>
+          <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea>
+          <div>
+            <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked="checked"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
+          </div>
+          <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
+          <div class="message" id="successMessage"></div>
+          <div class="errorMessage" id="errorMessage"></div>
+        </form>
+      </div>
+
+      <div id="noteList">
+        <div id="notesContainer"></div>
+        <div id="loadingSpinner" class="hidden"><img src="http://www.opentaps.org/images/spinner.gif"/></div>
+        <div id="noMoreNotes" class="hidden"><p>There are no more notes to show right now.</p></div>
+      </div>
+
     </div>
 
   </div>
-
-</div>
 
 </body>
 </html>
