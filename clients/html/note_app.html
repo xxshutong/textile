@@ -921,6 +921,12 @@ function ajaxLoadNotes(from, order) {
 
     console.log("loading [" + notes.numberOfNotesPerPage + "] notes using AJAX from [" + from + "] order [" + order + "]");
 
+    if (from <= 0 && "DESC" == order) {
+        console.log("Reached note sequence 0, not loading anymore.");
+        onNotesLoaded(0, true, order);
+        return;
+    }
+
     // get the notes from the REST api
     var loadNoteReq = createRequest();
 
