@@ -845,7 +845,7 @@ function loadNoteList() {
        } else {
            ajaxLoadNotes();
        }
-       return;
+       //return;
     }
 
     // check if we have them in local storage already
@@ -865,7 +865,7 @@ function loadNoteList() {
             if (from < notes.cachedNotesArray.length) {
                 // check if the cached note found is the next sequence we want or a closest match
                 var matchedNote = notes.cachedNotesArray[from];
-                if (matchedNote && matchedNote.sequenceNum != (notes.latestDisplayedNoteSequence + 1)) {
+                if (notes.latestDisplayedNoteSequence && matchedNote && matchedNote.sequenceNum != (notes.latestDisplayedNoteSequence + 1)) {
                     // not an exact match so some values might be on the server
                     console.log("Note found in cache #" + matchedNote.sequenceNum + " not an exact match to the requested next note sequence [" + (notes.latestDisplayedNoteSequence + 1) + "], loading from server instead");
                     notes.loadedNotesReachedCache = false;
@@ -892,7 +892,7 @@ function loadNoteList() {
             if (from < notes.cachedNotesArray.length) {
                 // check if the cached note found is the next sequence we want or a closest match
                 var matchedNote = notes.cachedNotesArray[from];
-                if (matchedNote && matchedNote.sequenceNum != (notes.oldestDisplayedNoteSequence - 1)) {
+                if (notes.oldestDisplayedNoteSequence && matchedNote && matchedNote.sequenceNum != (notes.oldestDisplayedNoteSequence - 1)) {
                     // not an exact match so some values might be on the server
                     console.log("Note found in cache #" + matchedNote.sequenceNum + " not an exact match to the requested next note sequence [" + (notes.oldestDisplayedNoteSequence - 1) + "], loading from server instead");
                     notes.loadedNotesReachedCache = false;
