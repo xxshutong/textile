@@ -109,7 +109,7 @@ img.userPicture,
 #noteList .listRow .noteEnd { clear:left; float:none; padding:0; }
 #noteList .noteAttribute { display:none; }
 #noteList .noteId { display:none; }
-#noteList .noteSequence { display:none; }
+#noteList .noteSequence { display:none; font-weight:bold; }
 #noteList .noteText { width:450px; }
 #noteList .listRow:nth-child(even) {background: #FFF;}
 #noteList .listRow:nth-child(odd) {background: #DDD;}
@@ -490,12 +490,15 @@ notes.loadedNotes = localStorage.getObject("notes", {});
 notes.users = localStorage.getObject("users", {});
 notes.loadedNotesCount = 0;
 notes.cachedNotesArray = new Array();
+notes.latestCachedNoteSequence = undefined;
+notes.oldestCachedNoteSequence = undefined;
 notes.loadNotesScrollThreshold = 200;  // in pixels, the amount of vertical height left at bottom of page before loading more notes
 notes.loading = false;
 notes.direction = "DESC";  // ordering of the sequenceNum of notes when they are loading.  DESC means newest note (with highest sequenceNum) is loaded first
 notes.oldestNoteLoaded = false;
 notes.latestDisplayedNoteSequence = undefined;
 notes.oldestDisplayedNoteSequence = undefined;
+notes.loadedNotesReachedCache = false;
 
 function parseDate(dateStr) {
     var date = new Date();
@@ -651,22 +654,34 @@ function loadNotes(noteList, remote, direction) {
                existing.parentNode.replaceChild(noteEl, existing);
            } else {
                if ("DESC" != notes.direction) {
-                   if (note.sequenceNum >= notes.latestDisplayedNoteSequence) {
+                   if (!notes.latestDisplayedNoteSequence || note.sequenceNum >= notes.latestDisplayedNoteSequence) {
                        console.log("appending note " + note.sequenceNum);
                        next.appendChild(noteEl);
-                   } else {
+                   } else if (note.sequenceNum < notes.oldestDisplayedNoteSequence) {
                        console.log("prepending note " + note.sequenceNum);
                        if (firstNew) prev.insertBefore(noteEl, firstNew);
                        else prev.appendChild(noteEl);
+                   } else {
+                       // this requires inserting somewhere in the current list
+                       var idx = searchLoadedNote(note.sequenceNum, notes.displayedNotesArray);
+                       var el = document.getElementById(notes.displayedNotesArray[idx].noteId);
+                       console.log("inserting note " + note.sequenceNum + " before note " + notes.displayedNotesArray[idx].sequenceNum);
+                       container.insertBefore(noteEl, el);
                    }
                } else {
-                   if (note.sequenceNum >= notes.latestDisplayedNoteSequence) {
+                   if (notes.latestDisplayedNoteSequence && note.sequenceNum >= notes.latestDisplayedNoteSequence) {
                        console.log("prepending note " + note.sequenceNum);
                        if (firstNew) prev.insertBefore(noteEl, firstNew);
                        else prev.appendChild(noteEl);
-                   } else {
+                   } else if (!notes.latestDisplayedNoteSequence || note.sequenceNum < notes.oldestDisplayedNoteSequence) {
                        console.log("appending note " + note.sequenceNum);
                        next.appendChild(noteEl);
+                   } else {
+                       // this requires inserting somewhere in the current list
+                       var idx = searchLoadedNote(note.sequenceNum, notes.displayedNotesArray);
+                       var el = document.getElementById(notes.displayedNotesArray[idx].noteId);
+                       console.log("inserting note " + note.sequenceNum + " before note " + notes.displayedNotesArray[idx].sequenceNum);
+                       container.insertBefore(noteEl, el);
                    }
                }
            }
@@ -692,11 +707,19 @@ function onNoteLoaded(note, displayed) {
     if (!notes.oldestNote || (notes.oldestNote.sequenceNum > note.sequenceNum)) notes.oldestNote = note;
     if (!notes.latestNote || (notes.latestNote.sequenceNum < note.sequenceNum)) notes.latestNote = note;
     if (displayed) {
-        if (!notes.oldestDisplayedNoteSequence || (notes.oldestDisplayedNoteSequence > note.sequenceNum)) {
-            notes.oldestDisplayedNoteSequence = note.sequenceNum;
+        if (!notes.displayedNotesArray) notes.displayedNotesArray = new Array();
+        notes.displayedNotesArray.push(note);
+        notes.displayedNotesArray.sort(compareNoteSequence);
+
+        if (notes.displayedNotesArray.length > 0) {
+            notes.latestDisplayedNoteSequence = notes.displayedNotesArray[notes.displayedNotesArray.length - 1].sequenceNum;
+            notes.oldestDisplayedNoteSequence = notes.displayedNotesArray[0].sequenceNum;
         }
-        if (!notes.latestDisplayedNoteSequence || (notes.latestDisplayedNoteSequence < note.sequenceNum)) {
-            notes.latestDisplayedNoteSequence = note.sequenceNum;
+        if ("DESC" == notes.direction) notes.displayedNotesArray.reverse();
+        // check if we reached the cache
+        if (!notes.loadedNotesReachedCache && notes.latestCachedNoteSequence > note.sequenceNum && notes.oldestCachedNoteSequence < note.sequenceNum) {
+            console.log("onNoteLoaded : displayed note #" + note.sequenceNum + " reached cache [" + notes.oldestCachedNoteSequence + " - " + notes.latestCachedNoteSequence + "]");
+            notes.loadedNotesReachedCache = true;
         }
     }
 }
@@ -730,6 +753,12 @@ function initCachedNotesArray() {
         }
     }
     notes.cachedNotesArray.sort(compareNoteSequence);
+
+    if (notes.cachedNotesArray.length > 0) {
+        notes.latestCachedNoteSequence = notes.cachedNotesArray[notes.cachedNotesArray.length - 1].sequenceNum;
+        notes.oldestCachedNoteSequence = notes.cachedNotesArray[0].sequenceNum;
+    }
+
     if ("DESC" == notes.direction) notes.cachedNotesArray.reverse();
     notes.loadedNotesCount = notes.cachedNotesArray.length;
     console.log("initCachedNotesArray complete, loaded [" + notes.loadedNotesCount + "] in [" + notes.direction + "] order");
@@ -738,24 +767,28 @@ function initCachedNotesArray() {
 // binary search in notes.cachedNotesArray, returns the biggest index of the note element
 // where note.sequenceNum >= given sequenceNum
 //  or   note.sequenceNum <= given sequenceNum  if direction is DESC
-function searchLoadedNote(sequence) {
-    var low = 0, n = notes.cachedNotesArray.length, i = -1, high = n - 1;
+function searchLoadedNote(sequence, inArray, direction) {
+
+    if (!direction) direction = notes.direction;
+    if (!inArray) inArray = notes.cachedNotesArray;
+
+    var low = 0, n = inArray.length, i = -1, high = n - 1;
     while (low <= high) {
         i = Math.floor((low + high) / 2);
-        if ("DESC" == notes.direction) {
-          if(notes.cachedNotesArray[i].sequenceNum > sequence) { low = i + 1; continue; }
-          else if(notes.cachedNotesArray[i].sequenceNum < sequence) { high = i - 1; continue; };
+        if ("DESC" == direction) {
+          if(inArray[i].sequenceNum > sequence) { low = i + 1; continue; }
+          else if(inArray[i].sequenceNum < sequence) { high = i - 1; continue; };
         } else {
-          if(notes.cachedNotesArray[i].sequenceNum < sequence) { low = i + 1; continue; }
-          else if(notes.cachedNotesArray[i].sequenceNum > sequence) { high = i - 1; continue; };
+          if(inArray[i].sequenceNum < sequence) { low = i + 1; continue; }
+          else if(inArray[i].sequenceNum > sequence) { high = i - 1; continue; };
         }
         return i;
     }
     if (i == -1) return i;
-    if ("DESC" == notes.direction) {
-      if (notes.cachedNotesArray[i].sequenceNum > sequence && i < (n - 1)) return i + 1;
+    if ("DESC" == direction) {
+      if (inArray[i].sequenceNum > sequence && i < (n - 1)) return i + 1;
     } else {
-      if (notes.cachedNotesArray[i].sequenceNum < sequence && i < (n - 1)) return i + 1;
+      if (inArray[i].sequenceNum < sequence && i < (n - 1)) return i + 1;
     }
     return i;
 }
@@ -785,23 +818,27 @@ function loadNoteList() {
     }
 
     if (notes.latestNote) {
-        console.log("cached : [" + notes.oldestNote.sequenceNum + " - " + notes.latestNote.sequenceNum + "] displayed : [" + notes.oldestDisplayedNoteSequence + " - " + notes.latestDisplayedNoteSequence + "]");
+        console.log("cached : [" + notes.oldestCachedNoteSequence + " - " + notes.latestCachedNoteSequence + "] displayed : [" + notes.oldestDisplayedNoteSequence + " - " + notes.latestDisplayedNoteSequence + "]");
     }
 
-    // if we are loading the latest first we have to it the server first to get the newest notes
-    if ("DESC" == notes.direction && !notes.oldestDisplayedNoteSequence) {
-       ajaxLoadNotes();
-       //return;
+    // if we are loading the latest first we have to do it on the server first to get the newest notes
+    if ("DESC" == notes.direction && (!notes.oldestDisplayedNoteSequence || !notes.loadedNotesReachedCache)) {
+       if (notes.oldestDisplayedNoteSequence) {
+           ajaxLoadNotes(notes.oldestDisplayedNoteSequence - 1);
+       } else {
+           ajaxLoadNotes();
+       }
+       return;
     }
 
     // check if we have them in local storage already
-    if (notes.latestNote) {
+    if (notes.latestCachedNoteSequence) {
         var from, to;
         if ("DESC" != notes.direction) {
-          // compare the latest note cached (notes.latestNote) with the latest displayed in the list notes.latestDisplayedNoteSequence
+          // compare the latest note cached (notes.latestCachedNoteSequence) with the latest displayed in the list notes.latestDisplayedNoteSequence
           // starting at the next latest (notes.latestDisplayedNoteSequence + 1)
-          if (!notes.latestDisplayedNoteSequence || notes.latestNote.sequenceNum > (notes.latestDisplayedNoteSequence + 1)) {
-            console.log("loading [" + notes.numberOfNotesPerPage + "] notes ASC using local storage ...");
+          if (!notes.latestDisplayedNoteSequence || notes.latestCachedNoteSequence > (notes.latestDisplayedNoteSequence + 1)) {
+            console.log("loading [" + notes.numberOfNotesPerPage + "] notes ASC from [" + (notes.latestDisplayedNoteSequence + 1) + "] using local storage ...");
             if (!notes.latestDisplayedNoteSequence) {
               from = 0;
             } else {
@@ -809,16 +846,26 @@ function loadNoteList() {
               from = searchLoadedNote(notes.latestDisplayedNoteSequence + 1);
             }
             if (from < notes.cachedNotesArray.length) {
+                // check if the cached note found is the next sequence we want or a closest match
+                var matchedNote = notes.cachedNotesArray[from];
+                if (matchedNote && matchedNote.sequenceNum != (notes.latestDisplayedNoteSequence + 1)) {
+                    // not an exact match so some values might be on the server
+                    console.log("Note found in cache #" + matchedNote.sequenceNum + " not an exact match to the requested next note sequence [" + (notes.latestDisplayedNoteSequence + 1) + "], loading from server instead");
+                    notes.loadedNotesReachedCache = false;
+                    ajaxLoadNotes(notes.latestDisplayedNoteSequence + 1);
+                    return;
+                }
+
                 to = from + notes.numberOfNotesPerPage;
                 loadNotes(notes.cachedNotesArray.slice(from, to));
                 return;
             }
           }
         } else {
-          // compare the oldest note cached (notes.oldestNote) with the oldest displayed in the list notes.oldestDisplayedNoteSequence
+          // compare the oldest note cached (notes.oldestCachedNoteSequence) with the oldest displayed in the list notes.oldestDisplayedNoteSequence
           // starting at the next oldest (notes.oldestDisplayedNoteSequence - 1)
-          if (!notes.oldestDisplayedNoteSequence || notes.oldestNote.sequenceNum < (notes.oldestDisplayedNoteSequence - 1)) {
-            console.log("loading [" + notes.numberOfNotesPerPage + "] notes DESC using local storage ...");
+          if (!notes.oldestDisplayedNoteSequence || notes.oldestCachedNoteSequence < (notes.oldestDisplayedNoteSequence - 1)) {
+            console.log("loading [" + notes.numberOfNotesPerPage + "] notes DESC from [" + (notes.oldestDisplayedNoteSequence - 1) + "] using local storage ...");
             if (!notes.oldestDisplayedNoteSequence) {
               from = 0;
             } else {
@@ -826,6 +873,15 @@ function loadNoteList() {
               from = searchLoadedNote(notes.oldestDisplayedNoteSequence - 1);
             }
             if (from < notes.cachedNotesArray.length) {
+                // check if the cached note found is the next sequence we want or a closest match
+                var matchedNote = notes.cachedNotesArray[from];
+                if (matchedNote && matchedNote.sequenceNum != (notes.oldestDisplayedNoteSequence - 1)) {
+                    // not an exact match so some values might be on the server
+                    console.log("Note found in cache #" + matchedNote.sequenceNum + " not an exact match to the requested next note sequence [" + (notes.oldestDisplayedNoteSequence - 1) + "], loading from server instead");
+                    notes.loadedNotesReachedCache = false;
+                    ajaxLoadNotes(notes.oldestDisplayedNoteSequence - 1);
+                    return;
+                }
                 to = from + notes.numberOfNotesPerPage;
                 loadNotes(notes.cachedNotesArray.slice(from, to));
                 return;
@@ -912,11 +968,6 @@ function ajaxLoadOlderNotes() {
 
 // this is called when the page first loads and the page is scrolled to load more notes as we get near the bottom of the page
 function loadIfScrolledToEndOfList() {
-    // check if there are more notes to load
-    if (notes.direction == "DESC" && notes.oldestNoteLoaded) {
-        console.log("Notes.direction is [" + notes.direction + "] and notes.oldestNoteLoaded is [" + notes.oldestNoteLoaded + "], so there are no more notes to load");
-        return false;
-    }
     // when the window scroll to the end of the note list, try to load more notes
     var scrollTop = window.pageYOffset;   // where we are (pixels) from the top of the current window
     var pageHeight = document.documentElement.clientHeight;   // height of the page in pixels
@@ -926,6 +977,11 @@ function loadIfScrolledToEndOfList() {
     // once we are within notes.loadNotesScrollThreshold pixels of the bottom of the page, more notes are loaded and cached
     heightFromBottom = contentHeight - pageHeight - scrollTop;
     if (heightFromBottom < notes.loadNotesScrollThreshold) {
+        // check if there are more notes to load
+        if (notes.direction == "DESC" && notes.oldestNoteLoaded) {
+            console.log("Notes.direction is [" + notes.direction + "] and notes.oldestNoteLoaded is [" + notes.oldestNoteLoaded + "], so there are no more notes to load");
+            return false;
+        }
         console.log("There are [" + heightFromBottom + "] px left in scrollable height which is less than threshold of [" + notes.loadNotesScrollThreshold + "].  We are nearing the bottom of the page and the oldest note is not loaded yet, so load more notes");
         loadNoteList();
         return true;
