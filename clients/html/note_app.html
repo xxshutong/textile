@@ -415,12 +415,13 @@ function onUserLoaded(user) {
     }
     user.loading = false;
     user.loaded = true;
-    localStorage.setObject("users", notes.users);
     // call the callbacks
     var l = user.onLoadCbs.length;
     for (var i = 0; i < l; i++) {
         user.onLoadCbs[i](user);
     }
+    delete user.onLoadCbs;
+    localStorage.setObject("users", notes.users);
 }
 
 function getUserForNote(note) {
@@ -483,22 +484,38 @@ function getUser(userId, type) {
 
 
 var notes = {};
-notes.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
-notes.latestNote = undefined;
-notes.oldestNote = undefined;
-notes.loadedNotes = localStorage.getObject("notes", {});
-notes.users = localStorage.getObject("users", {});
-notes.loadedNotesCount = 0;
-notes.cachedNotesArray = new Array();
-notes.latestCachedNoteSequence = undefined;
-notes.oldestCachedNoteSequence = undefined;
-notes.loadNotesScrollThreshold = 200;  // in pixels, the amount of vertical height left at bottom of page before loading more notes
-notes.loading = false;
-notes.direction = "DESC";  // ordering of the sequenceNum of notes when they are loading.  DESC means newest note (with highest sequenceNum) is loaded first
-notes.oldestNoteLoaded = false;
-notes.latestDisplayedNoteSequence = undefined;
-notes.oldestDisplayedNoteSequence = undefined;
-notes.loadedNotesReachedCache = false;
+
+notes.reset = function() {
+  this.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
+  this.latestNote = undefined;
+  this.oldestNote = undefined;
+  this.loadedNotes = localStorage.getObject("notes", {});
+  this.users = localStorage.getObject("users", {});
+  this.loadedNotesCount = 0;
+  this.cachedNotesArray = new Array();
+  this.latestCachedNoteSequence = undefined;
+  this.oldestCachedNoteSequence = undefined;
+  this.loadNotesScrollThreshold = 200;  // in pixels, the amount of vertical height left at bottom of page before loading more notes
+  this.loading = false;
+  this.direction = "DESC";  // ordering of the sequenceNum of notes when they are loading.  DESC means newest note (with highest sequenceNum) is loaded first
+  this.oldestNoteLoaded = false;
+  this.displayedNotesArray = new Array(); 
+  this.latestDisplayedNoteSequence = undefined;
+  this.oldestDisplayedNoteSequence = undefined;
+  this.loadedNotesReachedCache = false;
+}
+
+notes.reset();
+
+function clearLocalStorage() {
+  localStorage.removeItem("notes");
+  localStorage.removeItem("users");
+  notes.reset();
+  var notelistEl = document.getElementById("notesContainer");
+  if (notelistEl) notelistEl.innerHTML = "";
+  initCachedNotesArray();
+  loadIfScrolledToEndOfList();
+}
 
 function parseDate(dateStr) {
     var date = new Date();
@@ -1056,6 +1073,7 @@ function onLoadPage() {
       </div>
 
       <div id="noteList">
+        <a href="javascript:clearLocalStorage()">Reset</a><br/><br/>
         <div id="notesContainer"></div>
         <div id="loadingSpinner" class="hidden"><img src="http://www.opentaps.org/images/spinner.gif"/></div>
         <div id="noMoreNotes" class="hidden"><p>There are no more notes to show right now.</p></div>
