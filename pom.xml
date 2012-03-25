@@ -151,6 +151,12 @@
                 <artifactId>com.springsource.net.sf.ezmorph</artifactId>
                 <version>1.0.5</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.bval</groupId>
+                <artifactId>org.apache.bval.bundle</artifactId>
+                <version>0.3-incubating</version>
+        </dependency>
+            
         </dependencies>
     </dependencyManagement>
 

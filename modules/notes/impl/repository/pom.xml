@@ -58,7 +58,6 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.opentaps.notes.entity</Export-Package>
                         <Private-Package>org.opentaps.notes.repository.impl</Private-Package>
                     </instructions>
                 </configuration>
@@ -96,48 +95,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.aries.jpa</groupId>
-            <artifactId>org.apache.aries.jpa.api</artifactId>
-            <version>0.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.aries</groupId>
-            <artifactId>org.apache.aries.util</artifactId>
-            <version>0.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.geronimo.specs</groupId>
-          <artifactId>geronimo-validation_1.0_spec</artifactId>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa</artifactId>
-            <scope>provided</scope>
-        </dependency>
-    	<dependency>
-    	    <groupId>mysql</groupId>
-    	    <artifactId>mysql-connector-java</artifactId>
-    	    <version>5.1.10</version>
-    	    <scope>provided</scope>
-    	</dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>validation.api</artifactId>
-            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>notes.domain</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>notes.services.api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

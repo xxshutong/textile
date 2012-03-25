@@ -39,9 +39,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Private-Package>
-                            org.opentaps.notes.services.impl
-                        </Private-Package>
+                        <Export-Package>org.opentaps.notes.repository</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -50,23 +48,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jpa_2.0_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.aries</groupId>
-            <artifactId>org.apache.aries.util</artifactId>
-            <version>0.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>notes.domain</artifactId>
             <version>${project.version}</version>
@@ -82,11 +69,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>validation.api</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sourceforge.json</groupId>
-            <artifactId>com.springsource.net.sf.json</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
