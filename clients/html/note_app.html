@@ -22,9 +22,12 @@
 
 <style type="text/css">
 
+body {
+   font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
 #content {
   margin-left: 20px;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 80%;
 }
 
@@ -38,7 +41,6 @@
    cursor:pointer;
    padding:10px;
    position:relative;
-   font-family: Verdana, Arial, Helvetica, sans-serif;
    font-size:120%;
    text-decoration:none;
    color:#fff;
@@ -54,6 +56,10 @@
    top:1px;
 }
 
+textarea {
+   border:1px solid #666666;
+}
+
 input[disabled] {
    background-color: #7a7a7a;
    color:#fff;
@@ -63,7 +69,6 @@ input[disabled] {
    background-color:#888888;
    cursor:pointer;
    padding:8px;
-   font-family: Verdana, Arial, Helvetica, sans-serif;
    font-size:100%;
    text-decoration:none;
    color:#fff;
@@ -75,7 +80,6 @@ input[disabled] {
 .message,
 .fieldErrorMessage
 {
-  font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 100%;
   padding: 5px 0px 2px 4px;
 }
@@ -83,21 +87,37 @@ input[disabled] {
 .fieldErrorMessage,
 .errorMessage { color:red; }
 
-#noteList { width:60em; border:1px solid #666; margin:10px; padding:10px;}
-#noteList .listHeader { font-weight:bold; margin-bottom:0.3em; border-bottom:1px dotted #AAA; }
+img.userPicture,
+.userPicture .noImage,
+.userPicture img { height:25px; width:25px; }
+
+
+#createNote { width:520px;float:left;margin-right:10px;  }
+#header { width:520px; }
+#notesContainer { width:500px; }
+
+#header .logo { float:left; }
+#header .login { float:right; margin-top:13px; }
+
+#createNote form,
+#createNote textarea { width:100%; }
+
+#noteList { float:left;font-size: 80%;border:0px solid #666; margin-bottom:40px; padding:10px;}
 #noteList .listRow > div { float:left; overflow:hidden; text-overflow:ellipsis; padding: .4em; }
 #noteList .listRow .noteHeader { float:none; }
 #noteList .listRow .noteHeader div { display:inline; }
 #noteList .listRow .noteEnd { clear:left; float:none; padding:0; }
 #noteList .noteAttribute { display:none; }
 #noteList .noteId { display:none; }
-#noteList .noteSequence { display:none; }
-#noteList .noteText { }
-#noteList .listRow:nth-child(even) {background: #DDD;}
-#noteList .listRow:nth-child(odd) {background: #FFF;}
+#noteList .noteSequence { display:none; font-weight:bold; }
+#noteList .noteText { width:450px; }
+#noteList .listRow:nth-child(even) {background: #FFF;}
+#noteList .listRow:nth-child(odd) {background: #DDD;}
 #loadingSpinner { padding:20px; text-align:center; }
+#noMoreNotes {text-align:center; font-style: italic; }
 
 .hidden { display:none; }
+.floatEnd { clear:both; }
 
 </style>
 
@@ -151,7 +171,7 @@ function parseResponse(req) {
 function showErrorMessage(message, details) {
     document.getElementById('errorMessage').innerHTML = message;
     // reset field errors
-    var els = document.getElementById('createNote').getElementsByTagName("div");
+    var els = document.getElementById("createNoteForm").getElementsByTagName("div");
     var elsLen = els.length;
     var pattern = new RegExp("(^|\\s)fieldErrorMessage(\\s|$)");
     for (i = 0, j = 0; i < elsLen; i++) {
@@ -166,7 +186,7 @@ function showErrorMessage(message, details) {
             var detail = details[i];
             var el = document.getElementById(detail.field + '_error');
             if (el) {
-                el.innerHTML = detail.message;
+                el.innerHTML = detail.field + ': ' + detail.message;
             }
         }
     }
@@ -230,7 +250,7 @@ function showLoginPrompt() {
     }
 }
 
-function getUser(userKey) {
+function getAppUser(userKey) {
     var reqUser = createRequest();
 
     // Create the callback:
@@ -280,7 +300,7 @@ function showUserArea(json) {
     }
     var userAreaPhoto = document.getElementById('userAreaPhoto');
     if (userAreaPhoto) {
-        userAreaPhoto.src = "https://graph.facebook.com/" + json.result.resultValue.user.id + "/picture?type=square";
+        userAreaPhoto.src = getFacebookUserPictureUrl(json.result.resultValue.user.id);
         userAreaPhoto.style.display = "inline";
     }
     var userLogout = document.getElementById('userLogout');
@@ -369,20 +389,166 @@ Storage.prototype.getObject = function(key, defaultValue) {
     }
 }
 
+function getFacebookUserPictureUrl(userId) {
+    return "https://graph.facebook.com/" + userId + "/picture?type=square";
+}
+
+function createUserPictureElement(user) {
+    var imgCtEl = document.createElement("div");
+    imgCtEl.className = "userPicture";
+    if (user) imgCtEl.dataset["userId"] = user.userId;
+    if (user && user.pictureUrl) {
+        imgEl = document.createElement("img");
+        imgEl.src = user.pictureUrl;
+    } else {
+        imgEl = document.createElement("div");
+        imgEl.className = "noImage";
+    }
+    imgCtEl.appendChild(imgEl);
+    return imgCtEl;
+}
+
+function onUserLoaded(user) {
+    if (!user) {
+        console.log("onUserLoaded called on empty user !");
+        return;
+    }
+    user.loading = false;
+    user.loaded = true;
+    // call the callbacks
+    var l = user.onLoadCbs.length;
+    for (var i = 0; i < l; i++) {
+        user.onLoadCbs[i](user);
+    }
+    delete user.onLoadCbs;
+    localStorage.setObject("users", notes.users);
+}
+
+function getUserForNote(note) {
+    return getUser(note.createdByUserId, note.userIdType);
+}
+
+function getUser(userId, type) {
+    console.log("getUser id = " + userId + " type = " + type);
+
+    var user;
+
+    // first look in the cache
+    if (notes.users && notes.users[userId]) {
+        user = notes.users[userId];
+        console.log("getUser id = " + userId + " type = " + type + " found in cache (loaded = " + user.loaded + ", loading = " + user.loading + ")");
+    } else {
+        user = {};
+        console.log("getUser id = " + userId + " type = " + type + " not found, initializing ...");
+    }
+
+    if (user.loaded || user.loading) {
+        return user;
+    }
+
+    user.onLoadCbs = new Array();
+    user.userId = userId;
+    user.userIdType = type;
+    user.loading = true;
+    notes.users[user.userId] = user;
+    
+    if ("facebook" == user.userIdType) {
+        user.pictureUrl = getFacebookUserPictureUrl(user.userId);
+        // get user info from facebook
+        console.log("getUser id = " + userId + " type = " + type + " is a Facebook user, fetching info ...");
+        var userReq = createRequest();
+        userReq.onreadystatechange = function() {
+            if (userReq.readyState == 4) {
+                var resp = userReq.responseText;
+                if (resp) {
+                    if (userReq.status == 200) {
+                        var json = eval('(' + resp + ')');
+                        user.name = json.name;
+                        user.firstName = json.first_name;
+                        user.lastName = json.last_name;
+                        user.gender = json.gender;
+                        user.pageUrl = json.link;
+                        user.locale = json.locale;
+                        onUserLoaded(user);
+                    }
+                }
+            }
+        }
+        userReq.open("GET", "https://graph.facebook.com/" + user.userId, true);
+        userReq.send(null);
+    } else {
+        onUserLoaded(user);
+    }
+    return user;
+}
 
 
 var notes = {};
-notes.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
-notes.latestNote = undefined;
-notes.oldestNote = undefined;
-notes.loadedNotes = localStorage.getObject("notes", {});
-notes.loadedNotesCount = 0;
-notes.cachedNotesArray = new Array();
-notes.loadNotesScrollThreshold = 200;
-notes.loading = false;
-notes.direction = "DESC";
-notes.latestDisplayedNoteSequence = undefined;
-notes.oldestDisplayedNoteSequence = undefined;
+
+notes.reset = function() {
+  this.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
+  this.latestNote = undefined;
+  this.oldestNote = undefined;
+  this.loadedNotes = localStorage.getObject("notes", {});
+  this.users = localStorage.getObject("users", {});
+  this.loadedNotesCount = 0;
+  this.cachedNotesArray = new Array();
+  this.latestCachedNoteSequence = undefined;
+  this.oldestCachedNoteSequence = undefined;
+  this.loadNotesScrollThreshold = 200;  // in pixels, the amount of vertical height left at bottom of page before loading more notes
+  this.loading = false;
+  this.direction = "DESC";  // ordering of the sequenceNum of notes when they are loading.  DESC means newest note (with highest sequenceNum) is loaded first
+  this.oldestNoteLoaded = false;
+  this.displayedNotesArray = new Array(); 
+  this.latestDisplayedNoteSequence = undefined;
+  this.oldestDisplayedNoteSequence = undefined;
+  this.loadedNotesReachedCache = false;
+}
+
+notes.reset();
+
+function clearLocalStorage() {
+  localStorage.removeItem("notes");
+  localStorage.removeItem("users");
+  notes.reset();
+  var notelistEl = document.getElementById("notesContainer");
+  if (notelistEl) notelistEl.innerHTML = "";
+  initCachedNotesArray();
+  loadIfScrolledToEndOfList();
+}
+
+function parseDate(dateStr) {
+    var date = new Date();
+
+    var parts = dateStr.split(" ");
+
+    if (parts.length < 2) {
+      console.log("Date [" + dateStr + "] did not split into a Date + Time");
+      return date;
+    }
+
+    var dateParts = parts[0].split("-");
+    if (dateParts.length < 3) {
+      console.log("Date part [" + parts[0] + "] did not split into Year - Month - Day");
+      return date;
+    }
+
+    date.setFullYear(dateParts[0]);
+    date.setMonth(dateParts[1] - 1);
+    date.setDate(dateParts[2]);
+
+    var timeParts = parts[1].split(":");
+    if (timeParts.length < 3) {
+      console.log("Time [" + dateStr + "] did not split into Hours : Minutes : Seconds");
+      return date;
+    }
+
+    date.setHours(timeParts[0]);
+    date.setMinutes(timeParts[1]);
+    date.setSeconds(timeParts[2]);
+
+    return date;
+}
 
 function formatDate(d) {
     if (!d) return "";
@@ -391,13 +557,25 @@ function formatDate(d) {
     return months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear() + " " + ((d.getHours() < 10 ? '0' : '') + d.getHours()) + ":" + ((d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
 }
 
+// creates an HTML element for a note that has been loaded
 function createNoteElement(note) {
 
-    var dateCreated = formatDate(new Date(note.dateTimeCreated));
-    var userName = "anonymous";
+    var user;
     if (note.createdByUserId && note.createdByUserId != "") {
-       userName = note.createdByUserId;
+       user = getUserForNote(note);
+       // if the user is not loaded yet, plug a callback so it will know to update this note
+       if (user.loading) {
+           user.onLoadCbs.push(function(u) {
+               if (u.name) {
+                   var userNameEl = document.getElementById(note.noteId + "_userName");
+                   userNameEl.innerHTML = u.name;
+               }
+           });
+       }
     }
+
+    var dateCreated = formatDate(parseDate(note.dateTimeCreated));
+    var userName = "anonymous";
 
     var noteEl = document.createElement("div");
     noteEl.className = "note listRow";
@@ -418,25 +596,22 @@ function createNoteElement(note) {
 
     var userEl = document.createElement("div");
     userEl.className = "userName";
+    userEl.id = note.noteId + "_userName";
+    if (user) {
+        userEl.dataset["userId"] = user.userId;
+        if (user.name) userName = user.name;
+        else userName = user.userId;
+    }
+    
     userEl.appendChild(document.createTextNode(userName));
 
     headerEl.appendChild(dateEl);
     headerEl.appendChild(document.createTextNode(" by "));
     headerEl.appendChild(userEl);
-    headerEl.appendChild(document.createTextNode(" : "));
+    headerEl.appendChild(document.createTextNode(": "));
     noteEl.appendChild(headerEl);
 
-    var imgCtEl = document.createElement("div");
-    imgCtEl.className = "userPicture";
-    var imgEl;
-    if (note.createdByUserId && note.createdByUserId != "") {
-      imgEl = document.createElement("img");
-      imgEl.src = "https://graph.facebook.com/" + note.createdByUserId + "/picture?type=square";
-    } else {
-      imgEl = document.createElement("div");
-      imgEl.className = "noImage";
-    }
-    imgCtEl.appendChild(imgEl);
+    var imgCtEl = createUserPictureElement(user);
     noteEl.appendChild(imgCtEl);
 
     var seqEl = document.createElement("div");
@@ -463,8 +638,12 @@ function createNoteElement(note) {
     return noteEl;
 }
 
-function loadNotes(noteList) {
+    
+// loads the notes and puts them into noteList, updating the notes.latestDisplayedNoteSequence
+// if the note already exists then replaces it
+function loadNotes(noteList, remote, direction) {
     var n = noteList.length;
+    var loaded = 0;
 
     if (n > 0) {
        var prev = document.createDocumentFragment();
@@ -478,6 +657,11 @@ function loadNotes(noteList) {
        for (var i = 0; i < n; i++) {
            var note = noteList[i];
            if (note.note) note = note.note;
+           if (!note.noteId) {
+              console.log("loadNotes: invalid note found, skipping. Note# = " + note.sequenceNum);
+              continue;
+           }
+           console.log("loadNotes: note " + i + " = " + note.noteId + " #" + note.sequenceNum + " : " + (note.noteText?note.noteText.substring(0,10)+"...":note.noteText));
            // save to localStorage
            notes.loadedNotes[note.noteId] = note;
            var noteEl = createNoteElement(note);
@@ -487,70 +671,111 @@ function loadNotes(noteList) {
                existing.parentNode.replaceChild(noteEl, existing);
            } else {
                if ("DESC" != notes.direction) {
-                   if (note.sequenceNum >= notes.latestDisplayedNoteSequence) {
+                   if (!notes.latestDisplayedNoteSequence || note.sequenceNum >= notes.latestDisplayedNoteSequence) {
                        console.log("appending note " + note.sequenceNum);
                        next.appendChild(noteEl);
-                   } else {
+                   } else if (note.sequenceNum < notes.oldestDisplayedNoteSequence) {
                        console.log("prepending note " + note.sequenceNum);
                        if (firstNew) prev.insertBefore(noteEl, firstNew);
                        else prev.appendChild(noteEl);
+                   } else {
+                       // this requires inserting somewhere in the current list
+                       var idx = searchLoadedNote(note.sequenceNum, notes.displayedNotesArray);
+                       var el = document.getElementById(notes.displayedNotesArray[idx].noteId);
+                       console.log("inserting note " + note.sequenceNum + " before note " + notes.displayedNotesArray[idx].sequenceNum);
+                       container.insertBefore(noteEl, el);
                    }
                } else {
-                   if (note.sequenceNum >= notes.latestDisplayedNoteSequence) {
+                   if (notes.latestDisplayedNoteSequence && note.sequenceNum >= notes.latestDisplayedNoteSequence) {
                        console.log("prepending note " + note.sequenceNum);
                        if (firstNew) prev.insertBefore(noteEl, firstNew);
                        else prev.appendChild(noteEl);
-                   } else {
+                   } else if (!notes.latestDisplayedNoteSequence || note.sequenceNum < notes.oldestDisplayedNoteSequence) {
                        console.log("appending note " + note.sequenceNum);
                        next.appendChild(noteEl);
+                   } else {
+                       // this requires inserting somewhere in the current list
+                       var idx = searchLoadedNote(note.sequenceNum, notes.displayedNotesArray);
+                       var el = document.getElementById(notes.displayedNotesArray[idx].noteId);
+                       console.log("inserting note " + note.sequenceNum + " before note " + notes.displayedNotesArray[idx].sequenceNum);
+                       container.insertBefore(noteEl, el);
                    }
                }
            }
            onNoteLoaded(note, true);
+           loaded++;
        }
-       notes.loadedNotesCount += n;
+       notes.loadedNotesCount += loaded;
        container.appendChild(next);
        container.insertBefore(prev, container.firstChild);
     }
 
-    console.log("loaded " + n + " new notes");
-    onNotesLoaded(n);
+    console.log("loaded " + loaded + " new notes");
+    onNotesLoaded(loaded, remote, direction);
 }
 
+// runs after the notes are loaded
 function onNoteLoaded(note, displayed) {
     if (!note) {
         console.log("onNoteLoaded called on empty note !");
         return;
     }
+    // update the variables which store the oldest and latest note that is displayed
     if (!notes.oldestNote || (notes.oldestNote.sequenceNum > note.sequenceNum)) notes.oldestNote = note;
     if (!notes.latestNote || (notes.latestNote.sequenceNum < note.sequenceNum)) notes.latestNote = note;
     if (displayed) {
-        if (!notes.oldestDisplayedNoteSequence || (notes.oldestDisplayedNoteSequence > note.sequenceNum)) {
-            notes.oldestDisplayedNoteSequence = note.sequenceNum;
+        if (!notes.displayedNotesArray) notes.displayedNotesArray = new Array();
+        notes.displayedNotesArray.push(note);
+        notes.displayedNotesArray.sort(compareNoteSequence);
+
+        if (notes.displayedNotesArray.length > 0) {
+            notes.latestDisplayedNoteSequence = notes.displayedNotesArray[notes.displayedNotesArray.length - 1].sequenceNum;
+            notes.oldestDisplayedNoteSequence = notes.displayedNotesArray[0].sequenceNum;
         }
-        if (!notes.latestDisplayedNoteSequence || (notes.latestDisplayedNoteSequence < note.sequenceNum)) {
-            notes.latestDisplayedNoteSequence = note.sequenceNum;
+        if ("DESC" == notes.direction) notes.displayedNotesArray.reverse();
+        // check if we reached the cache
+        if (!notes.loadedNotesReachedCache && notes.latestCachedNoteSequence > note.sequenceNum && notes.oldestCachedNoteSequence < note.sequenceNum) {
+            console.log("onNoteLoaded : displayed note #" + note.sequenceNum + " reached cache [" + notes.oldestCachedNoteSequence + " - " + notes.latestCachedNoteSequence + "]");
+            notes.loadedNotesReachedCache = true;
         }
     }
 }
 
-function onNotesLoaded(n) {
+function onNotesLoaded(n, remote, direction) {
     localStorage.setObject("notes", notes.loadedNotes);
     notesLoadingDone();
     // check the list position and see if more loading is needed
     // which is when the list did not got to the end of the page
-    if (n > 0) loadIfScrolledToEndOfList();
+    if (n > 0) {
+        loadIfScrolledToEndOfList();
+    } else if (remote && "DESC" == notes.direction && direction == notes.direction) {
+        // special case when we loaded the oldest note from the server
+        // indicate to the user that there are no more notes to load
+        // and we can skip trying to load older notes from now on
+        notes.oldestNoteLoaded = true;
+        var el = document.getElementById("noMoreNotes");
+        if (el) el.className = "";
+    }
 }
 
+// gets the notes stored in local storage back into notes.cachedNotesArray
 function initCachedNotesArray() {
     // notes are stored in localStorage as id -> note
     // first we want to order them back by sequenceNum
     for (var id in notes.loadedNotes) {
         var note = notes.loadedNotes[id];
-        notes.cachedNotesArray.push(note);
-        onNoteLoaded(note);
+        if (note && note.noteId) {
+            notes.cachedNotesArray.push(note);
+            onNoteLoaded(note);
+        }
     }
     notes.cachedNotesArray.sort(compareNoteSequence);
+
+    if (notes.cachedNotesArray.length > 0) {
+        notes.latestCachedNoteSequence = notes.cachedNotesArray[notes.cachedNotesArray.length - 1].sequenceNum;
+        notes.oldestCachedNoteSequence = notes.cachedNotesArray[0].sequenceNum;
+    }
+
     if ("DESC" == notes.direction) notes.cachedNotesArray.reverse();
     notes.loadedNotesCount = notes.cachedNotesArray.length;
     console.log("initCachedNotesArray complete, loaded [" + notes.loadedNotesCount + "] in [" + notes.direction + "] order");
@@ -559,24 +784,28 @@ function initCachedNotesArray() {
 // binary search in notes.cachedNotesArray, returns the biggest index of the note element
 // where note.sequenceNum >= given sequenceNum
 //  or   note.sequenceNum <= given sequenceNum  if direction is DESC
-function searchLoadedNote(sequence) {
-    var low = 0, n = notes.cachedNotesArray.length, i = -1, high = n - 1;
+function searchLoadedNote(sequence, inArray, direction) {
+
+    if (!direction) direction = notes.direction;
+    if (!inArray) inArray = notes.cachedNotesArray;
+
+    var low = 0, n = inArray.length, i = -1, high = n - 1;
     while (low <= high) {
         i = Math.floor((low + high) / 2);
-        if ("DESC" == notes.direction) {
-          if(notes.cachedNotesArray[i].sequenceNum > sequence) { low = i + 1; continue; }
-          else if(notes.cachedNotesArray[i].sequenceNum < sequence) { high = i - 1; continue; };
+        if ("DESC" == direction) {
+          if(inArray[i].sequenceNum > sequence) { low = i + 1; continue; }
+          else if(inArray[i].sequenceNum < sequence) { high = i - 1; continue; };
         } else {
-          if(notes.cachedNotesArray[i].sequenceNum < sequence) { low = i + 1; continue; }
-          else if(notes.cachedNotesArray[i].sequenceNum > sequence) { high = i - 1; continue; };
+          if(inArray[i].sequenceNum < sequence) { low = i + 1; continue; }
+          else if(inArray[i].sequenceNum > sequence) { high = i - 1; continue; };
         }
         return i;
     }
     if (i == -1) return i;
-    if ("DESC" == notes.direction) {
-      if (notes.cachedNotesArray[i].sequenceNum > sequence && i < (n - 1)) return i + 1;
+    if ("DESC" == direction) {
+      if (inArray[i].sequenceNum > sequence && i < (n - 1)) return i + 1;
     } else {
-      if (notes.cachedNotesArray[i].sequenceNum < sequence && i < (n - 1)) return i + 1;
+      if (inArray[i].sequenceNum < sequence && i < (n - 1)) return i + 1;
     }
     return i;
 }
@@ -598,6 +827,7 @@ function notesLoadingDone() {
     console.log("Done loading.");
 }
 
+// manages the loading of notes from both local storage and remote (ajax) server
 function loadNoteList() {
     if (notes.loading) {
         console.log("loadNoteList : not loading more, request still in progress ...");
@@ -605,23 +835,27 @@ function loadNoteList() {
     }
 
     if (notes.latestNote) {
-        console.log("cached : [" + notes.oldestNote.sequenceNum + " - " + notes.latestNote.sequenceNum + "] displayed : [" + notes.oldestDisplayedNoteSequence + " - " + notes.latestDisplayedNoteSequence + "]");
+        console.log("cached : [" + notes.oldestCachedNoteSequence + " - " + notes.latestCachedNoteSequence + "] displayed : [" + notes.oldestDisplayedNoteSequence + " - " + notes.latestDisplayedNoteSequence + "]");
     }
 
-    // if we are loading the latest first we have to it the server first to get the newest notes
-    if ("DESC" == notes.direction && !notes.oldestDisplayedNoteSequence) {
-       ajaxLoadNotes();
+    // if we are loading the latest first we have to do it on the server first to get the newest notes
+    if ("DESC" == notes.direction && (!notes.oldestDisplayedNoteSequence || !notes.loadedNotesReachedCache)) {
+       if (notes.oldestDisplayedNoteSequence) {
+           ajaxLoadNotes(notes.oldestDisplayedNoteSequence - 1);
+       } else {
+           ajaxLoadNotes();
+       }
        //return;
     }
 
     // check if we have them in local storage already
-    if (notes.latestNote) {
+    if (notes.latestCachedNoteSequence) {
         var from, to;
         if ("DESC" != notes.direction) {
-          // compare the latest note cached (notes.latestNote) with the latest displayed in the list notes.latestDisplayedNoteSequence
+          // compare the latest note cached (notes.latestCachedNoteSequence) with the latest displayed in the list notes.latestDisplayedNoteSequence
           // starting at the next latest (notes.latestDisplayedNoteSequence + 1)
-          if (!notes.latestDisplayedNoteSequence || notes.latestNote.sequenceNum > (notes.latestDisplayedNoteSequence + 1)) {
-            console.log("loading [" + notes.numberOfNotesPerPage + "] notes ASC using local storage ...");
+          if (!notes.latestDisplayedNoteSequence || notes.latestCachedNoteSequence > (notes.latestDisplayedNoteSequence + 1)) {
+            console.log("loading [" + notes.numberOfNotesPerPage + "] notes ASC from [" + (notes.latestDisplayedNoteSequence + 1) + "] using local storage ...");
             if (!notes.latestDisplayedNoteSequence) {
               from = 0;
             } else {
@@ -629,16 +863,26 @@ function loadNoteList() {
               from = searchLoadedNote(notes.latestDisplayedNoteSequence + 1);
             }
             if (from < notes.cachedNotesArray.length) {
+                // check if the cached note found is the next sequence we want or a closest match
+                var matchedNote = notes.cachedNotesArray[from];
+                if (notes.latestDisplayedNoteSequence && matchedNote && matchedNote.sequenceNum != (notes.latestDisplayedNoteSequence + 1)) {
+                    // not an exact match so some values might be on the server
+                    console.log("Note found in cache #" + matchedNote.sequenceNum + " not an exact match to the requested next note sequence [" + (notes.latestDisplayedNoteSequence + 1) + "], loading from server instead");
+                    notes.loadedNotesReachedCache = false;
+                    ajaxLoadNotes(notes.latestDisplayedNoteSequence + 1);
+                    return;
+                }
+
                 to = from + notes.numberOfNotesPerPage;
                 loadNotes(notes.cachedNotesArray.slice(from, to));
                 return;
             }
           }
         } else {
-          // compare the oldest note cached (notes.oldestNote) with the oldest displayed in the list notes.oldestDisplayedNoteSequence
+          // compare the oldest note cached (notes.oldestCachedNoteSequence) with the oldest displayed in the list notes.oldestDisplayedNoteSequence
           // starting at the next oldest (notes.oldestDisplayedNoteSequence - 1)
-          if (!notes.oldestDisplayedNoteSequence || notes.oldestNote.sequenceNum < (notes.oldestDisplayedNoteSequence - 1)) {
-            console.log("loading [" + notes.numberOfNotesPerPage + "] notes DESC using local storage ...");
+          if (!notes.oldestDisplayedNoteSequence || notes.oldestCachedNoteSequence < (notes.oldestDisplayedNoteSequence - 1)) {
+            console.log("loading [" + notes.numberOfNotesPerPage + "] notes DESC from [" + (notes.oldestDisplayedNoteSequence - 1) + "] using local storage ...");
             if (!notes.oldestDisplayedNoteSequence) {
               from = 0;
             } else {
@@ -646,6 +890,15 @@ function loadNoteList() {
               from = searchLoadedNote(notes.oldestDisplayedNoteSequence - 1);
             }
             if (from < notes.cachedNotesArray.length) {
+                // check if the cached note found is the next sequence we want or a closest match
+                var matchedNote = notes.cachedNotesArray[from];
+                if (notes.oldestDisplayedNoteSequence && matchedNote && matchedNote.sequenceNum != (notes.oldestDisplayedNoteSequence - 1)) {
+                    // not an exact match so some values might be on the server
+                    console.log("Note found in cache #" + matchedNote.sequenceNum + " not an exact match to the requested next note sequence [" + (notes.oldestDisplayedNoteSequence - 1) + "], loading from server instead");
+                    notes.loadedNotesReachedCache = false;
+                    ajaxLoadNotes(notes.oldestDisplayedNoteSequence - 1);
+                    return;
+                }
                 to = from + notes.numberOfNotesPerPage;
                 loadNotes(notes.cachedNotesArray.slice(from, to));
                 return;
@@ -658,11 +911,21 @@ function loadNoteList() {
     ajaxLoadNextPage();
 }
 
+// load notes from server (ajax)
+// from = sequenceNumber to start loading at on server side
+// order = ordering of load (DESC or ASC)
+// notes.numberOfNotesPerPage = controls how many notes are loaded at once
 function ajaxLoadNotes(from, order) {
 
     if (!order) order = notes.direction;
 
     console.log("loading [" + notes.numberOfNotesPerPage + "] notes using AJAX from [" + from + "] order [" + order + "]");
+
+    if (from <= 0 && "DESC" == order) {
+        console.log("Reached note sequence 0, not loading anymore.");
+        onNotesLoaded(0, true, order);
+        return;
+    }
 
     // get the notes from the REST api
     var loadNoteReq = createRequest();
@@ -674,7 +937,9 @@ function ajaxLoadNotes(from, order) {
             if (resp) {
                 if (loadNoteReq.status == 200) {
                     var json = eval('(' + resp + ')');
-                    loadNotes(json.result.resultValue);
+                    loadNotes(json.result.resultValue, true, order);
+                    // if we are loading ASC without a from that includes the oldest note
+                    if ("DESC" != order && !from) notes.oldestNoteLoaded = true;
                 }
             } else {
                 showErrorMessage("Cannot get response from server.");
@@ -695,6 +960,7 @@ function ajaxLoadNotes(from, order) {
 
 }
 
+// load the next page of notes, which depending on the notes.direction would be older (for DESC) or newer (ASC)
 function ajaxLoadNextPage() {
     if ("DESC" == notes.direction) {
         ajaxLoadOlderNotes();
@@ -703,6 +969,7 @@ function ajaxLoadNextPage() {
     }
 }
 
+// load notes using ajaxLoadNotes which are newer than the notes.latestNote.sequenceNum
 function ajaxLoadLaterNotes() {
     var next;
     if (notes.latestNote) {
@@ -712,6 +979,7 @@ function ajaxLoadLaterNotes() {
     ajaxLoadNotes(next, "ASC");
 }
 
+// load notes using ajaxLoadNotes which are older than the notes.oldestNote.sequenceNum
 function ajaxLoadOlderNotes() {
     var next;
     if (notes.oldestNote) {
@@ -721,18 +989,26 @@ function ajaxLoadOlderNotes() {
     ajaxLoadNotes(next, "DESC");
 }
 
-
+// this is called when the page first loads and the page is scrolled to load more notes as we get near the bottom of the page
 function loadIfScrolledToEndOfList() {
     // when the window scroll to the end of the note list, try to load more notes
-    var scrollTop = window.pageYOffset;
-    var pageHeight = document.documentElement.clientHeight; 
-    var contentHeight = document.documentElement.offsetHeight;
-    //console.log("scrollTop = " + scrollTop + ", pageHeight = " + pageHeight + ", contentHeight = " + contentHeight + " ==> contentHeight - pageHeight - scrollTop = " + (contentHeight - pageHeight - scrollTop));
-    if ((contentHeight - pageHeight - scrollTop) < notes.loadNotesScrollThreshold) {
-        console.log("have not reached the bottom of the page, load more notes");
+    var scrollTop = window.pageYOffset;   // where we are (pixels) from the top of the current window
+    var pageHeight = document.documentElement.clientHeight;   // height of the page in pixels
+    var contentHeight = document.documentElement.offsetHeight;   // height of the content element in pixels
+    // console.log("scrollTop = " + scrollTop + ", pageHeight = " + pageHeight + ", contentHeight = " + contentHeight + " ==> contentHeight - pageHeight - scrollTop = " + (contentHeight - pageHeight - scrollTop));
+
+    // once we are within notes.loadNotesScrollThreshold pixels of the bottom of the page, more notes are loaded and cached
+    heightFromBottom = contentHeight - pageHeight - scrollTop;
+    if (heightFromBottom < notes.loadNotesScrollThreshold) {
+        // check if there are more notes to load
+        if (notes.direction == "DESC" && notes.oldestNoteLoaded) {
+            console.log("Notes.direction is [" + notes.direction + "] and notes.oldestNoteLoaded is [" + notes.oldestNoteLoaded + "], so there are no more notes to load");
+            return false;
+        }
+        console.log("There are [" + heightFromBottom + "] px left in scrollable height which is less than threshold of [" + notes.loadNotesScrollThreshold + "].  We are nearing the bottom of the page and the oldest note is not loaded yet, so load more notes");
         loadNoteList();
         return true;
-    }
+    } 
     return false;
 }
 
@@ -747,7 +1023,7 @@ function onLoadPage() {
     if (userKey == "") {
         showLoginPrompt();
     } else {
-        getUser(userKey);
+        getAppUser(userKey);
     }
 
     if (typeof localStorage == 'undefined') {
@@ -757,6 +1033,7 @@ function onLoadPage() {
       initCachedNotesArray();
       // set the scroll handler
       window.onscroll = scroll;
+      // load more notes if there is room for it
       loadIfScrolledToEndOfList();
     }
 }
@@ -766,59 +1043,54 @@ function onLoadPage() {
 
 <body onLoad="javascript:onLoadPage()">
 
-<div id="container">
   <div id="content">
-    <table style="width:518px">
-     <tr>
-       <td style="width:70%">
-         <img src="http://www.opentaps.org/images/opentaps_logo.png"/>
-       </td>
-        <td align="right" style="width:30%">
-          <div id="userLogin" style="display:none">
-          <a href="javascript:login()"><img src="images/fb_login.png"></a>
+
+    <div id="header">
+      <div class="logo">
+        <img src="http://www.opentaps.org/images/opentaps_logo.png"/>
+      </div>
+      <div class="login">
+        <div id="userLogin" style="display:none">
+          <a href="javascript:login()"><img src="images/fb_login.png"/></a>
+        </div>
+        <div id="userLogout" style="display:none">
+          <input type="button" name="logoutButton" id="logoutButton" value="Logout" onClick="logout()" class="logoutbutton"/>
+        </div>
+      </div>
+      <div class="floatEnd"></div>
+    </div>
+
+    <div id="mainContainer">
+
+      <div id="createNote">
+        <label id="userArea"></label>
+        <img style="display:none" id="userAreaPhoto" src="" class="userPicture"/>
+        <input type="hidden" name="userKey" id="userKey"/>
+        <form name="createNoteForm" id="createNoteForm" action="createNote" method="post">
+          <div class="fieldErrorMessage" id="noteText_error"></div>
+          <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea>
+          <div>
+            <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked="checked"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
           </div>
-         <div id="userLogout" style="display:none">
-           <input type="button" name="logoutButton" id="logoutButton" value="Logout" onClick="logout()" class="logoutbutton"/>
-         </div>
-       </td>
-     </tr>
-     <tr>
-       <td valign="top" colspan="2">
-         <label id="userArea"></label> <img style="display:none" id="userAreaPhoto" src="" height="25px"/>
-       </td>
-     </tr>
-    </table>
-    <input type="hidden" name="userKey" id="userKey"/>
-    <form name="createNote" id="createNote" action="createNote" method="post">
-    <table style="width:518px">
-      <tr><td>
-      <div class="fieldErrorMessage" id="noteText_error"></div>
-      <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here" style="width:100%"></textarea>
-      </td></tr>
-      <tr>
-        <td>
-          <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked="checked"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
-        </td>
-      </tr>
-      <tr>
-        <td>
           <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
-        </td>
-      </tr>
-	  <tr><td>
-        <div class="message" id="successMessage"></div>
-        <div class="errorMessage" id="errorMessage"></div>
-	  </td></tr>
-    </table>
-    </form>
-  </div>
+          <div class="message" id="successMessage"></div>
+          <div class="errorMessage" id="errorMessage"></div>
+        </form>
+      </div>
 
-  <div id="noteList">
-    <div id="notesContainer"></div>
-    <div id="loadingSpinner" class="hidden"><img src="http://www.opentaps.org/images/spinner.gif"/></div>
-  </div>
+      <div id="noteList">
+ <!--
+use this to reset local storage
+       <a href="javascript:clearLocalStorage()">Reset</a><br/><br/>
+-->
+        <div id="notesContainer"></div>
+        <div id="loadingSpinner" class="hidden"><img src="http://www.opentaps.org/images/spinner.gif"/></div>
+        <div id="noMoreNotes" class="hidden"><p>That's all, folks!</p></div>
+      </div>
 
-</div>
+    </div>
+
+  </div>
 
 </body>
 </html>
