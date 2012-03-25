@@ -16,7 +16,6 @@
  */
 package org.opentaps.notes.rest;
 
-import org.opentaps.notes.rest.auth.WrapperAuthenticator;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
@@ -42,6 +41,6 @@ public class NotesApplication extends Application {
         router.attach("/user/{userKey}", UserResource.class);
         router.attach("/user/logout/{userKey}", UserResource.class);
 
-        return new WrapperAuthenticator(getContext(), router);
+        return router;
     }
 }
