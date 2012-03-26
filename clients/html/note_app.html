@@ -217,7 +217,7 @@ function saveNote(form){
     params = params + '&postOnMyWall=N';
   }
 
-  req.open("POST", "http://localhost:8080/notes/note", true);
+  req.open("POST", notes.baseUrl + "note", true);
   req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
   req.send(params);
@@ -260,7 +260,7 @@ function getAppUser(userKey) {
         }
     }
 
-    reqUser.open("GET", "http://localhost:8080/notes/user/"+userKey, true);
+    reqUser.open("GET", notes.baseUrl + "user/" + userKey, true);
 
     reqUser.send(null);
 }
@@ -269,7 +269,7 @@ function getAppUser(userKey) {
   Facebook Sign In integration is configured in org.opentaps.notes.rest.FacebookResource in the notes.rest module
 ***/
 function login() {
-    window.location.href = "http://localhost:8080/notes/facebook/login";
+    window.location.href = notes.baseUrl + "facebook/login";
 }
 
 function parseUserResponse(req) {
@@ -369,7 +369,7 @@ function logout() {
         }
     }
 
-    reqLogoutUser.open("POST", "http://localhost:8080/notes/user/logout/"+userKey.value, true);
+    reqLogoutUser.open("POST", notes.baseUrl + "user/logout/" + userKey.value, true);
     reqLogoutUser.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     reqLogoutUser.send(null);
@@ -486,6 +486,7 @@ function getUser(userId, type) {
 var notes = {};
 
 notes.reset = function() {
+  this.baseUrl = localStorage.getObject("baseUrl", "http://localhost:8080/notes/");
   this.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
   this.latestNote = undefined;
   this.oldestNote = undefined;
@@ -948,7 +949,7 @@ function ajaxLoadNotes(from, order) {
         }
     }
 
-    var query = "http://localhost:8080/notes/notes/" + notes.numberOfNotesPerPage;
+    var query = "http://earth.opentaps.org:8078/notes/notes/" + notes.numberOfNotesPerPage;
     if (from) {
         query += "/" + from;
     }
