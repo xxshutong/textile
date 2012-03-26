@@ -2,6 +2,7 @@ target/
 */target/
 /runner
 $*
+clients/phonegap/android/NoteApp/bin/
 
 # Eclipse stuff
 .settings/
