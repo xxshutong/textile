@@ -40,6 +40,7 @@ import org.restlet.resource.Get;
 public class FacebookResource extends ServerResource {
 
     public static final String FB_API_URL = "https://www.facebook.com/";
+    public static final String FB_M_API_URL = "https://m.facebook.com/";
     public static final String FB_GRAPH_API_URL = "https://graph.facebook.com/";
     public static final String FB_SCOPE = "offline_access,email,user_photos,publish_stream";
     public static final String FB_OAUTH_CALL = "dialog/oauth";
@@ -49,36 +50,52 @@ public class FacebookResource extends ServerResource {
     public static final String FB_CLIENT_ID = "147297945387974";
     public static final String FB_CLIENT_SECRET = "47543515439316957dd2ad605a8e22f1";
     public static final String FB_REDIRECT_URL = "http://localhost:8080/notes/facebook/callback";
+    public static final String FB_M_REDIRECT_URL = "http://localhost:8080/notes/facebook/mcallback";
     public static final String FB_ACTION_LOGIN = "login";
+    public static final String FB_M_ACTION_LOGIN = "mlogin";
     public static final String FB_ACTION_CALLBACK = "callback";
+    public static final String FB_M_ACTION_CALLBACK = "mcallback";
+    public static final String FB_M_ACTION_SUCCESS = "success";
     public static final String FB_HTML_CLIENT_CALLBACK = "http://localhost/note_app.html";
+    public static final String FB_MOBILE_CLIENT_CALLBACK = "http://localhost:8080/notes/facebook/success";
     public static final String USER_KEY_NAME = "userKey";
 
     @Get
     public Representation getLogin() {
         Representation rep = null;
         String action = (String) getRequest().getAttributes().get("action");
-
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
         if (FB_ACTION_LOGIN.equalsIgnoreCase(action)) {
-            login();
+            login(FB_API_URL, FB_REDIRECT_URL);
+        } else if (FB_M_ACTION_LOGIN.equalsIgnoreCase(action)) {
+            login(FB_M_API_URL, FB_M_REDIRECT_URL);
         } else if (FB_ACTION_CALLBACK.equalsIgnoreCase(action)) {
-            rep =  callback();
+            rep = callback(FB_HTML_CLIENT_CALLBACK, FB_REDIRECT_URL);
+        } else if (FB_M_ACTION_CALLBACK.equalsIgnoreCase(action)) {    
+            rep = callback(FB_MOBILE_CLIENT_CALLBACK, FB_M_REDIRECT_URL);
+        } else if (FB_M_ACTION_SUCCESS.equalsIgnoreCase(action)) {    
+                rep = success();    
         } else {
             rep = new StringRepresentation("Unknown request: " + action);
         }
 
         return rep;
     }
+    
+    private Representation success() {
+        Representation rep = new StringRepresentation("Success");
+        
+        return rep;
+    }
 
     /**
      * Redirect to facebook login page
      */
-    private void login() {
-        Reference ref = new Reference(FB_API_URL+FB_OAUTH_CALL);
+    private void login(String apiURL, String callbackURL) {
+        Reference ref = new Reference(apiURL+FB_OAUTH_CALL);
         ref.addQueryParameter("client_id", FB_CLIENT_ID);
-        ref.addQueryParameter("redirect_uri", FB_REDIRECT_URL);
+        ref.addQueryParameter("redirect_uri", callbackURL);
         ref.addQueryParameter("scope", FB_SCOPE);
 
         getResponse().redirectTemporary(ref);
@@ -88,12 +105,12 @@ public class FacebookResource extends ServerResource {
      * Catch callback from facebook
      * @return Representation
      */
-    private Representation callback() {
+    private Representation callback(String clientCallback, String callbackURL) {
         Representation rep = new StringRepresentation("Can't get token ");
         String code = getRequest().getResourceRef().getQueryAsForm().getFirstValue("code");
 
         if (!GenericValidator.isBlankOrNull(code)) {
-            Form form = getAccessToken(code);
+            Form form = getAccessToken(code, callbackURL);
 
             if (form != null) {
                 String accessToken = form.getFirstValue("access_token");
@@ -109,7 +126,7 @@ public class FacebookResource extends ServerResource {
                             if (fbUser != null) {
                                 fbUser.setAccessToken(accessToken);
                                 userCache.putUser(userKey, fbUser);
-                                Reference ref = new Reference(FB_HTML_CLIENT_CALLBACK + "?" + USER_KEY_NAME + "=" + userKey);
+                                Reference ref = new Reference(clientCallback + "?" + USER_KEY_NAME + "=" + userKey);
                                 getResponse().redirectTemporary(ref);
                             }
                         } catch (IOException e) {
@@ -132,10 +149,10 @@ public class FacebookResource extends ServerResource {
      * @param code a <code>String</code>
      * @return access token a <code>Representation</code>
      */
-    private Form getAccessToken(String code) {
+    private Form getAccessToken(String code, String callbackURL) {
         Reference ref = new Reference(FB_GRAPH_API_URL+FB_TOKEN_CALL);
         ref.addQueryParameter("client_id", FB_CLIENT_ID);
-        ref.addQueryParameter("redirect_uri", FB_REDIRECT_URL);
+        ref.addQueryParameter("redirect_uri", callbackURL);
         ref.addQueryParameter("client_secret", FB_CLIENT_SECRET);
         ref.addQueryParameter("code", code);
 
