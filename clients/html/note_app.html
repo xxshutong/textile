@@ -949,7 +949,7 @@ function ajaxLoadNotes(from, order) {
         }
     }
 
-    var query = "http://earth.opentaps.org:8078/notes/notes/" + notes.numberOfNotesPerPage;
+    var query = notes.baseUrl + "notes/" + notes.numberOfNotesPerPage;
     if (from) {
         query += "/" + from;
     }
