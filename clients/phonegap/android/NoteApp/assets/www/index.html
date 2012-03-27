@@ -24,6 +24,10 @@
     <script type="text/javascript" charset="utf-8" src="jquery-1.7.1.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="jquery.mobile-1.0.1.min.js"></script>
     <script type="text/javascript">
+    var baseUrl = "http://notes.opentaps.com/notes/";
+    //for local testing
+    //var baseUrl = "http://192.168.0.68:8080/notes/"; 
+    
     function createRequest() {
         xmlhttp = false;
         if (typeof XMLHttpRequest != 'undefined') { 
@@ -103,22 +107,120 @@
     	    params = params + '&postOnMyWall=N';
     	}
 
-    	req.open("POST", "http://192.168.0.68:8080/notes/note", true);
+    	req.open("POST", baseUrl + "note", true);
     	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         req.send(params);    	 
     }
     
-    function login() {
-    	window.plugins.childBrowser.showWebPage("http://192.168.0.68:8080/notes/facebook/mlogin");
+    function login() {    	
+    	window.plugins.childBrowser.showWebPage(baseUrl + "facebook/mlogin");
+        window.plugins.childBrowser.onLocationChange = function(loc){ locationChange(loc); };
+    }
+    
+    function logout() {
+    	
+    }
+    
+    function locationChange(loc) {    	
+    	if (loc.indexOf("notes/facebook/success?userKey") >= 0) {
+    		var userKey = "";
+    		index = loc.indexOf("?");
+    		if (index >= 0) {
+    		    userKey = getQueryVariable(loc.substring(index + 1), "userKey");
+    		}
+    	    document.getElementById("userKey").value = userKey;
+
+    	    if (userKey == "") {
+    	        showLoginPrompt();
+    	    } else {
+    	        getAppUser(userKey);
+    	    }
+    	    
+    	    window.plugins.childBrowser.close();
+    	}
+    }
+    
+    function getQueryVariable(query, variable) {
+        var vars = query.split("&");
+        for (var i=0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return "";
+                
+    }
+    
+    function showLoginPrompt() {
+        var loginButton = document.getElementById("loginButton");
+        if (loginButton) {
+        	loginButton.style.display = "inline";
+        }
+        
+        var logoutButton = document.getElementById("logoutButton");
+        if (logoutButton) {
+            logoutButton.style.display = "none";
+        }
+    }
+    
+    function showLogoutPrompt() {    	
+        var logoutButton = document.getElementById("logoutButton");
+        if (logoutButton) {
+        	logoutButton.style.display = "inline";
+        }
+        
+        var loginButton = document.getElementById("loginButton");
+        if (loginButton) {
+            loginButton.style.display = "none";
+        }
+    }
+
+    function getAppUser(userKey) {
+        var reqUser = createRequest();
+
+        // Create the callback:
+        reqUser.onreadystatechange = function() {
+            if (reqUser.readyState == 4) {
+                parseUserResponse(reqUser);
+            }
+        }
+
+        reqUser.open("GET", baseUrl + "user/" + userKey, true);
+
+        reqUser.send(null);
+    }
+    
+    function showUserArea(json) {
+    	showLogoutPrompt();
+    }
+
+    function parseUserResponse(req) {
+        var resp = req.responseText;
+        showSuccessMessage("");
+        showErrorMessage("");
+
+        if (resp) {
+            var json = eval('(' + resp + ')');
+
+            if (req.status == 200) {
+                showUserArea(json);
+            } else {
+                showSuccessMessage("");
+                showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
+                showLoginPrompt();
+            }
+
+        } else {
+            showErrorMessage("Cannot get response from server.");
+        }
     }
 
     //register event listeners
-    document.addEventListener("DOMContentLoaded", function () {
-    	
+    document.addEventListener("DOMContentLoaded", function () {    	
         document.getElementById("createNoteButton").addEventListener("click", saveNote, false); 
         document.getElementById("loginButton").addEventListener("click", login, false);
         ChildBrowser.install();
-
     }, false)
 
     </script>
@@ -130,6 +232,7 @@
     <div data-role="header" data-position="inline" data-theme="d" > 
         <img src="images/opentaps_logo.png" width="180px"/>
         <a href="#" id="loginButton" class="ui-btn-right" data-theme="b">Login</a>
+        <a href="#" id="logoutButton" class="ui-btn-right" data-theme="a" style="display:none">Logout</a>
     </div>    
     <form name="createNote" id="createNote" action="createNote" method="post">    	  
         <input type="hidden" name="userKey" id="userKey"/>	
