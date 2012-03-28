@@ -54,7 +54,7 @@
     	        showSuccessMessage("");
     	        showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
     	        if (req.status == 401) {
-    	        	   //showLoginPrompt();
+    	        	   showLoginPrompt();
     	        }  
     	   }
     	} else {
@@ -91,7 +91,11 @@
         document.getElementById('successMessage').innerHTML = message;
     }
     
-    function saveNote(){        
+    function saveNote(){     
+        if (requireLogin() && !userLoggedIn()) {        	
+            return;            
+    	}
+
     	var req = createRequest(); 
     	  
     	// Create the callback:
@@ -195,6 +199,13 @@
         if (logoutButton) {
             logoutButton.style.display = "none";
         }
+        
+        setUserLoggedIn("N");
+        if (requireLogin()) {
+           setSaveButtonLabel("Please Sign In");
+        } else {
+           setSaveButtonLabel("Create Note");
+        }
     }
     
     function showLogoutPrompt() {    	
@@ -207,6 +218,9 @@
         if (loginButton) {
             loginButton.style.display = "none";
         }
+        
+        setUserLoggedIn("Y");
+        setSaveButtonLabel("Create Note");
     }
 
     function getAppUser(userKey) {
@@ -298,12 +312,43 @@
             showErrorMessage("Cannot get response from server.");
         }
     }
+    
+    function requireLogin() {
+        var requireLogin = document.getElementById('requireLogin');
+    	if (requireLogin && requireLogin.value == "Y") {
+    	    return true;
+    	} else {
+    	    return false;
+    	}
+    }
+
+   	function setUserLoggedIn(flag) {
+   		var userLoggedIn = document.getElementById('userLoggedIn');
+    	if (userLoggedIn) {
+    	    userLoggedIn.value = flag;
+    	} 
+    }
+
+    function userLoggedIn() {
+        var userLoggedIn = document.getElementById('userLoggedIn');
+    	if (userLoggedIn && userLoggedIn.value == "Y") {
+    	    return true;
+    	} else {
+    	    return false;
+    	}
+    }
+
+    function setSaveButtonLabel(label) {
+    	$('#createNoteButton').siblings('.ui-btn-inner').children('.ui-btn-text').text(label);
+    	
+    }
 
     //register event listeners
     document.addEventListener("DOMContentLoaded", function () {    	
         document.getElementById("createNoteButton").addEventListener("click", saveNote, false); 
         document.getElementById("loginButton").addEventListener("click", login, false);
         document.getElementById("logoutButton").addEventListener("click", logout, false);
+        showLoginPrompt();
         ChildBrowser.install();
     }, false)
 
@@ -321,7 +366,9 @@
     <form name="createNote" id="createNote" action="createNote" method="post"> 
         <label id="userArea"></label>
         <img style="display:none" id="userAreaPhoto" src="" class="userPicture"/>   	  
-        <input type="hidden" name="userKey" id="userKey"/>	
+        <input type="hidden" name="userKey" id="userKey"/>
+        <input type="hidden" name="requireLogin" id="requireLogin" value="Y"/>
+        <input type="hidden" name="userLoggedIn" id="userLoggedIn" value="N"/>
         <div class="field-error-message" id="noteText_error"></div>
         <textarea name="noteText" id="noteText" placeholder="Write your note here"></textarea>
         <input id="postOnMyWall" type="checkbox" name="postOnMyWall" class="custom" style="display:none" checked="checked" data-theme="c"/>       
