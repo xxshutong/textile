@@ -18,6 +18,10 @@
             color:red;
         }
         .error-message { color:red; }
+        
+        img.userPicture,
+        .userPicture .noImage,
+        .userPicture img { height:25px; width:25px; }
     </style>
     <script type="text/javascript" charset="utf-8" src="phonegap-1.4.1.js"></script>
     <script type="text/javascript" charset="utf-8" src="childbrowser.js"></script>
@@ -117,8 +121,37 @@
         window.plugins.childBrowser.onLocationChange = function(loc){ locationChange(loc); };
     }
     
+    function parseLogoutUserResponse(req) {
+        var resp = req.responseText;
+        showSuccessMessage("");
+        showErrorMessage("");
+
+        if (resp) {
+            if (req.status == 200) {
+                var userKey = getQueryVariable("userKey");
+                document.getElementById('userKey').value = "";
+                hideUserArea();
+            }
+        } else {
+            showErrorMessage("Cannot get response from server.");
+        }
+    }
+
     function logout() {
-    	
+        var reqLogoutUser = createRequest();
+        var userKey = document.getElementById('userKey');
+
+        // Create the callback:
+        reqLogoutUser.onreadystatechange = function() {
+            if (reqLogoutUser.readyState == 4) {
+                parseLogoutUserResponse(reqLogoutUser);
+            }
+        }
+
+        reqLogoutUser.open("POST", baseUrl + "user/logout/" + userKey.value, true);
+        reqLogoutUser.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        reqLogoutUser.send(null);
     }
     
     function locationChange(loc) {    	
@@ -193,6 +226,56 @@
     
     function showUserArea(json) {
     	showLogoutPrompt();
+    	
+    	var userArea = document.getElementById('userArea');
+        if (userArea) {
+            userArea.innerHTML = json.result.successMessage + " " + json.result.resultValue.user.name;
+        }
+        
+        var userAreaPhoto = document.getElementById('userAreaPhoto');
+        if (userAreaPhoto) {
+            userAreaPhoto.src = getFacebookUserPictureUrl(json.result.resultValue.user.id);
+            userAreaPhoto.style.display = "inline";
+        }
+        
+        var postOnMyWall = document.getElementById('postOnMyWall');
+        if (postOnMyWall) {
+            postOnMyWall.style.display = "block";
+        }
+
+        var postOnMyWallLabel = document.getElementById('postOnMyWallLabel');
+        if (postOnMyWallLabel) {
+            postOnMyWallLabel.style.display = "block";
+        }
+    }
+    
+    function hideUserArea(json) {
+    	showLoginPrompt();
+    	
+        var userArea = document.getElementById('userArea');
+        if (userArea) {
+            userArea.innerHTML = "";
+        }
+        
+        var userAreaPhoto = document.getElementById('userAreaPhoto');
+        if (userAreaPhoto) {
+            userAreaPhoto.src = "";
+            userAreaPhoto.style.display = "none";
+        }
+        
+        var postOnMyWall = document.getElementById('postOnMyWall');
+        if (postOnMyWall) {
+            postOnMyWall.style.display = "none";
+        }
+        
+        var postOnMyWallLabel = document.getElementById('postOnMyWallLabel');
+        if (postOnMyWallLabel) {
+            postOnMyWallLabel.style.display = "none";
+        }
+    }
+    
+    function getFacebookUserPictureUrl(userId) {
+        return "https://graph.facebook.com/" + userId + "/picture?type=square";
     }
 
     function parseUserResponse(req) {
@@ -220,6 +303,7 @@
     document.addEventListener("DOMContentLoaded", function () {    	
         document.getElementById("createNoteButton").addEventListener("click", saveNote, false); 
         document.getElementById("loginButton").addEventListener("click", login, false);
+        document.getElementById("logoutButton").addEventListener("click", logout, false);
         ChildBrowser.install();
     }, false)
 
@@ -234,11 +318,14 @@
         <a href="#" id="loginButton" class="ui-btn-right" data-theme="b">Login</a>
         <a href="#" id="logoutButton" class="ui-btn-right" data-theme="a" style="display:none">Logout</a>
     </div>    
-    <form name="createNote" id="createNote" action="createNote" method="post">    	  
+    <form name="createNote" id="createNote" action="createNote" method="post"> 
+        <label id="userArea"></label>
+        <img style="display:none" id="userAreaPhoto" src="" class="userPicture"/>   	  
         <input type="hidden" name="userKey" id="userKey"/>	
         <div class="field-error-message" id="noteText_error"></div>
         <textarea name="noteText" id="noteText" placeholder="Write your note here"></textarea>
-        <input id="postOnMyWall" type="checkbox" name="postOnMyWall"  style="display:none"/>
+        <input id="postOnMyWall" type="checkbox" name="postOnMyWall" class="custom" style="display:none" checked="checked" data-theme="c"/>       
+        <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none" data-theme="c">Also post on my wall</label>
         <button id="createNoteButton" type="button" data-theme="b">Create Note</button>           
         <div id="successMessage" class="message"></div>
         <div id="errorMessage" class="error-message" ></div>
