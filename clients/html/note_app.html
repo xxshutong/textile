@@ -197,6 +197,10 @@ function showSuccessMessage(message) {
 }
 
 function saveNote(form){
+  if (requireLogin() && !userLoggedIn()) {
+     return;
+  }
+
   switchButtonDisable(document.getElementById('createNoteButton'), true, "Please Wait...");
   var req = createRequest();
 
@@ -248,6 +252,23 @@ function showLoginPrompt() {
     if (userLogin) {
         userLogin.style.display = "inline";
     }
+
+    setUserLoggedIn("N");
+    if (requireLogin()) {
+       setSaveButtonLabel("Please Sign In");
+    } else {
+       setSaveButtonLabel("Create Note");
+    }
+}
+
+function showLogoutPrompt() {
+    var userLogout = document.getElementById("userLogout");
+    if (userLogout) {
+        userLogout.style.display = "inline";
+    }
+
+    setUserLoggedIn("Y");
+    setSaveButtonLabel("Create Note");
 }
 
 function getAppUser(userKey) {
@@ -303,10 +324,9 @@ function showUserArea(json) {
         userAreaPhoto.src = getFacebookUserPictureUrl(json.result.resultValue.user.id);
         userAreaPhoto.style.display = "inline";
     }
-    var userLogout = document.getElementById('userLogout');
-    if (userLogout) {
-        userLogout.style.display = "block";
-    }
+
+    showLogoutPrompt();
+
     var postOnMyWall = document.getElementById('postOnMyWall');
     if (postOnMyWall) {
         postOnMyWall.style.display = "inline";
@@ -1017,6 +1037,38 @@ function scroll() {
     if (!notes.loading) loadIfScrolledToEndOfList();
 }
 
+function requireLogin() {
+  var requireLogin = document.getElementById('requireLogin');
+  if (requireLogin && requireLogin.value == "Y") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function setUserLoggedIn(flag) {
+  var userLoggedIn = document.getElementById('userLoggedIn');
+  if (userLoggedIn) {
+    userLoggedIn.value = flag;
+  } 
+}
+
+function userLoggedIn() {
+  var userLoggedIn = document.getElementById('userLoggedIn');
+  if (userLoggedIn && userLoggedIn.value == "Y") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function setSaveButtonLabel(label) {
+  var createNoteButton = document.getElementById('createNoteButton');
+  if (createNoteButton) {
+    createNoteButton.value = label;
+  } 
+}
+
 function onLoadPage() {
     var userKey = getQueryVariable("userKey");
     document.getElementById("userKey").value = userKey;
@@ -1067,6 +1119,8 @@ function onLoadPage() {
         <label id="userArea"></label>
         <img style="display:none" id="userAreaPhoto" src="" class="userPicture"/>
         <input type="hidden" name="userKey" id="userKey"/>
+        <input type="hidden" name="requireLogin" id="requireLogin" value="N"/>
+        <input type="hidden" name="userLoggedIn" id="userLoggedIn" value="N"/>
         <form name="createNoteForm" id="createNoteForm" action="createNote" method="post">
           <div class="fieldErrorMessage" id="noteText_error"></div>
           <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea>
