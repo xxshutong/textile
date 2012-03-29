@@ -42,6 +42,7 @@
     
     function parseResponse(req) {
         var resp = req.responseText;
+        switchButtonDisable('#createNoteButton', false, "Create Note");
 
     	if (resp) {
     	    var json = eval('(' + resp + ')');
@@ -95,7 +96,8 @@
         if (requireLogin() && !userLoggedIn()) {        	
             return;            
     	}
-
+        
+        switchButtonDisable('#createNoteButton', true, "Please Wait...");
     	var req = createRequest(); 
     	  
     	// Create the callback:
@@ -202,9 +204,9 @@
         
         setUserLoggedIn("N");
         if (requireLogin()) {
-           setSaveButtonLabel("Please Sign In");
+            switchButtonDisable('#createNoteButton', true, "Please Sign In");
         } else {
-           setSaveButtonLabel("Create Note");
+        	switchButtonDisable('#createNoteButton', false, "Create Note");
         }
     }
     
@@ -220,7 +222,7 @@
         }
         
         setUserLoggedIn("Y");
-        setSaveButtonLabel("Create Note");
+        switchButtonDisable('#createNoteButton', false, "Create Note");
     }
 
     function getAppUser(userKey) {
@@ -337,10 +339,16 @@
     	    return false;
     	}
     }
-
-    function setSaveButtonLabel(label) {
-    	$('#createNoteButton').siblings('.ui-btn-inner').children('.ui-btn-text').text(label);
-    	
+   
+    function switchButtonDisable(button, disabled, buttonText) {
+        if (button) {
+        	if (disabled) {
+        	    $(button).button('disable');
+        	} else {
+        		$(button).button('enable');
+        	}
+        	$(button).siblings('.ui-btn-inner').children('.ui-btn-text').text(buttonText);
+    	}
     }
 
     //register event listeners
