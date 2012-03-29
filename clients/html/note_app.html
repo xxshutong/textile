@@ -255,9 +255,9 @@ function showLoginPrompt() {
 
     setUserLoggedIn("N");
     if (requireLogin()) {
-       setSaveButtonLabel("Please Sign In");
+       switchButtonDisable(document.getElementById('createNoteButton'), true, "Please Sign In");
     } else {
-       setSaveButtonLabel("Create Note");
+       switchButtonDisable(document.getElementById('createNoteButton'), false, "Create Note");
     }
 }
 
@@ -267,8 +267,8 @@ function showLogoutPrompt() {
         userLogout.style.display = "inline";
     }
 
-    setUserLoggedIn("Y");
-    setSaveButtonLabel("Create Note");
+    setUserLoggedIn("Y");  
+    switchButtonDisable(document.getElementById('createNoteButton'), false, "Create Note");
 }
 
 function getAppUser(userKey) {
@@ -1060,13 +1060,6 @@ function userLoggedIn() {
   } else {
     return false;
   }
-}
-
-function setSaveButtonLabel(label) {
-  var createNoteButton = document.getElementById('createNoteButton');
-  if (createNoteButton) {
-    createNoteButton.value = label;
-  } 
 }
 
 function onLoadPage() {
