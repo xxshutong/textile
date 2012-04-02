@@ -152,7 +152,7 @@ function parseResponse(req) {
       showSuccessMessage(json.result.successMessage);
       document.getElementById('noteText').value = "";
       // fetch new notes for display in the list
-      ajaxLoadLaterNotes();
+      if (localStorage) ajaxLoadLaterNotes();
     } else {
       showSuccessMessage("");
       showErrorMessage(json.result.errorMessage.replace(/\n/g,'<br/>'), json.result.errorDetail);
@@ -506,12 +506,14 @@ function getUser(userId, type) {
 var notes = {};
 
 notes.reset = function() {
-  this.baseUrl = localStorage.getObject("baseUrl", "http://localhost:8080/notes/");
-  this.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
+  this.baseUrl = "http://localhost:8080/notes/";
+  if (localStorage) {    
+    this.numberOfNotesPerPage = localStorage.getObject("numberOfNotesPerPage", 10);
+    this.loadedNotes = localStorage.getObject("notes", {});
+    this.users = localStorage.getObject("users", {});
+  }  
   this.latestNote = undefined;
   this.oldestNote = undefined;
-  this.loadedNotes = localStorage.getObject("notes", {});
-  this.users = localStorage.getObject("users", {});
   this.loadedNotesCount = 0;
   this.cachedNotesArray = new Array();
   this.latestCachedNoteSequence = undefined;
@@ -1072,8 +1074,12 @@ function onLoadPage() {
         getAppUser(userKey);
     }
 
-    if (typeof localStorage == 'undefined') {
-        alert("Your browser does not support HTML 5 local storage.");
+    if (!localStorage) {
+        var el = document.getElementById("noMoreNotes");
+        if (el) {
+            el.className = "";  
+            el.innerHTML = "Your browser doesn't support LocalStorage, so you won't be able to see the list of notes.</br>Please use a more current browser.";  
+        }
     } else {
       // first display the notes from local storage
       initCachedNotesArray();
