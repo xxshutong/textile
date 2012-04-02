@@ -8,10 +8,9 @@
     <link rel="stylesheet" href="jquery.mobile-1.0.1.min.css" />
     <style type="text/css">
         .opentaps-logo {
-            margin-top:6px;
-            margin-bottom:6px;
-            width:100%;
-            background-color:#FFFFFF;
+            margin-top:2px;
+            margin-left:2px;
+            width:180px;
         }
         .field-error-message { 
             margin-bottom:6px; 
@@ -22,6 +21,12 @@
         img.userPicture,
         .userPicture .noImage,
         .userPicture img { height:25px; width:25px; }
+        
+        #header { 
+            background:#fff;
+            border:0px; 
+            margin-bottom:4px;
+        }
     </style>
     <script type="text/javascript" charset="utf-8" src="phonegap-1.4.1.js"></script>
     <script type="text/javascript" charset="utf-8" src="childbrowser.js"></script>
@@ -356,8 +361,7 @@
         document.getElementById("createNoteButton").addEventListener("click", saveNote, false); 
         document.getElementById("loginButton").addEventListener("click", login, false);
         document.getElementById("logoutButton").addEventListener("click", logout, false);
-        showLoginPrompt();
-        ChildBrowser.install();
+        showLoginPrompt();        
     }, false)
 
     </script>
@@ -365,12 +369,12 @@
 
 <body>
 <div data-role="page" data-theme="d">
-<div data-role="content" >
-    <div data-role="header" data-position="inline" data-theme="d" > 
-        <img src="images/opentaps_logo.png" width="180px"/>
+<div data-role="content">
+    <div id="header" data-role="header" data-position="inline"> 
+        <img src="images/opentaps_logo.png" class="opentaps-logo"/>
         <a href="#" id="loginButton" class="ui-btn-right" data-theme="b">Login</a>
         <a href="#" id="logoutButton" class="ui-btn-right" data-theme="a" style="display:none">Logout</a>
-    </div>    
+    </div>  
     <form name="createNote" id="createNote" action="createNote" method="post"> 
         <label id="userArea"></label>
         <img style="display:none" id="userAreaPhoto" src="" class="userPicture"/>   	  
