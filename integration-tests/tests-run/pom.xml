@@ -185,6 +185,11 @@
             <groupId>net.sourceforge.json</groupId>
             <artifactId>com.springsource.net.sf.json</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>com.springsource.org.testng</artifactId>
+            <version>5.10.0</version>
+        </dependency>
 
         <!-- test scope -->
         <dependency>
