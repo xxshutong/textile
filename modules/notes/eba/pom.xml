@@ -166,6 +166,11 @@
             <artifactId>validation.impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>com.springsource.org.testng</artifactId>
+            <version>5.10.0</version>
+        </dependency>
     </dependencies>
 
     <properties>
