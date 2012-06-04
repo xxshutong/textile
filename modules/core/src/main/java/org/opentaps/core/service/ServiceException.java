@@ -99,6 +99,18 @@ public class ServiceException extends Exception {
         this.messages = messages;
     }
 
+    @Override
+    public String getMessage() {
+        StringBuilder sb = new StringBuilder(super.getMessage());
+        if (messages != null && messages.size() > 0) {
+            sb.append("\n Also messages on the list:");
+            for (String msg : messages) {
+                sb.append(String.format("\n\t%1$s", msg));
+            }
+        }
+        return sb.toString();
+    }
+
     /**
      * Returns the detail message, including the message from the nested exception if there is one.
      * @return the formatted message
