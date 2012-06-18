@@ -26,9 +26,9 @@
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>notes.repository.impl</artifactId>
-    <name>Notes Repository Implementation</name>
-    <description>The repository and persisted entities</description>
+    <artifactId>notes.repository.impl.jpa</artifactId>
+    <name>Notes Repository Implementation for JPA</name>
+    <description>Data access and manipulation methods implemented for openJPA</description>
     <packaging>bundle</packaging>
 
     <build>

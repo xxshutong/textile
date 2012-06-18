@@ -82,7 +82,7 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>notes.repository.impl</artifactId>
+        <artifactId>notes.repository.impl.jpa</artifactId>
         <version>${project.version}</version>
         <scope>provided</scope>
       </dependency>

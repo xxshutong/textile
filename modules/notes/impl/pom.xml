@@ -31,7 +31,8 @@
     <packaging>pom</packaging>
 
     <modules>
-    	<module>repository</module>
+    	<module>repository.jpa</module>
+        <module>repository.mongo</module>
     	<module>services</module>
         <module>security</module>
         <module>security2</module>

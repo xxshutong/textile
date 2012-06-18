@@ -136,7 +136,7 @@
         </dependency>
         <dependency>
             <groupId>org.opentaps</groupId>
-            <artifactId>notes.repository.impl</artifactId>
+            <artifactId>notes.repository.impl.jpa</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
