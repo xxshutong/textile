@@ -56,7 +56,7 @@ public class NotesTests extends RemoteTestCase {
         postURI.setNext(client);
 
         Form formData = new Form();
-        formData.add(new Parameter("noteText", TEXT));
+        formData.add(new Parameter("note_field_noteText", TEXT));
         formData.add(new Parameter("attribute1", ATTR1));
         formData.add(new Parameter("attribute2", ATTR2));
         formData.add(new Parameter("attribute3", ATTR3));

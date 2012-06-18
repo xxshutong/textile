@@ -169,7 +169,7 @@ public class NoteResource extends ServerResource {
             }
         }
 
-        String noteText = form.getFirstValue("noteText");
+        String noteText = form.getFirstValue("note_field_noteText");
         String attribute1 = form.getFirstValue("attribute1");
         String attribute2 = form.getFirstValue("attribute2");
         String attribute3 = form.getFirstValue("attribute3");

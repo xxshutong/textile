@@ -212,7 +212,7 @@ function saveNote(form){
 
   }
 
-  var params = 'noteText=' + encodeURIComponent(form["noteText"].value);
+  var params = 'note_field_noteText=' + encodeURIComponent(form["note_field_noteText"].value);
   params = params + '&userKey=' + encodeURIComponent(document.getElementById('userKey').value);
   var postOnMyWall = document.getElementById('postOnMyWall').checked;
   if (postOnMyWall) {
@@ -1122,7 +1122,7 @@ function onLoadPage() {
         <input type="hidden" name="userLoggedIn" id="userLoggedIn" value="N"/>
         <form name="createNoteForm" id="createNoteForm" action="createNote" method="post">
           <div class="fieldErrorMessage" id="noteText_error"></div>
-          <textarea name="noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea>
+          <textarea name="note_field_noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea>
           <div>
             <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked="checked"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
           </div>

@@ -128,7 +128,7 @@
     	   
     	}
 
-    	var params = 'noteText=' + encodeURIComponent(this.form["noteText"].value);
+    	var params = 'note_field_noteText=' + encodeURIComponent(this.form["noteText"].value);
     	params = params + '&userKey=' + encodeURIComponent(document.getElementById('userKey').value);
     	var postOnMyWall = document.getElementById('postOnMyWall').checked;
     	if (postOnMyWall) {
@@ -1061,7 +1061,7 @@
         <input type="hidden" name="requireLogin" id="requireLogin" value="Y"/>
         <input type="hidden" name="userLoggedIn" id="userLoggedIn" value="N"/>
         <div class="field-error-message" id="noteText_error"></div>
-        <textarea name="noteText" id="noteText" placeholder="Write your note here"></textarea>
+        <textarea name="note_field_noteText" id="noteText" placeholder="Write your note here"></textarea>
         <input id="postOnMyWall" type="checkbox" name="postOnMyWall" class="custom" style="display:none" checked="checked" data-theme="c"/>       
         <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none" data-theme="c">Also post on my wall</label>
         <button id="createNoteButton" type="button" data-theme="b">Create Note</button>           
