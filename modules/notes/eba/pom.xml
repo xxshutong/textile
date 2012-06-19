@@ -112,6 +112,11 @@
             <artifactId>com.springsource.net.sf.json</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>com.springsource.org.testng</artifactId>
+            <version>5.10.0</version>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
@@ -143,7 +148,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>notes.repository.impl.jpa</artifactId>
+            <artifactId>notes.repository.impl.mongo</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

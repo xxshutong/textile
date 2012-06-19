@@ -46,16 +46,11 @@ public class NoteApiTest extends NotesTestConfig {
         // create a note
         CreateNoteServiceInput createNoteInput = new CreateNoteServiceInput();
         createNoteInput.setText("This is the note text");
-        createNoteInput.setAttribute1("attribute 1");
-        createNoteInput.setAttribute2("attribute 2");
-        createNoteInput.setAttribute3("attribute 3");
-        createNoteInput.setAttribute4("attribute 4");
-        createNoteInput.setAttribute5("attribute 5");
-        createNoteInput.setAttribute6("attribute 6");
-        createNoteInput.setAttribute7("attribute 7");
-        createNoteInput.setAttribute8("attribute 8");
-        createNoteInput.setAttribute9("attribute 9");
-        createNoteInput.setAttribute10("attribute 10");
+        createNoteInput.setAttribute("field1", "value1");
+        createNoteInput.setAttribute("field2", "value2");
+        createNoteInput.setAttribute("field3", "value3");
+        createNoteInput.setAttribute("field4", "value4");
+        createNoteInput.setAttribute("field5", "value5");
 
 
         log("NoteApiTest :: testCreateNote : Creating note ...");
@@ -77,25 +72,17 @@ public class NoteApiTest extends NotesTestConfig {
 
         assertEquals("note id mismatch", noteId, note.getNoteId());
         assertEquals("note text mismatch", "This is the note text", note.getNoteText());
-        assertEquals("attribute 1 mismatch", "attribute 1", note.getAttribute1());
-        assertEquals("attribute 2 mismatch", "attribute 2", note.getAttribute2());
-        assertEquals("attribute 3 mismatch", "attribute 3", note.getAttribute3());
-        assertEquals("attribute 4 mismatch", "attribute 4", note.getAttribute4());
-        assertEquals("attribute 5 mismatch", "attribute 5", note.getAttribute5());
-        assertEquals("attribute 6 mismatch", "attribute 6", note.getAttribute6());
-        assertEquals("attribute 7 mismatch", "attribute 7", note.getAttribute7());
-        assertEquals("attribute 8 mismatch", "attribute 8", note.getAttribute8());
-        assertEquals("attribute 9 mismatch", "attribute 9", note.getAttribute9());
-        assertEquals("attribute 10 mismatch", "attribute 10", note.getAttribute10());
+        assertEquals("custom field 1 mismatch", "value1", note.getAttribute("field1"));
+        assertEquals("custom field 2 mismatch", "value2", note.getAttribute("field2"));
+        assertEquals("custom field 3 mismatch", "value3", note.getAttribute("field3"));
+        assertEquals("custom field 4 mismatch", "value4", note.getAttribute("field4"));
+        assertEquals("custom field 5 mismatch", "value5", note.getAttribute("field5"));
 
         // create a second note
         createNoteInput = new CreateNoteServiceInput();
         createNoteInput.setText("This is another note text");
-        createNoteInput.setAttribute1("attribute 1");
-        createNoteInput.setAttribute3("attribute 3");
-        createNoteInput.setAttribute5("attribute 5");
-        createNoteInput.setAttribute7("attribute 7");
-        createNoteInput.setAttribute9("attribute 9");
+        createNoteInput.setAttribute("field1", "value1");
+        createNoteInput.setAttribute("field2", "value2");
 
         log("NoteApiTest :: testCreateNote : Creating note 2 ...");
 
@@ -116,16 +103,11 @@ public class NoteApiTest extends NotesTestConfig {
 
         assertEquals("note id mismatch", noteId, note.getNoteId());
         assertEquals("note text mismatch", "This is another note text", note.getNoteText());
-        assertEquals("attribute 1 mismatch", "attribute 1", note.getAttribute1());
-        assertEquals("attribute 2 mismatch", null, note.getAttribute2());
-        assertEquals("attribute 3 mismatch", "attribute 3", note.getAttribute3());
-        assertEquals("attribute 4 mismatch", null, note.getAttribute4());
-        assertEquals("attribute 5 mismatch", "attribute 5", note.getAttribute5());
-        assertEquals("attribute 6 mismatch", null, note.getAttribute6());
-        assertEquals("attribute 7 mismatch", "attribute 7", note.getAttribute7());
-        assertEquals("attribute 8 mismatch", null, note.getAttribute8());
-        assertEquals("attribute 9 mismatch", "attribute 9", note.getAttribute9());
-        assertEquals("attribute 10 mismatch", null, note.getAttribute10());
+        assertEquals("custom field 1 mismatch", "value1", note.getAttribute("field1"));
+        assertEquals("custom field 2 mismatch", "value2", note.getAttribute("field2"));
+        assertEquals("custom field 3 mismatch", null, note.getAttribute("field3"));
+        assertEquals("custom field 4 mismatch", null, note.getAttribute("field4"));
+        assertEquals("custom field 5 mismatch", null, note.getAttribute("field5"));
     }
 
     @Test
@@ -140,16 +122,11 @@ public class NoteApiTest extends NotesTestConfig {
         for (int i = 1; i <= 100; i++) {
             CreateNoteServiceInput createNoteInput = new CreateNoteServiceInput();
             createNoteInput.setText("Test note sequence " + i);
-            createNoteInput.setAttribute1("attribute 1");
-            createNoteInput.setAttribute2("attribute 2");
-            createNoteInput.setAttribute3("attribute 3");
-            createNoteInput.setAttribute4("attribute 4");
-            createNoteInput.setAttribute5("attribute 5");
-            createNoteInput.setAttribute6("attribute 6");
-            createNoteInput.setAttribute7("attribute 7");
-            createNoteInput.setAttribute8("attribute 8");
-            createNoteInput.setAttribute9("attribute 9");
-            createNoteInput.setAttribute10("attribute 10");
+            createNoteInput.setAttribute("field1", "value1");
+            createNoteInput.setAttribute("field2", "value2");
+            createNoteInput.setAttribute("field3", "value3");
+            createNoteInput.setAttribute("field4", "value4");
+            createNoteInput.setAttribute("field5", "value5");
 
             log("NoteApiTest :: testCreateNoteSequence : Creating note : Iteration : " + i);
 

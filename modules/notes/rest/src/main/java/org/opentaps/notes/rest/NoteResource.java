@@ -17,14 +17,12 @@
 package org.opentaps.notes.rest;
 
 import java.util.List;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONBuilder;
 import net.sf.json.util.JSONStringer;
-
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
@@ -56,6 +54,8 @@ import org.restlet.resource.Post;
  * The Notes REST implementation.
  */
 public class NoteResource extends ServerResource {
+
+    private static final String CUSTOM_FIELD_PREFIX = "note_field_";
 
     /**
      * Handle GET requests.
@@ -169,17 +169,7 @@ public class NoteResource extends ServerResource {
             }
         }
 
-        String noteText = form.getFirstValue("noteText");
-        String attribute1 = form.getFirstValue("attribute1");
-        String attribute2 = form.getFirstValue("attribute2");
-        String attribute3 = form.getFirstValue("attribute3");
-        String attribute4 = form.getFirstValue("attribute4");
-        String attribute5 = form.getFirstValue("attribute5");
-        String attribute6 = form.getFirstValue("attribute6");
-        String attribute7 = form.getFirstValue("attribute7");
-        String attribute8 = form.getFirstValue("attribute8");
-        String attribute9 = form.getFirstValue("attribute9");
-        String attribute10 = form.getFirstValue("attribute10");
+        String noteText = form.getFirstValue(Note.Fields.noteText.getName());
 
         InitialContext context = new InitialContext();
         CreateNoteService createNoteService = (CreateNoteService) context.lookup("osgi:service/org.opentaps.notes.services.CreateNoteService");
@@ -187,16 +177,13 @@ public class NoteResource extends ServerResource {
         if (createNoteService != null) {
             CreateNoteServiceInput createNoteServiceInput = new CreateNoteServiceInput();
             createNoteServiceInput.setText(noteText);
-            createNoteServiceInput.setAttribute1(attribute1);
-            createNoteServiceInput.setAttribute2(attribute2);
-            createNoteServiceInput.setAttribute3(attribute3);
-            createNoteServiceInput.setAttribute4(attribute4);
-            createNoteServiceInput.setAttribute5(attribute5);
-            createNoteServiceInput.setAttribute6(attribute6);
-            createNoteServiceInput.setAttribute7(attribute7);
-            createNoteServiceInput.setAttribute8(attribute8);
-            createNoteServiceInput.setAttribute9(attribute9);
-            createNoteServiceInput.setAttribute10(attribute10);
+            for (String param : form.getNames()) {
+                if (param.startsWith(CUSTOM_FIELD_PREFIX)) {
+                    String fieldName = param.substring(CUSTOM_FIELD_PREFIX.length());
+                    String value = form.getFirstValue(param);
+                    createNoteServiceInput.setAttribute(fieldName, value);
+                }
+            }
             createNoteServiceInput.setCreatedByUserId(createdByUserId);
             createNoteServiceInput.setUserIdType(userIdType);
             Reference ref = getRequest().getReferrerRef();
@@ -260,29 +247,23 @@ public class NoteResource extends ServerResource {
             throw new IllegalArgumentException();
         }
 
+        JSONBuilder noteBuilder = new JSONStringer()
+            .object()
+            .key(Note.Fields.noteId.getName()).value(note.getNoteId())
+            .key(Note.Fields.noteText.getName()).value(note.getNoteText())
+            .key(Note.Fields.sequenceNum.getName()).value(note.getSequenceNum())
+            .key(Note.Fields.dateTimeCreated.getName()).value(note.getDateTimeCreated())
+            .key(Note.Fields.createdByUserId.getName()).value(note.getCreatedByUserId())
+            .key(Note.Fields.userIdType.getName()).value(note.getUserIdType());
+
+        for (String field : note.getAttributeNames()) {
+            noteBuilder.key(CUSTOM_FIELD_PREFIX + field).value(note.getAttribute(field));
+        }
+
         return new JSONStringer()
             .object()
                 .key("note")
-                .value(JSONSerializer.toJSON(new JSONStringer()
-                                             .object()
-                                             .key("noteId").value(note.getNoteId())
-                                             .key("noteText").value(note.getNoteText())
-                                             .key("sequenceNum").value(note.getSequenceNum())
-                                             .key("dateTimeCreated").value(note.getDateTimeCreated())
-                                             .key("createdByUserId").value(note.getCreatedByUserId())
-                                             .key("userIdType").value(note.getUserIdType())
-                                             .key("attribute1").value(note.getAttribute1())
-                                             .key("attribute2").value(note.getAttribute2())
-                                             .key("attribute3").value(note.getAttribute3())
-                                             .key("attribute4").value(note.getAttribute4())
-                                             .key("attribute5").value(note.getAttribute5())
-                                             .key("attribute6").value(note.getAttribute6())
-                                             .key("attribute7").value(note.getAttribute7())
-                                             .key("attribute8").value(note.getAttribute8())
-                                             .key("attribute9").value(note.getAttribute9())
-                                             .key("attribute10").value(note.getAttribute10())
-                                             .endObject()
-                                             .toString()))
+                .value(JSONSerializer.toJSON(noteBuilder.endObject().toString()))
             .endObject()
             .toString();
     }
@@ -302,7 +283,7 @@ public class NoteResource extends ServerResource {
                 .key("note")
                 .value(JSONSerializer.toJSON(new JSONStringer()
                                              .object()
-                                             .key("noteId").value(noteId)
+                                             .key(Note.Fields.noteId.getName()).value(noteId)
                                              .endObject()
                                              .toString()))
             .endObject()

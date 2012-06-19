@@ -56,17 +56,12 @@ public class NotesTests extends RemoteTestCase {
         postURI.setNext(client);
 
         Form formData = new Form();
-        formData.add(new Parameter("noteText", TEXT));
-        formData.add(new Parameter("attribute1", ATTR1));
-        formData.add(new Parameter("attribute2", ATTR2));
-        formData.add(new Parameter("attribute3", ATTR3));
-        formData.add(new Parameter("attribute4", ATTR4));
-        formData.add(new Parameter("attribute5", ATTR5));
-        formData.add(new Parameter("attribute6", ATTR6));
-        formData.add(new Parameter("attribute7", ATTR7));
-        formData.add(new Parameter("attribute8", ATTR8));
-        formData.add(new Parameter("attribute9", ATTR9));
-        formData.add(new Parameter("attribute10", ATTR10));
+        formData.add(new Parameter(Note.Fields.noteText.getName(), TEXT));
+        formData.add(new Parameter("note_field_" + ATTR1, ATTR2));
+        formData.add(new Parameter("note_field_" + ATTR3, ATTR4));
+        formData.add(new Parameter("note_field_" + ATTR5, ATTR6));
+        formData.add(new Parameter("note_field_" + ATTR7, ATTR8));
+        formData.add(new Parameter("note_field_" + ATTR9, ATTR10));
 
         Representation response = postURI.post(formData);
         long contentLength = response.getSize();
@@ -92,16 +87,11 @@ public class NotesTests extends RemoteTestCase {
         assertNotNull(note);
 
         assertEquals("Checking text property", TEXT, note.getNoteText());
-        assertEquals("Checking attribute1 property", ATTR1, note.getAttribute1());
-        assertEquals("Checking attribute2 property", ATTR2, note.getAttribute2());
-        assertEquals("Checking attribute3 property", ATTR3, note.getAttribute3());
-        assertEquals("Checking attribute4 property", ATTR4, note.getAttribute4());
-        assertEquals("Checking attribute5 property", ATTR5, note.getAttribute5());
-        assertEquals("Checking attribute6 property", ATTR6, note.getAttribute6());
-        assertEquals("Checking attribute7 property", ATTR7, note.getAttribute7());
-        assertEquals("Checking attribute8 property", ATTR8, note.getAttribute8());
-        assertEquals("Checking attribute9 property", ATTR9, note.getAttribute9());
-        assertEquals("Checking attribute10 property", ATTR10, note.getAttribute10());
+        assertEquals("Checking attribute1 property", ATTR2, note.getAttribute(ATTR1));
+        assertEquals("Checking attribute1 property", ATTR4, note.getAttribute(ATTR3));
+        assertEquals("Checking attribute1 property", ATTR6, note.getAttribute(ATTR5));
+        assertEquals("Checking attribute1 property", ATTR8, note.getAttribute(ATTR7));
+        assertEquals("Checking attribute1 property", ATTR10, note.getAttribute(ATTR9));
 
         /*
          * 3. Test that validation is working, the following should fail.
