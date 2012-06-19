@@ -22,18 +22,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.bson.types.ObjectId;
-import org.opentaps.notes.domain.Note;
-import org.opentaps.notes.repository.NoteRepository;
-import org.opentaps.notes.repository.RepositoryException;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.MongoException;
+import org.bson.types.ObjectId;
+import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.repository.NoteRepository;
 
 
 /**
@@ -83,15 +80,12 @@ public class NoteRepositoryImpl implements NoteRepository {
         return note;
     }
 
-    /** {@inheritDoc} 
-     * @throws Exception */
+    /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes) {
         return getNotesPaginated(fromSequence, numberOfNotes, null);
     }
 
-    /** {@inheritDoc} 
-     * @throws MongoException 
-     * @throws  */
+    /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes, Integer order) {
         if (mongo == null) {
             throw new IllegalStateException();
@@ -103,19 +97,27 @@ public class NoteRepositoryImpl implements NoteRepository {
 
         BasicDBObject query = new BasicDBObject();
         if (order == null || order >= 0) {
-            query.put("sequenceNum", new BasicDBObject("$gte", fromSequence == null ? 0L : fromSequence));
+            order = 1;
         } else {
-            query.put("sequenceNum", new BasicDBObject("$lte", fromSequence == null ? 0L : fromSequence));
+            order = -1;
+        }
+
+        if (fromSequence != null) {
+            if (order > 0) {
+                query.put("sequenceNum", new BasicDBObject("$gte", fromSequence));
+            } else {
+                query.put("sequenceNum", new BasicDBObject("$lte", fromSequence));
+            }
         }
 
         if (numberOfNotes == null || numberOfNotes <= 0 || numberOfNotes > 100) {
             numberOfNotes = 100;
         }
 
-        List<DBObject> notes = coll.find(query).sort(new BasicDBObject("sequenceNum", (order == null || order >= 0) ? 1 : -1)).limit(numberOfNotes).toArray();
+        List<DBObject> notes = coll.find(query).sort(new BasicDBObject("sequenceNum", order)).limit(numberOfNotes).toArray();
         List<Note> result = new ArrayList<Note>();
         if (notes != null && notes.size() > 0) {
-            for (DBObject noteDoc : notes ) {
+            for (DBObject noteDoc : notes) {
                 Note note = new Note();
                 note.setNoteId(noteDoc.get("_id").toString());
                 note.setNoteText((String) noteDoc.get("noteText"));
@@ -189,7 +191,11 @@ public class NoteRepositoryImpl implements NoteRepository {
             lastSequenceNum = (Long) last.get(0).get("sequenceNum");
             lastSequenceNum++;
         }
-        
-        return lastSequenceNum != null ? lastSequenceNum : 1L;
+
+        if (lastSequenceNum == null) {
+            lastSequenceNum = 1L;
+        }
+
+        return lastSequenceNum;
     }
 }
