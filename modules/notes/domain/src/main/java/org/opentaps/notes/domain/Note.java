@@ -18,7 +18,10 @@ package org.opentaps.notes.domain;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,15 +38,50 @@ import org.opentaps.validation.contraints.NotEmpty;
  * Represents a Note.
  * This class has all the markups for openJPA persistence, but it can also be used as POJO under another persistence context.
  */
-
 @Entity
-@Table(name="NOTE_DATA")
+@Table(name = "NOTE_DATA")
 public class Note implements Serializable {
 
     private static final long serialVersionUID = -4314958909722739985L;
 
+    /** Enum defining the base fields of a Note. */
+    public static enum Fields {
+            noteId("noteId"),
+            noteText("noteText"),
+            createdByUserId("createdByUserId"),
+            userIdType("userIdType"),
+            sequenceNum("sequenceNum"),
+            clientDomain("clientDomain"),
+            dateTimeCreated("dateTimeCreated");
+        private final String fieldName;
+        private Fields(String name) { fieldName = name; }
+        public String getName() { return fieldName; }
+    }
+
+    /** Set containing the base field names of a Note. */
+    public static final Set<String> FIELD_NAMES;
+    static {
+        FIELD_NAMES = new TreeSet<String>();
+        FIELD_NAMES.add(Fields.noteId.getName());
+        FIELD_NAMES.add(Fields.noteText.getName());
+        FIELD_NAMES.add(Fields.createdByUserId.getName());
+        FIELD_NAMES.add(Fields.userIdType.getName());
+        FIELD_NAMES.add(Fields.sequenceNum.getName());
+        FIELD_NAMES.add(Fields.clientDomain.getName());
+        FIELD_NAMES.add(Fields.dateTimeCreated.getName());
+    }
+
+    /**
+     * Checks if a given field name is one the Note base fields.
+     * @param fieldName a <code>String</code> value
+     * @return a <code>boolean</code>
+     */
+    public static boolean isBaseField(String fieldName) {
+        return FIELD_NAMES.contains(fieldName);
+    }
+
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO, generator="uuid-type4-hex")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid-type4-hex")
     @Column(name = "NOTE_ID", nullable = false, length = 32)
     private String noteId;
 
@@ -58,7 +96,7 @@ public class Note implements Serializable {
     @Column(name = "USER_ID_TYPE")
     private String userIdType;
 
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "SEQUENCE_NUM", nullable = false)
     private Long sequenceNum;
 
@@ -68,7 +106,6 @@ public class Note implements Serializable {
     @NotNull
     @Column(name = "DATE_TIME_CREATED")
     private Timestamp dateTimeCreated;
-
 
     @Column(name = "ATTRIBUTE_1")
     private String attribute1;
@@ -90,6 +127,10 @@ public class Note implements Serializable {
     private String attribute9;
     @Column(name = "ATTRIBUTE_10")
     private String attribute10;
+
+    // in a NoSQL DB like the mongo implementation we can store as many custom fields as needed, on JPA implementations
+    // we can only store them in the attributes fields eg: attribute1 = key, attribute2 = value, etc ...
+    private Map<String, String> customFields = new HashMap<String, String>();
 
     public Note() {}
 
@@ -149,74 +190,214 @@ public class Note implements Serializable {
         this.sequenceNum = sequenceNum;
     }
 
-    public String getAttribute1() {
+    private String getAttribute1() {
         return attribute1;
     }
-    public void setAttribute1(String attribute1) {
+    private void setAttribute1(String attribute1) {
         this.attribute1 = attribute1;
     }
 
-    public String getAttribute2() {
+    private String getAttribute2() {
         return attribute2;
     }
-    public void setAttribute2(String attribute2) {
+    private void setAttribute2(String attribute2) {
         this.attribute2 = attribute2;
     }
 
-    public String getAttribute3() {
+    private String getAttribute3() {
         return attribute3;
     }
-    public void setAttribute3(String attribute3) {
+    private void setAttribute3(String attribute3) {
         this.attribute3 = attribute3;
     }
 
-    public String getAttribute4() {
+    private String getAttribute4() {
         return attribute4;
     }
-    public void setAttribute4(String attribute4) {
+    private void setAttribute4(String attribute4) {
         this.attribute4 = attribute4;
     }
 
-    public String getAttribute5() {
+    private String getAttribute5() {
         return attribute5;
     }
-    public void setAttribute5(String attribute5) {
+    private void setAttribute5(String attribute5) {
         this.attribute5 = attribute5;
     }
 
-    public String getAttribute6() {
+    private String getAttribute6() {
         return attribute6;
     }
-    public void setAttribute6(String attribute6) {
+    private void setAttribute6(String attribute6) {
         this.attribute6 = attribute6;
     }
 
-    public String getAttribute7() {
+    private String getAttribute7() {
         return attribute7;
     }
-    public void setAttribute7(String attribute7) {
+    private void setAttribute7(String attribute7) {
         this.attribute7 = attribute7;
     }
 
-    public String getAttribute8() {
+    private String getAttribute8() {
         return attribute8;
     }
-    public void setAttribute8(String attribute8) {
+    private void setAttribute8(String attribute8) {
         this.attribute8 = attribute8;
     }
 
-    public String getAttribute9() {
+    private String getAttribute9() {
         return attribute9;
     }
-    public void setAttribute9(String attribute9) {
+    private void setAttribute9(String attribute9) {
         this.attribute9 = attribute9;
     }
 
-    public String getAttribute10() {
+    private String getAttribute10() {
         return attribute10;
     }
-    public void setAttribute10(String attribute10) {
+    private void setAttribute10(String attribute10) {
         this.attribute10 = attribute10;
+    }
+
+    /**
+     * Gets a custom field value for this note.
+     * @param fieldName a <code>String</code> value
+     * @return a <code>String</code> value
+     */
+    public String getAttribute(String fieldName) {
+        if (fieldName == null) {
+            throw new IllegalArgumentException("Attribute name cannot be null");
+        }
+
+        if (customFields.containsKey(fieldName)) {
+            return customFields.get(fieldName);
+        } else {
+            // lookup the attributes
+            if (fieldName.equals(getAttribute1())) {
+                return getAttribute2();
+            }
+            if (fieldName.equals(getAttribute3())) {
+                return getAttribute4();
+            }
+            if (fieldName.equals(getAttribute5())) {
+                return getAttribute6();
+            }
+            if (fieldName.equals(getAttribute7())) {
+                return getAttribute8();
+            }
+            if (fieldName.equals(getAttribute9())) {
+                return getAttribute10();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets a custom field / value pair on this Note.
+     * @param fieldName a <code>String</code> value
+     * @param value a <code>String</code> value
+     */
+    public void setAttribute(String fieldName, String value) {
+        if (fieldName == null) {
+            throw new IllegalArgumentException("Attribute name cannot be null");
+        }
+
+        customFields.put(fieldName, value);
+        // lookup if the field is defined in the attributes
+        if (fieldName.equals(getAttribute1())) {
+            setAttribute2(value);
+            return;
+        }
+        if (fieldName.equals(getAttribute3())) {
+            setAttribute4(value);
+            return;
+        }
+        if (fieldName.equals(getAttribute5())) {
+            setAttribute6(value);
+            return;
+        }
+        if (fieldName.equals(getAttribute7())) {
+            setAttribute8(value);
+            return;
+        }
+        if (fieldName.equals(getAttribute9())) {
+            setAttribute10(value);
+            return;
+        }
+        // else set on the first null pair
+        if (getAttribute1() == null) {
+            setAttribute1(fieldName);
+            setAttribute2(value);
+            return;
+        }
+        if (getAttribute3() == null) {
+            setAttribute3(fieldName);
+            setAttribute4(value);
+            return;
+        }
+        if (getAttribute5() == null) {
+            setAttribute5(fieldName);
+            setAttribute6(value);
+            return;
+        }
+        if (getAttribute7() == null) {
+            setAttribute7(fieldName);
+            setAttribute8(value);
+            return;
+        }
+        if (getAttribute9() == null) {
+            setAttribute9(fieldName);
+            setAttribute10(value);
+            return;
+        }
+    }
+
+    /**
+     * Gets the Set of all defined custom field names for this Note.
+     * @return a <code>Set<String></code> value
+     */
+    public Set<String> getAttributeNames() {
+        Set<String> fieldNames = new TreeSet<String>(customFields.keySet());
+        if (getAttribute1() != null) {
+            fieldNames.add(getAttribute1());
+        }
+        if (getAttribute3() != null) {
+            fieldNames.add(getAttribute3());
+        }
+        if (getAttribute5() != null) {
+            fieldNames.add(getAttribute5());
+        }
+        if (getAttribute7() != null) {
+            fieldNames.add(getAttribute7());
+        }
+        if (getAttribute9() != null) {
+            fieldNames.add(getAttribute9());
+        }
+        return fieldNames;
+    }
+
+    /**
+     * Gets the custom fields for this Note.
+     * @return a <code>Map<String, String></code> value
+     */
+    public Map<String, String> getAttributes() {
+        Map<String, String> cf = new HashMap<String, String>();
+        for (String field : getAttributeNames()) {
+            cf.put(field, getAttribute(field));
+        }
+        return cf;
+    }
+
+    /**
+     * Sets the custom fields for this Note.
+     * @param map a <code>Map<String, String></code> value
+     */
+    public void setAttributes(Map<String, String> map) {
+        for (String field : map.keySet()) {
+            setAttribute(field, map.get(field));
+        }
     }
 
 }

@@ -33,4 +33,12 @@
         </service-properties>
     </service>
 
+    <service id="JPANoteFactory" interface="org.opentaps.notes.domain.NoteFactory">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.domain.NoteFactory"/>
+            <entry key="DataAccessType" value="jpa"/>
+        </service-properties>
+        <bean class="org.opentaps.notes.domain.impl.NoteFactoryJPA"/>
+    </service>
+
 </blueprint>

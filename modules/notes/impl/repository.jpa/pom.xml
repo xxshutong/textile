@@ -58,7 +58,7 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Private-Package>org.opentaps.notes.repository.impl</Private-Package>
+                        <Private-Package>org.opentaps.notes.repository.impl,org.opentaps.notes.domain.impl</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -99,7 +99,7 @@
             <artifactId>openjpa</artifactId>
             <scope>provided</scope>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>notes.domain</artifactId>
             <version>${project.version}</version>

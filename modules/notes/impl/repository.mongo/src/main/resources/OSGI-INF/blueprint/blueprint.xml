@@ -37,4 +37,12 @@
         </service-properties>
     </service>
 
+    <service id="MongoNoteFactory" interface="org.opentaps.notes.domain.NoteFactory">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="org.opentaps.notes.domain.NoteFactory"/>
+            <entry key="DataAccessType" value="mongo"/>
+        </service-properties>
+        <bean class="org.opentaps.notes.domain.impl.NoteFactoryMongo"/>
+    </service>
+
 </blueprint>

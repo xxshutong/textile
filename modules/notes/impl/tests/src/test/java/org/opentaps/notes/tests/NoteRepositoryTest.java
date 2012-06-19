@@ -41,16 +41,11 @@ public class NoteRepositoryTest extends NotesTestConfig {
 
         Note note = new Note();
         note.setNoteText("NoteRepository test note text");
-        note.setAttribute1("attribute 1");
-        note.setAttribute2("attribute 2");
-        note.setAttribute3("attribute 3");
-        note.setAttribute4("attribute 4");
-        note.setAttribute5("attribute 5");
-        note.setAttribute6("attribute 6");
-        note.setAttribute7("attribute 7");
-        note.setAttribute8("attribute 8");
-        note.setAttribute9("attribute 9");
-        note.setAttribute10("attribute 10");
+        note.setAttribute("field1", "value1");
+        note.setAttribute("field2", "value2");
+        note.setAttribute("field3", "value3");
+        note.setAttribute("field4", "value4");
+        note.setAttribute("field5", "value5");
 
         noteRepository.persist(note);
         String noteId = note.getNoteId();
@@ -65,16 +60,11 @@ public class NoteRepositoryTest extends NotesTestConfig {
 
         assertEquals("note id mismatch", noteId, note.getNoteId());
         assertEquals("note text mismatch", "NoteRepository test note text", note.getNoteText());
-        assertEquals("attribute 1 mismatch", "attribute 1", note.getAttribute1());
-        assertEquals("attribute 2 mismatch", "attribute 2", note.getAttribute2());
-        assertEquals("attribute 3 mismatch", "attribute 3", note.getAttribute3());
-        assertEquals("attribute 4 mismatch", "attribute 4", note.getAttribute4());
-        assertEquals("attribute 5 mismatch", "attribute 5", note.getAttribute5());
-        assertEquals("attribute 6 mismatch", "attribute 6", note.getAttribute6());
-        assertEquals("attribute 7 mismatch", "attribute 7", note.getAttribute7());
-        assertEquals("attribute 8 mismatch", "attribute 8", note.getAttribute8());
-        assertEquals("attribute 9 mismatch", "attribute 9", note.getAttribute9());
-        assertEquals("attribute 10 mismatch", "attribute 10", note.getAttribute10());
+        assertEquals("custom field 1 mismatch", "value1", note.getAttribute("field1"));
+        assertEquals("custom field 2 mismatch", "value2", note.getAttribute("field2"));
+        assertEquals("custom field 3 mismatch", "value3", note.getAttribute("field3"));
+        assertEquals("custom field 4 mismatch", "value4", note.getAttribute("field4"));
+        assertEquals("custom field 5 mismatch", "value5", note.getAttribute("field5"));
     }
 
     @Test

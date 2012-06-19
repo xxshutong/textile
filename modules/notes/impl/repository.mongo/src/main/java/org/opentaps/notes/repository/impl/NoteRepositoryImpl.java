@@ -22,18 +22,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.bson.types.ObjectId;
-import org.opentaps.notes.domain.Note;
-import org.opentaps.notes.repository.NoteRepository;
-import org.opentaps.notes.repository.RepositoryException;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.MongoException;
+import org.bson.types.ObjectId;
+import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.repository.NoteRepository;
 
 
 /**
@@ -42,6 +39,8 @@ import com.mongodb.MongoException;
 public class NoteRepositoryImpl implements NoteRepository {
     private volatile Mongo mongo;
     private static final String DB = "notedb";
+    private static final String NOTES_COLLECTION = "notes";
+    private static final String MONGO_ID_FIELD = "_id";
 
     public void setMongo(Mongo mongo) {
         if (this.mongo == null) {
@@ -53,80 +52,55 @@ public class NoteRepositoryImpl implements NoteRepository {
         }
     }
 
-    /** {@inheritDoc} */
-    public Note getNoteById(String noteId) {
+    private DBCollection getNotesCollection() {
         if (mongo == null) {
             throw new IllegalStateException();
         }
-
         DB db = mongo.getDB(DB);
-        DBCollection coll = db.getCollection("notes");
-
-        BasicDBObject query = new BasicDBObject("_id", new ObjectId(noteId));
-        DBObject noteDoc = coll.findOne(query);
-
-        Note note = null;
-        if (noteDoc != null) {
-            note = new Note();
-            note.setNoteId(noteDoc.get("_id").toString());
-            note.setNoteText((String) noteDoc.get("noteText"));
-            note.setCreatedByUserId((String) noteDoc.get("createdByUserId"));
-            note.setUserIdType((String) noteDoc.get("userIdType"));
-            note.setClientDomain((String) noteDoc.get("clientDomain"));
-            note.setSequenceNum((Long) noteDoc.get("sequenceNum"));
-            Date dateTimeCreated = (Date) noteDoc.get("dateTimeCreated");
-            if (dateTimeCreated != null) {
-                note.setDateTimeCreated(new Timestamp(dateTimeCreated.getTime()));
-            }
-        }
-
-        return note;
+        return db.getCollection(NOTES_COLLECTION);
     }
 
-    /** {@inheritDoc} 
-     * @throws Exception */
+    /** {@inheritDoc} */
+    public Note getNoteById(String noteId) {
+        DBCollection coll = getNotesCollection();
+        BasicDBObject query = new BasicDBObject(MONGO_ID_FIELD, new ObjectId(noteId));
+        DBObject noteDoc = coll.findOne(query);
+        return dbObjectToNote(noteDoc);
+    }
+
+    /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes) {
         return getNotesPaginated(fromSequence, numberOfNotes, null);
     }
 
-    /** {@inheritDoc} 
-     * @throws MongoException 
-     * @throws  */
+    /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes, Integer order) {
-        if (mongo == null) {
-            throw new IllegalStateException();
-        }
-
-        DB db = mongo.getDB(DB);
-
-        DBCollection coll = db.getCollection("notes");
+        DBCollection coll = getNotesCollection();
 
         BasicDBObject query = new BasicDBObject();
         if (order == null || order >= 0) {
-            query.put("sequenceNum", new BasicDBObject("$gte", fromSequence == null ? 0L : fromSequence));
+            order = 1;
         } else {
-            query.put("sequenceNum", new BasicDBObject("$lte", fromSequence == null ? 0L : fromSequence));
+            order = -1;
+        }
+
+        if (fromSequence != null) {
+            if (order > 0) {
+                query.put(Note.Fields.sequenceNum.getName(), new BasicDBObject("$gte", fromSequence));
+            } else {
+                query.put(Note.Fields.sequenceNum.getName(), new BasicDBObject("$lte", fromSequence));
+            }
         }
 
         if (numberOfNotes == null || numberOfNotes <= 0 || numberOfNotes > 100) {
             numberOfNotes = 100;
         }
 
-        List<DBObject> notes = coll.find(query).sort(new BasicDBObject("sequenceNum", (order == null || order >= 0) ? 1 : -1)).limit(numberOfNotes).toArray();
+        List<DBObject> notes = coll.find(query).sort(new BasicDBObject(Note.Fields.sequenceNum.getName(), order)).limit(numberOfNotes).toArray();
         List<Note> result = new ArrayList<Note>();
         if (notes != null && notes.size() > 0) {
-            for (DBObject noteDoc : notes ) {
-                Note note = new Note();
-                note.setNoteId(noteDoc.get("_id").toString());
-                note.setNoteText((String) noteDoc.get("noteText"));
-                note.setCreatedByUserId((String) noteDoc.get("createdByUserId"));
-                note.setUserIdType((String) noteDoc.get("userIdType"));
-                note.setClientDomain((String) noteDoc.get("clientDomain"));
-                note.setSequenceNum((Long) noteDoc.get("sequenceNum"));
-                Date dateTimeCreated = (Date) noteDoc.get("dateTimeCreated");
-                if (dateTimeCreated != null) {
-                    note.setDateTimeCreated(new Timestamp(dateTimeCreated.getTime()));
-                }
+            for (DBObject noteDoc : notes) {
+                Note note = dbObjectToNote(noteDoc);
                 result.add(note);
             }
         }
@@ -145,51 +119,91 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public void persist(List<Note> notes) {
-        if (mongo == null) {
-            throw new IllegalStateException();
-        }
         if (notes == null) {
             throw new IllegalArgumentException();
         }
-
-        DB db = mongo.getDB(DB);
-
-        DBCollection coll = db.getCollection("notes");
+        DBCollection coll = getNotesCollection();
 
         for (Note note : notes) {
 
             // transform POJO into BSON
-            BasicDBObject noteDoc = (BasicDBObject) BasicDBObjectBuilder.start()
-                    .add("noteId", note.getNoteId())
-                    .add("noteText", note.getNoteText())
-                    .add("createdByUserId", note.getCreatedByUserId())
-                    .add("userIdType", note.getUserIdType())
-                    .add("clientDomain", note.getClientDomain()).get();
+            BasicDBObject noteDoc = noteToDbObject(note);
 
             // for creation set the created date
             if (note.getDateTimeCreated() == null) {
                 note.setDateTimeCreated(new Timestamp(System.currentTimeMillis()));
             }
-            noteDoc.put("dateTimeCreated", note.getDateTimeCreated());
+            noteDoc.put(Note.Fields.dateTimeCreated.getName(), note.getDateTimeCreated());
+
+            // and the sequence
             if (note.getSequenceNum() == null) {
                 note.setSequenceNum(nextSequenceNum(coll));
             }
-            noteDoc.put("sequenceNum", note.getSequenceNum());
+            noteDoc.put(Note.Fields.sequenceNum.getName(), note.getSequenceNum());
 
             coll.insert(noteDoc);
-            note.setNoteId(noteDoc.getObjectId("_id").toString());
+            note.setNoteId(noteDoc.getObjectId(MONGO_ID_FIELD).toString());
         }
     }
 
     private Long nextSequenceNum(DBCollection c) {
-        BasicDBObject query = new BasicDBObject("sequenceNum", new BasicDBObject("$exists", true));
-        List<DBObject> last = c.find(query).sort(new BasicDBObject("sequenceNum", -1)).limit(1).toArray();
+        BasicDBObject query = new BasicDBObject(Note.Fields.sequenceNum.getName(), new BasicDBObject("$exists", true));
+        List<DBObject> last = c.find(query).sort(new BasicDBObject(Note.Fields.sequenceNum.getName(), -1)).limit(1).toArray();
         Long lastSequenceNum = null;
         if (last != null && last.size() > 0) {
-            lastSequenceNum = (Long) last.get(0).get("sequenceNum");
+            lastSequenceNum = (Long) last.get(0).get(Note.Fields.sequenceNum.getName());
             lastSequenceNum++;
         }
-        
-        return lastSequenceNum != null ? lastSequenceNum : 1L;
+
+        if (lastSequenceNum == null) {
+            lastSequenceNum = 1L;
+        }
+
+        return lastSequenceNum;
+    }
+
+    private static Note dbObjectToNote(DBObject noteDoc) {
+        if (noteDoc == null) {
+            return null;
+        }
+
+        Note note = new Note();
+        note.setNoteId(noteDoc.get(MONGO_ID_FIELD).toString());
+        note.setNoteText((String) noteDoc.get(Note.Fields.noteText.getName()));
+        note.setCreatedByUserId((String) noteDoc.get(Note.Fields.createdByUserId.getName()));
+        note.setUserIdType((String) noteDoc.get(Note.Fields.userIdType.getName()));
+        note.setClientDomain((String) noteDoc.get(Note.Fields.clientDomain.getName()));
+        note.setSequenceNum((Long) noteDoc.get(Note.Fields.sequenceNum.getName()));
+        Date dateTimeCreated = (Date) noteDoc.get(Note.Fields.dateTimeCreated.getName());
+        if (dateTimeCreated != null) {
+            note.setDateTimeCreated(new Timestamp(dateTimeCreated.getTime()));
+        }
+        // look for custom fields
+        for (String field : noteDoc.keySet()) {
+            if (!MONGO_ID_FIELD.equals(field) && !Note.isBaseField(field)) {
+                note.setAttribute(field, (String) noteDoc.get(field));
+            }
+        }
+
+        return note;
+    }
+
+    private static BasicDBObject noteToDbObject(Note note) {
+        if (note == null) {
+            return null;
+        }
+        BasicDBObject noteDoc = (BasicDBObject) BasicDBObjectBuilder.start()
+            .add(Note.Fields.noteId.getName(), note.getNoteId())
+            .add(Note.Fields.noteText.getName(), note.getNoteText())
+            .add(Note.Fields.createdByUserId.getName(), note.getCreatedByUserId())
+            .add(Note.Fields.userIdType.getName(), note.getUserIdType())
+            .add(Note.Fields.clientDomain.getName(), note.getClientDomain()).get();
+
+        // look for custom fields
+        for (String field : note.getAttributeNames()) {
+            noteDoc.put(field, note.getAttribute(field));
+        }
+
+        return noteDoc;
     }
 }

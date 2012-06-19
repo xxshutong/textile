@@ -60,7 +60,6 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         }
     }
 
-    
     public void setValidationService(ValidationService validationService) {
         if (this.validationService == null && validationService != null) {
             synchronized (this) {
@@ -89,16 +88,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
 
         Note note = new Note();
         note.setNoteText(input.getText());
-        note.setAttribute1(input.getAttribute1());
-        note.setAttribute2(input.getAttribute2());
-        note.setAttribute3(input.getAttribute3());
-        note.setAttribute4(input.getAttribute4());
-        note.setAttribute5(input.getAttribute5());
-        note.setAttribute6(input.getAttribute6());
-        note.setAttribute7(input.getAttribute7());
-        note.setAttribute8(input.getAttribute8());
-        note.setAttribute9(input.getAttribute9());
-        note.setAttribute10(input.getAttribute10());
+        note.setAttributes(input.getAttributes());
         note.setCreatedByUserId(input.getCreatedByUserId());
         note.setUserIdType(input.getUserIdType());
         note.setClientDomain(input.getClientDomain());

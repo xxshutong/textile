@@ -38,7 +38,7 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Private-Package>org.opentaps.notes.repository.impl</Private-Package>
+                        <Private-Package>org.opentaps.notes.repository.impl,org.opentaps.notes.domain.impl</Private-Package>
                         <Embed-Dependency>mongo-java-driver;scope=compile</Embed-Dependency>
                     </instructions>
                 </configuration>
@@ -48,8 +48,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jpa_2.0_spec</artifactId>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

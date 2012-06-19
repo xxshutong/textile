@@ -107,7 +107,9 @@ img.userPicture,
 #noteList .listRow .noteHeader { float:none; }
 #noteList .listRow .noteHeader div { display:inline; }
 #noteList .listRow .noteEnd { clear:left; float:none; padding:0; }
-#noteList .noteAttribute { display:none; }
+#noteList .noteAttribute { clear:left; }
+#noteList .noteAttribute .noteAttributeName { font-style:italic; }
+#noteList .noteAttribute .noteAttributeName::after { content: ": "; }
 #noteList .noteId { display:none; }
 #noteList .noteSequence { display:none; font-weight:bold; }
 #noteList .noteText { width:450px; }
@@ -115,6 +117,11 @@ img.userPicture,
 #noteList .listRow:nth-child(odd) {background: #DDD;}
 #loadingSpinner { padding:20px; text-align:center; }
 #noMoreNotes {text-align:center; font-style: italic; }
+
+#attributesSection { margin-bottom:10px }
+#attributeInputsSection input { border:1px solid #aaa; margin-right:10px;  }
+#attributeInputsSection label::after { content: ": "; }
+
 
 .hidden { display:none; }
 .floatEnd { clear:both; }
@@ -208,6 +215,7 @@ function saveNote(form){
   req.onreadystatechange = function() {
     if (req.readyState == 4) {
         parseResponse(req);
+        clearAttributeRows();
     }
 
   }
@@ -219,6 +227,15 @@ function saveNote(form){
     params = params + '&postOnMyWall=Y';
   } else {
     params = params + '&postOnMyWall=N';
+  }
+
+  for (var n = 0; n < notes.numberOfAttributeInputs; n++) {
+    var row = document.getElementById("attribute_" + n);
+    if (row) {
+      var attrName = notes.attributeFieldNamePrefix + encodeURIComponent(document.getElementById("attribute_" + n + "_name").value);
+      var attrValue = encodeURIComponent(document.getElementById("attribute_" + n + "_value").value);
+      params = params + "&" + attrName + "=" + attrValue;
+    }
   }
 
   req.open("POST", notes.baseUrl + "note", true);
@@ -526,6 +543,8 @@ notes.reset = function() {
   this.latestDisplayedNoteSequence = undefined;
   this.oldestDisplayedNoteSequence = undefined;
   this.loadedNotesReachedCache = false;
+  this.numberOfAttributeInputs = 0;
+  this.attributeFieldNamePrefix = "note_field_";
 }
 
 notes.reset();
@@ -647,11 +666,25 @@ function createNoteElement(note) {
     textEl.appendChild(document.createTextNode(note.noteText));
     noteEl.appendChild(textEl);
 
-    for (var i = 1; i <= 10; i++) {
-        var attEl = document.createElement("div");
-        attEl.className = "noteAttribute";
-        attEl.appendChild(document.createTextNode(note['attribute' + i]));
-        noteEl.appendChild(attEl);
+    for (var attr in note) {
+        if (note.hasOwnProperty(attr) && attr.indexOf(notes.attributeFieldNamePrefix) == 0) {
+          var attrName = attr.substring(notes.attributeFieldNamePrefix.length);
+
+          var attEl = document.createElement("div");
+          attEl.className = "noteAttribute";
+
+          var attNameEl = document.createElement("span");
+          attNameEl.className = "noteAttributeName";
+          attNameEl.appendChild(document.createTextNode(attrName));
+
+          var attValueEl = document.createElement("span");
+          attValueEl.className = "noteAttributeValue";
+          attValueEl.appendChild(document.createTextNode(note[attr]));
+
+          attEl.appendChild(attNameEl);
+          attEl.appendChild(attValueEl);
+          noteEl.appendChild(attEl);
+        }
     }
 
     var endEl = document.createElement("div");
@@ -1089,6 +1122,66 @@ function onLoadPage() {
       loadIfScrolledToEndOfList();
     }
 }
+
+function addAttribute() {
+  var n = notes.numberOfAttributeInputs;
+  var container = document.getElementById("attributeInputsSection");
+
+  var row = document.createElement("div");
+  row.id = "attribute_" + n;
+  row.className = "attributeInput";
+
+  var fieldNameLbl = document.createElement("label");
+  fieldNameLbl.id = "attribute_" + n + "_name_lbl";
+  fieldNameLbl.for = "attribute_" + n + "_name";
+  fieldNameLbl.appendChild(document.createTextNode("Name"));
+
+  var fieldNameInput = document.createElement("input");
+  fieldNameInput.id = "attribute_" + n + "_name";
+  fieldNameInput.type = "text";
+  fieldNameInput.name = "attribute_" + n + "_name";
+
+  var fieldValueLbl = document.createElement("label");
+  fieldValueLbl.id = "attribute_" + n + "_value_lbl";
+  fieldValueLbl.for = "attribute_" + n + "_value";
+  fieldValueLbl.appendChild(document.createTextNode("Value"));
+
+  var fieldValueInput = document.createElement("input");
+  fieldValueInput.id = "attribute_" + n + "_value";
+  fieldValueInput.type = "text";
+  fieldValueInput.name = "attribute_" + n + "_value";
+
+  var removeButton = document.createElement("a");
+  removeButton.id = "attribute_" + n + "_remove";
+  removeButton.href = "javascript:void(0)";
+  removeButton.onclick = function() { removeAttributeRow(n); };
+  removeButton.appendChild(document.createTextNode("remove"));
+
+  row.appendChild(fieldNameLbl);
+  row.appendChild(fieldNameInput);
+  row.appendChild(fieldValueLbl);
+  row.appendChild(fieldValueInput);
+  row.appendChild(removeButton);
+
+  container.appendChild(row);
+
+  notes.numberOfAttributeInputs = n + 1;
+}
+
+function removeAttributeRow(n) {
+  var row = document.getElementById("attribute_" + n);
+  if (row) {
+    row.parentNode.removeChild(row);
+  }
+}
+
+function clearAttributeRows() {
+  for (var n = 0; n < notes.numberOfAttributeInputs; n++) {
+    removeAttributeRow(n);
+  }
+  notes.numberOfAttributeInputs = 0;
+}
+
 </script>
 
 </head>
@@ -1125,6 +1218,10 @@ function onLoadPage() {
           <textarea name="note_field_noteText" id="noteText" rows="6" cols="70" placeholder="Write your note here"></textarea>
           <div>
             <input type="checkbox" name="postOnMyWall" id="postOnMyWall" style="display:none" checked="checked"/> <label id="postOnMyWallLabel" for="postOnMyWall" style="display:none">Also post on my wall</label>
+          </div>
+          <div id="attributesSection">
+            <div id="attributeInputsSection"></div>
+            <a href="javascript:void(0);" id="addAttributeButton" onClick="addAttribute()">Add attribute</a>
           </div>
           <input type="button" name="createNoteButton" id="createNoteButton" value="Create Note" onClick="saveNote(this.form)" class="savebutton"/>
           <div class="message" id="successMessage"></div>
