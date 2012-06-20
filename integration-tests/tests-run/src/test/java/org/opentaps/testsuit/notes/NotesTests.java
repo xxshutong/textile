@@ -33,6 +33,7 @@ import org.restlet.resource.ClientResource;
 
 
 public class NotesTests extends RemoteTestCase {
+    private static String FIELD_PREFIX = "note_field_";
 
     @Test
     public void testRemoteCreateAndRetrieveNote() throws Exception {
@@ -57,11 +58,11 @@ public class NotesTests extends RemoteTestCase {
 
         Form formData = new Form();
         formData.add(new Parameter(Note.Fields.noteText.getName(), TEXT));
-        formData.add(new Parameter("note_field_" + ATTR1, ATTR2));
-        formData.add(new Parameter("note_field_" + ATTR3, ATTR4));
-        formData.add(new Parameter("note_field_" + ATTR5, ATTR6));
-        formData.add(new Parameter("note_field_" + ATTR7, ATTR8));
-        formData.add(new Parameter("note_field_" + ATTR9, ATTR10));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR1, ATTR2));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR3, ATTR4));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR5, ATTR6));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR7, ATTR8));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR9, ATTR10));
 
         Representation response = postURI.post(formData);
         long contentLength = response.getSize();
@@ -72,8 +73,8 @@ public class NotesTests extends RemoteTestCase {
         assertTrue("There is no content in response", !GenericValidator.isBlankOrNull(content));
         assertTrue("It looks like the response is not a JSON string", JSONUtils.mayBeJSON(content));
 
-        Note note = toNote(content);
-        String noteId = note.getNoteId();
+        JSONObject note = toNote(content);
+        String noteId = note.getString("noteId");
         assertTrue("Note ID is not found", !GenericValidator.isBlankOrNull(noteId));
 
         /*
@@ -86,12 +87,12 @@ public class NotesTests extends RemoteTestCase {
         note = toNote(content);
         assertNotNull(note);
 
-        assertEquals("Checking text property", TEXT, note.getNoteText());
-        assertEquals("Checking attribute1 property", ATTR2, note.getAttribute(ATTR1));
-        assertEquals("Checking attribute1 property", ATTR4, note.getAttribute(ATTR3));
-        assertEquals("Checking attribute1 property", ATTR6, note.getAttribute(ATTR5));
-        assertEquals("Checking attribute1 property", ATTR8, note.getAttribute(ATTR7));
-        assertEquals("Checking attribute1 property", ATTR10, note.getAttribute(ATTR9));
+        assertEquals("Checking text property", TEXT, note.getString("noteText"));
+        assertEquals("Checking attribute1 property", ATTR2, note.get(FIELD_PREFIX + ATTR1));
+        assertEquals("Checking attribute1 property", ATTR4, note.get(FIELD_PREFIX + ATTR3));
+        assertEquals("Checking attribute1 property", ATTR6, note.get(FIELD_PREFIX + ATTR5));
+        assertEquals("Checking attribute1 property", ATTR8, note.get(FIELD_PREFIX + ATTR7));
+        assertEquals("Checking attribute1 property", ATTR10, note.get(FIELD_PREFIX + ATTR9));
 
         /*
          * 3. Test that validation is working, the following should fail.
@@ -107,12 +108,12 @@ public class NotesTests extends RemoteTestCase {
      * <pre>
      * {"result":{"resultValue":{"note":{"noteId":"NOTEID", ...}},"successMessage":"","errorMessage":""}}"
      * </pre>
-     * This method extract JSON object with key "note" and convert it into an instance of Note class.
+     * This method extract JSON object with key "note".
      *
      * @param respJSON A correctly formated JSON string
-     * @return The instance of {@link Note}
+     * @return Note JSON w/o extra data
       */
-    private Note toNote(String respJSON) {
+    private JSONObject toNote(String respJSON) {
         JSONObject contentJSON = (JSONObject) JSONSerializer.toJSON(respJSON);
         JSONObject result = contentJSON.getJSONObject("result");
         assertNotNull("Expected \"result\" object", result);
@@ -120,7 +121,6 @@ public class NotesTests extends RemoteTestCase {
         assertNotNull("Expected \"resultValue\" object", resultValue);
         JSONObject note = resultValue.getJSONObject("note");
         assertNotNull("Expected \"note\" object", note);
-        JSONUtils.getMorpherRegistry().registerMorpher(new org.opentaps.rest.ezmorph.TimestampMorpher(new String[] {"yyyy-MM-dd HH:mm:ss.S"}));
-        return (Note) JSONObject.toBean(note, Note.class);
+        return note;
     }
 }
