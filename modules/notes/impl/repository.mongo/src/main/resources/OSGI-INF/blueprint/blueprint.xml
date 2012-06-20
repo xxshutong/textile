@@ -29,6 +29,7 @@
     <!-- repository service -->
     <bean id="noteRepositoryImpl" class="org.opentaps.notes.repository.impl.NoteRepositoryImpl">
         <property name="mongo" ref="mongoDb"/>
+        <property name="noteFactory" ref="NoteFactoryBean"/>
     </bean>
 
     <service id="noteRepositoryService" ref="noteRepositoryImpl" interface="org.opentaps.notes.repository.NoteRepository">
@@ -37,12 +38,12 @@
         </service-properties>
     </service>
 
-    <service id="MongoNoteFactory" interface="org.opentaps.notes.domain.NoteFactory">
+    <service id="NoteFactory" ref="NoteFactoryBean" interface="org.opentaps.notes.domain.NoteFactory">
         <service-properties>
             <entry key="osgi.jndi.service.name" value="org.opentaps.notes.domain.NoteFactory"/>
             <entry key="DataAccessType" value="mongo"/>
         </service-properties>
-        <bean class="org.opentaps.notes.domain.impl.NoteFactoryMongo"/>
     </service>
+    <bean id="NoteFactoryBean" class="org.opentaps.notes.domain.impl.NoteFactoryMongo"/>
 
 </blueprint>

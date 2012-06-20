@@ -25,6 +25,7 @@ import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
 import org.opentaps.core.service.ServiceValidationException;
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.domain.NoteFactory;
 import org.opentaps.notes.repository.NoteRepository;
 import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
@@ -37,6 +38,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
     private volatile NoteRepository repository = null;
     private volatile NoteSecurity security = null;
     private volatile ValidationService validationService = null;
+    private volatile NoteFactory factory = null;
 
     public CreateNoteServiceImpl() { }
 
@@ -70,6 +72,16 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         }
     }
 
+    public void setNoteFactory(NoteFactory factory) {
+        if (this.factory == null && factory != null) {
+            synchronized (this) {
+                if (this.factory == null) {
+                    this.factory = factory;
+                }
+            }
+        }
+    }
+
     public CreateNoteServiceOutput createNote(CreateNoteServiceInput input) throws ServiceException {
         if (input == null) {
             throw new IllegalArgumentException("Input cannot be null");
@@ -86,7 +98,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
             throw new ServiceValidationException("Cannot create note.", (Set) inputViolations);
         }
 
-        Note note = new Note();
+        Note note = factory.newInstance();
         note.setNoteText(input.getText());
         note.setAttributes(input.getAttributes());
         note.setCreatedByUserId(input.getCreatedByUserId());

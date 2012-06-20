@@ -23,7 +23,7 @@ public class NoteFactoryMongo implements NoteFactory {
 
     @Override
     public Note newInstance() {
-        return new Note();
+        return new NoteMongo();
     }
 
 }

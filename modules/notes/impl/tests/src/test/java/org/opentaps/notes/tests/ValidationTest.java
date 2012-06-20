@@ -25,6 +25,7 @@ import javax.validation.metadata.BeanDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.domain.NoteFactory;
 import org.opentaps.validation.services.ValidationService;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
@@ -34,6 +35,8 @@ public class ValidationTest extends NotesTestConfig {
     @Inject
     private ValidationService validationService;
 
+    @Inject
+    private NoteFactory factory;
 
     @Test
     public void testValidation() throws Exception {
@@ -48,7 +51,7 @@ public class ValidationTest extends NotesTestConfig {
 
         log("ValidationTest :: testValidation : Got all Note constraints on " + desc.getConstrainedProperties());
 
-        Note note = new Note();
+        Note note = factory.newInstance();
         Set<ConstraintViolation<Note>> constraintViolations = validationService.getValidator().validate(note);
 
         log("ValidationTest :: testValidation : Got note constraint violations " + constraintViolations);

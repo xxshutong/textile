@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.domain.NoteFactory;
 import org.opentaps.notes.repository.NoteRepository;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
@@ -32,6 +33,9 @@ public class NoteRepositoryTest extends NotesTestConfig {
     @Inject
     private NoteRepository noteRepository;
 
+    @Inject
+    private NoteFactory factory;
+
     @Test
     public void testRepository() throws Exception {
 
@@ -39,7 +43,7 @@ public class NoteRepositoryTest extends NotesTestConfig {
 
         log("NoteRepositoryTest :: testRepository : Got the NoteRepository OSGI service : " + noteRepository.getClass());
 
-        Note note = new Note();
+        Note note = factory.newInstance();
         note.setNoteText("NoteRepository test note text");
         note.setAttribute("field1", "value1");
         note.setAttribute("field2", "value2");
@@ -78,7 +82,7 @@ public class NoteRepositoryTest extends NotesTestConfig {
         int numOfNotes = 100;
         List<String> noteIds = new ArrayList<String>(numOfNotes);
         for (int i = 1; i <= numOfNotes; i++) {
-            Note note = new Note();
+            Note note = factory.newInstance();
             note.setNoteText("NoteRepository test note sequence " + i);
             noteRepository.persist(note);
             noteIds.add(note.getNoteId());

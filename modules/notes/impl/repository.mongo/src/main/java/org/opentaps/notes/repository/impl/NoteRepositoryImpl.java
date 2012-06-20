@@ -30,6 +30,8 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import org.bson.types.ObjectId;
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.domain.NoteFactory;
+import org.opentaps.notes.domain.impl.NoteMongo;
 import org.opentaps.notes.repository.NoteRepository;
 
 
@@ -38,6 +40,7 @@ import org.opentaps.notes.repository.NoteRepository;
  */
 public class NoteRepositoryImpl implements NoteRepository {
     private volatile Mongo mongo;
+    private volatile NoteFactory factory;
     private static final String DB = "notedb";
     private static final String NOTES_COLLECTION = "notes";
     private static final String MONGO_ID_FIELD = "_id";
@@ -47,6 +50,16 @@ public class NoteRepositoryImpl implements NoteRepository {
             synchronized (this) {
                 if (this.mongo == null) {
                     this.mongo = mongo;
+                }
+            }
+        }
+    }
+
+    public void setNoteFactory(NoteFactory factory) {
+        if (this.factory  == null) {
+            synchronized (this) {
+                if (this.factory == null) {
+                    this.factory = factory;
                 }
             }
         }
@@ -162,12 +175,12 @@ public class NoteRepositoryImpl implements NoteRepository {
         return lastSequenceNum;
     }
 
-    private static Note dbObjectToNote(DBObject noteDoc) {
+    private Note dbObjectToNote(DBObject noteDoc) {
         if (noteDoc == null) {
             return null;
         }
 
-        Note note = new Note();
+        Note note = factory.newInstance();
         note.setNoteId(noteDoc.get(MONGO_ID_FIELD).toString());
         note.setNoteText((String) noteDoc.get(Note.Fields.noteText.getName()));
         note.setCreatedByUserId((String) noteDoc.get(Note.Fields.createdByUserId.getName()));
@@ -180,7 +193,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         }
         // look for custom fields
         for (String field : noteDoc.keySet()) {
-            if (!MONGO_ID_FIELD.equals(field) && !Note.isBaseField(field)) {
+            if (!MONGO_ID_FIELD.equals(field) && !NoteMongo.isBaseField(field)) { //TODO: rid of static call 
                 note.setAttribute(field, (String) noteDoc.get(field));
             }
         }

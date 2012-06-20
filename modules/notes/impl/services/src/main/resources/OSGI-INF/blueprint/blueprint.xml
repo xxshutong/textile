@@ -21,11 +21,13 @@
     <reference id="noteRepositoryService" interface="org.opentaps.notes.repository.NoteRepository"/>
     <reference id="validationService" interface="org.opentaps.validation.services.ValidationService"/>
     <reference id="noteSecurityService" interface="org.opentaps.notes.security.NoteSecurity"/>
+    <reference id="NoteFactory" interface="org.opentaps.notes.domain.NoteFactory"/>
     
     <bean id="createNoteServiceImpl" class="org.opentaps.notes.services.impl.CreateNoteServiceImpl">
         <property name="noteRepository" ref="noteRepositoryService"/>
         <property name="validationService" ref="validationService"/>
         <property name="noteSecurity" ref="noteSecurityService"/>
+        <property name="noteFactory" ref="NoteFactory"/>
     </bean>
     <service id="notes.createNoteService" ref="createNoteServiceImpl" interface="org.opentaps.notes.services.CreateNoteService">
         <service-properties>

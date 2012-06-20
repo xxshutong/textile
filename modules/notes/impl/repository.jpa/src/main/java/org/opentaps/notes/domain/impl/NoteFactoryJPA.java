@@ -23,7 +23,7 @@ public class NoteFactoryJPA implements NoteFactory {
 
     @Override
     public Note newInstance() {
-        return new Note();
+        return new NoteJPA();
     }
 
 }
