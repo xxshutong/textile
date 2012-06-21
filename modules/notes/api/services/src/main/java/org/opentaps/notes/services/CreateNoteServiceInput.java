@@ -18,13 +18,13 @@ package org.opentaps.notes.services;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 
 import org.opentaps.core.service.ServiceInput;
+import org.opentaps.validation.contraints.NotEmpty;
 
 public class CreateNoteServiceInput implements ServiceInput {
 
-    @NotNull
+    @NotEmpty
     private String text;
     private Map<String, String> customFields = new HashMap<String, String>();
     private String createdByUserId;

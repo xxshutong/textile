@@ -58,5 +58,17 @@ public class ValidationTest extends NotesTestConfig {
 
         // text, and created date time cannot be null
         assertEquals("Should have 2 validation errors on an empty NoteData", constraintViolations.size(), 2);
+
+        // check for empty text
+        note.setNoteText("");
+        constraintViolations = validationService.getValidator().validate(note);
+        log("ValidationTest :: testValidation : Got note constraint violations " + constraintViolations);
+        assertEquals("Should have 2 validation errors on an empty NoteData with empty text", constraintViolations.size(), 2);
+
+        // check for blank text (having whitespace)
+        note.setNoteText("  ");
+        constraintViolations = validationService.getValidator().validate(note);
+        log("ValidationTest :: testValidation : Got note constraint violations " + constraintViolations);
+        assertEquals("Should have 2 validation errors on an empty NoteData with white space only text", constraintViolations.size(), 2);
     }
 }

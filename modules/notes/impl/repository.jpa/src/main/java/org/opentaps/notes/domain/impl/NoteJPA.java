@@ -30,10 +30,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import org.opentaps.notes.domain.Note;
-import org.opentaps.validation.contraints.NotEmpty;
 
 
 /**
@@ -51,7 +49,6 @@ public class NoteJPA implements Note, Serializable {
     private String noteId;
 
     @Lob
-    @NotEmpty
     @Column(name = "NOTE_TEXT", nullable = false)
     private String noteText;
 
@@ -68,7 +65,6 @@ public class NoteJPA implements Note, Serializable {
     @Column(name = "CLIENT_DOMAIN")
     private String clientDomain;
 
-    @NotNull
     @Column(name = "DATE_TIME_CREATED")
     private Timestamp dateTimeCreated;
 

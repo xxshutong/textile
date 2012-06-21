@@ -20,6 +20,8 @@ import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+import org.opentaps.validation.contraints.NotEmpty;
 
 /**
  * Represents a Note.
@@ -44,6 +46,7 @@ public interface Note {
 
     public void setNoteId(String noteId);
 
+    @NotEmpty
     public String getNoteText();
 
     public void setNoteText(String noteText);
@@ -52,6 +55,7 @@ public interface Note {
 
     public void setClientDomain(String clientDomain);
 
+    @NotNull
     public Timestamp getDateTimeCreated();
 
     public void setDateTimeCreated(Timestamp dateTimeCreated);

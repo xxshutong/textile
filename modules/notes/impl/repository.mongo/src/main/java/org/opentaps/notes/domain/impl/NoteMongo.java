@@ -23,10 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.validation.constraints.NotNull;
-
 import org.opentaps.notes.domain.Note;
-import org.opentaps.validation.contraints.NotEmpty;
 
 
 @SuppressWarnings("serial")
@@ -56,7 +53,6 @@ public class NoteMongo implements Note, Serializable {
 
     private String noteId;
 
-    @NotEmpty
     private String noteText;
 
     private String createdByUserId;
@@ -67,7 +63,6 @@ public class NoteMongo implements Note, Serializable {
 
     private String clientDomain;
 
-    @NotNull
     private Timestamp dateTimeCreated;
 
     private String attribute1;
