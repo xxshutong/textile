@@ -65,17 +65,6 @@ public class NoteMongo implements Note, Serializable {
 
     private Timestamp dateTimeCreated;
 
-    private String attribute1;
-    private String attribute2;
-    private String attribute3;
-    private String attribute4;
-    private String attribute5;
-    private String attribute6;
-    private String attribute7;
-    private String attribute8;
-    private String attribute9;
-    private String attribute10;
-
     // in a NoSQL DB like the mongo implementation we can store as many custom fields as needed, on JPA implementations
     // we can only store them in the attributes fields eg: attribute1 = key, attribute2 = value, etc ...
     private Map<String, String> customFields = new HashMap<String, String>();
@@ -138,76 +127,6 @@ public class NoteMongo implements Note, Serializable {
         this.sequenceNum = sequenceNum;
     }
 
-    private String getAttribute1() {
-        return attribute1;
-    }
-    private void setAttribute1(String attribute1) {
-        this.attribute1 = attribute1;
-    }
-
-    private String getAttribute2() {
-        return attribute2;
-    }
-    private void setAttribute2(String attribute2) {
-        this.attribute2 = attribute2;
-    }
-
-    private String getAttribute3() {
-        return attribute3;
-    }
-    private void setAttribute3(String attribute3) {
-        this.attribute3 = attribute3;
-    }
-
-    private String getAttribute4() {
-        return attribute4;
-    }
-    private void setAttribute4(String attribute4) {
-        this.attribute4 = attribute4;
-    }
-
-    private String getAttribute5() {
-        return attribute5;
-    }
-    private void setAttribute5(String attribute5) {
-        this.attribute5 = attribute5;
-    }
-
-    private String getAttribute6() {
-        return attribute6;
-    }
-    private void setAttribute6(String attribute6) {
-        this.attribute6 = attribute6;
-    }
-
-    private String getAttribute7() {
-        return attribute7;
-    }
-    private void setAttribute7(String attribute7) {
-        this.attribute7 = attribute7;
-    }
-
-    private String getAttribute8() {
-        return attribute8;
-    }
-    private void setAttribute8(String attribute8) {
-        this.attribute8 = attribute8;
-    }
-
-    private String getAttribute9() {
-        return attribute9;
-    }
-    private void setAttribute9(String attribute9) {
-        this.attribute9 = attribute9;
-    }
-
-    private String getAttribute10() {
-        return attribute10;
-    }
-    private void setAttribute10(String attribute10) {
-        this.attribute10 = attribute10;
-    }
-
     /**
      * Gets a custom field value for this note.
      * @param fieldName a <code>String</code> value
@@ -218,28 +137,7 @@ public class NoteMongo implements Note, Serializable {
             throw new IllegalArgumentException("Attribute name cannot be null");
         }
 
-        if (customFields.containsKey(fieldName)) {
-            return customFields.get(fieldName);
-        } else {
-            // lookup the attributes
-            if (fieldName.equals(getAttribute1())) {
-                return getAttribute2();
-            }
-            if (fieldName.equals(getAttribute3())) {
-                return getAttribute4();
-            }
-            if (fieldName.equals(getAttribute5())) {
-                return getAttribute6();
-            }
-            if (fieldName.equals(getAttribute7())) {
-                return getAttribute8();
-            }
-            if (fieldName.equals(getAttribute9())) {
-                return getAttribute10();
-            }
-        }
-
-        return null;
+        return customFields.get(fieldName);
     }
 
     /**
@@ -253,53 +151,6 @@ public class NoteMongo implements Note, Serializable {
         }
 
         customFields.put(fieldName, value);
-        // lookup if the field is defined in the attributes
-        if (fieldName.equals(getAttribute1())) {
-            setAttribute2(value);
-            return;
-        }
-        if (fieldName.equals(getAttribute3())) {
-            setAttribute4(value);
-            return;
-        }
-        if (fieldName.equals(getAttribute5())) {
-            setAttribute6(value);
-            return;
-        }
-        if (fieldName.equals(getAttribute7())) {
-            setAttribute8(value);
-            return;
-        }
-        if (fieldName.equals(getAttribute9())) {
-            setAttribute10(value);
-            return;
-        }
-        // else set on the first null pair
-        if (getAttribute1() == null) {
-            setAttribute1(fieldName);
-            setAttribute2(value);
-            return;
-        }
-        if (getAttribute3() == null) {
-            setAttribute3(fieldName);
-            setAttribute4(value);
-            return;
-        }
-        if (getAttribute5() == null) {
-            setAttribute5(fieldName);
-            setAttribute6(value);
-            return;
-        }
-        if (getAttribute7() == null) {
-            setAttribute7(fieldName);
-            setAttribute8(value);
-            return;
-        }
-        if (getAttribute9() == null) {
-            setAttribute9(fieldName);
-            setAttribute10(value);
-            return;
-        }
     }
 
     /**
@@ -307,23 +158,7 @@ public class NoteMongo implements Note, Serializable {
      * @return a <code>Set<String></code> value
      */
     public Set<String> getAttributeNames() {
-        Set<String> fieldNames = new TreeSet<String>(customFields.keySet());
-        if (getAttribute1() != null) {
-            fieldNames.add(getAttribute1());
-        }
-        if (getAttribute3() != null) {
-            fieldNames.add(getAttribute3());
-        }
-        if (getAttribute5() != null) {
-            fieldNames.add(getAttribute5());
-        }
-        if (getAttribute7() != null) {
-            fieldNames.add(getAttribute7());
-        }
-        if (getAttribute9() != null) {
-            fieldNames.add(getAttribute9());
-        }
-        return fieldNames;
+        return new TreeSet<String>(customFields.keySet());
     }
 
     /**
