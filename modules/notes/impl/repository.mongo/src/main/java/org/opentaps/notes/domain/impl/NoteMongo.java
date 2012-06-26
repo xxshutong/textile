@@ -26,112 +26,117 @@ import java.util.TreeSet;
 import org.opentaps.notes.domain.Note;
 
 
+/**
+ * Represents a Note in MongoDB.
+ */
 @SuppressWarnings("serial")
 public class NoteMongo implements Note, Serializable {
 
+    /** All Mongo objects have an _id field as the PK. */
+    public static final String MONGO_ID_FIELD = "_id";
+
     /** Set containing the base field names of a Note. */
-    public static final Set<String> FIELD_NAMES;
+    public static final Set<String> FIELD_NAMES = new TreeSet<String>();;
     static {
-        FIELD_NAMES = new TreeSet<String>();
-        FIELD_NAMES.add(Fields.noteId.getName());
-        FIELD_NAMES.add(Fields.noteText.getName());
-        FIELD_NAMES.add(Fields.createdByUserId.getName());
-        FIELD_NAMES.add(Fields.userIdType.getName());
-        FIELD_NAMES.add(Fields.sequenceNum.getName());
-        FIELD_NAMES.add(Fields.clientDomain.getName());
-        FIELD_NAMES.add(Fields.dateTimeCreated.getName());
+        for (Fields field : Fields.values()) {
+            FIELD_NAMES.add(field.getName());
+        }
+        FIELD_NAMES.add(MONGO_ID_FIELD);
     }
 
-    /**
-     * Checks if a given field name is one the Note base fields.
-     * @param fieldName a <code>String</code> value
-     * @return a <code>boolean</code>
-     */
-    public static boolean isBaseField(String fieldName) {
+    /** {@inheritDoc} */
+    public boolean isBaseField(String fieldName) {
         return FIELD_NAMES.contains(fieldName);
     }
 
     private String noteId;
-
     private String noteText;
-
     private String createdByUserId;
-
     private String userIdType;
-
     private Long sequenceNum;
-
     private String clientDomain;
-
     private Timestamp dateTimeCreated;
 
     // in a NoSQL DB like the mongo implementation we can store as many custom fields as needed, on JPA implementations
     // we can only store them in the attributes fields eg: attribute1 = key, attribute2 = value, etc ...
     private Map<String, String> customFields = new HashMap<String, String>();
 
-    public NoteMongo() {}
+    /**
+     * Default constructor.
+     */
+    public NoteMongo() { }
 
+    /** {@inheritDoc} */
     public String getNoteId() {
         return noteId;
     }
 
+    /** {@inheritDoc} */
     public void setNoteId(String noteId) {
         this.noteId = noteId;
     }
 
+    /** {@inheritDoc} */
     public String getNoteText() {
         return noteText;
     }
 
+    /** {@inheritDoc} */
     public void setNoteText(String noteText) {
         this.noteText = noteText;
     }
 
+    /** {@inheritDoc} */
     public String getClientDomain() {
         return clientDomain;
     }
 
+    /** {@inheritDoc} */
     public void setClientDomain(String clientDomain) {
         this.clientDomain = clientDomain;
     }
 
+    /** {@inheritDoc} */
     public Timestamp getDateTimeCreated() {
         return dateTimeCreated;
     }
 
+    /** {@inheritDoc} */
     public void setDateTimeCreated(Timestamp dateTimeCreated) {
         this.dateTimeCreated = dateTimeCreated;
     }
 
+    /** {@inheritDoc} */
     public String getCreatedByUserId() {
         return createdByUserId;
     }
 
+    /** {@inheritDoc} */
     public void setCreatedByUserId(String createdByUserId) {
         this.createdByUserId = createdByUserId;
     }
 
+    /** {@inheritDoc} */
     public String getUserIdType() {
         return userIdType;
     }
 
+    /** {@inheritDoc} */
     public void setUserIdType(String userIdType) {
         this.userIdType = userIdType;
     }
 
+    /** {@inheritDoc} */
     public Long getSequenceNum() {
         return sequenceNum;
     }
 
+    /** {@inheritDoc} */
     public void setSequenceNum(Long sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
 
-    /**
-     * Gets a custom field value for this note.
-     * @param fieldName a <code>String</code> value
-     * @return a <code>String</code> value
-     */
+    /** {@inheritDoc} */
     public String getAttribute(String fieldName) {
         if (fieldName == null) {
             throw new IllegalArgumentException("Attribute name cannot be null");
@@ -140,11 +145,7 @@ public class NoteMongo implements Note, Serializable {
         return customFields.get(fieldName);
     }
 
-    /**
-     * Sets a custom field / value pair on this Note.
-     * @param fieldName a <code>String</code> value
-     * @param value a <code>String</code> value
-     */
+    /** {@inheritDoc} */
     public void setAttribute(String fieldName, String value) {
         if (fieldName == null) {
             throw new IllegalArgumentException("Attribute name cannot be null");
@@ -153,18 +154,12 @@ public class NoteMongo implements Note, Serializable {
         customFields.put(fieldName, value);
     }
 
-    /**
-     * Gets the Set of all defined custom field names for this Note.
-     * @return a <code>Set<String></code> value
-     */
+    /** {@inheritDoc} */
     public Set<String> getAttributeNames() {
         return new TreeSet<String>(customFields.keySet());
     }
 
-    /**
-     * Gets the custom fields for this Note.
-     * @return a <code>Map<String, String></code> value
-     */
+    /** {@inheritDoc} */
     public Map<String, String> getAttributes() {
         Map<String, String> cf = new HashMap<String, String>();
         for (String field : getAttributeNames()) {
@@ -173,10 +168,7 @@ public class NoteMongo implements Note, Serializable {
         return cf;
     }
 
-    /**
-     * Sets the custom fields for this Note.
-     * @param map a <code>Map<String, String></code> value
-     */
+    /** {@inheritDoc} */
     public void setAttributes(Map<String, String> map) {
         for (String field : map.keySet()) {
             setAttribute(field, map.get(field));

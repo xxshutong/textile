@@ -43,7 +43,6 @@ public class NoteRepositoryImpl implements NoteRepository {
     private volatile NoteFactory factory;
     private static final String DB = "notedb";
     private static final String NOTES_COLLECTION = "notes";
-    private static final String MONGO_ID_FIELD = "_id";
 
     public void setMongo(Mongo mongo) {
         if (this.mongo == null) {
@@ -76,7 +75,7 @@ public class NoteRepositoryImpl implements NoteRepository {
     /** {@inheritDoc} */
     public Note getNoteById(String noteId) {
         DBCollection coll = getNotesCollection();
-        BasicDBObject query = new BasicDBObject(MONGO_ID_FIELD, new ObjectId(noteId));
+        BasicDBObject query = new BasicDBObject(NoteMongo.MONGO_ID_FIELD, new ObjectId(noteId));
         DBObject noteDoc = coll.findOne(query);
         return dbObjectToNote(noteDoc);
     }
@@ -155,7 +154,7 @@ public class NoteRepositoryImpl implements NoteRepository {
             noteDoc.put(Note.Fields.sequenceNum.getName(), note.getSequenceNum());
 
             coll.insert(noteDoc);
-            note.setNoteId(noteDoc.getObjectId(MONGO_ID_FIELD).toString());
+            note.setNoteId(noteDoc.getObjectId(NoteMongo.MONGO_ID_FIELD).toString());
         }
     }
 
@@ -181,7 +180,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         }
 
         Note note = factory.newInstance();
-        note.setNoteId(noteDoc.get(MONGO_ID_FIELD).toString());
+        note.setNoteId(noteDoc.get(NoteMongo.MONGO_ID_FIELD).toString());
         note.setNoteText((String) noteDoc.get(Note.Fields.noteText.getName()));
         note.setCreatedByUserId((String) noteDoc.get(Note.Fields.createdByUserId.getName()));
         note.setUserIdType((String) noteDoc.get(Note.Fields.userIdType.getName()));
@@ -193,7 +192,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         }
         // look for custom fields
         for (String field : noteDoc.keySet()) {
-            if (!MONGO_ID_FIELD.equals(field) && !NoteMongo.isBaseField(field)) { //TODO: rid of static call 
+            if (!note.isBaseField(field)) {
                 note.setAttribute(field, (String) noteDoc.get(field));
             }
         }

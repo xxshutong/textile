@@ -42,34 +42,97 @@ public interface Note {
         public String getName() { return fieldName; }
     }
 
+    /**
+     * Checks if a given field name is one the Note base fields.
+     * @param fieldName a <code>String</code> value
+     * @return a <code>boolean</code>
+     */
+    public boolean isBaseField(String fieldName);
+
+    /**
+     * Gets this Note ID value.
+     * @return a <code>String</code> value
+     */
     public String getNoteId();
 
+    /**
+     * Sets this Note ID value.
+     * @param noteId a <code>String</code> value
+     */
     public void setNoteId(String noteId);
 
+    /**
+     * Gets this Note text value.
+     * @return a <code>String</code> value
+     */
     @NotEmpty
     public String getNoteText();
 
+    /**
+     * Sets this Note text value.
+     * @param noteText a <code>String</code> value
+     */
     public void setNoteText(String noteText);
 
+    /**
+     * Gets this Note client domain value.
+     * @return a <code>String</code> value
+     */
     public String getClientDomain();
 
+    /**
+     * Sets this Note client domain value.
+     * @param clientDomain a <code>String</code> value
+     */
     public void setClientDomain(String clientDomain);
 
+    /**
+     * Gets this Note DateTimeCreated value.
+     * @return a <code>Timestamp</code> value
+     */
     @NotNull
     public Timestamp getDateTimeCreated();
 
+    /**
+     * Sets this Note DateTimeCreated value.
+     * @param dateTimeCreated a <code>Timestamp</code> value
+     */
     public void setDateTimeCreated(Timestamp dateTimeCreated);
 
+    /**
+     * Gets this Note created by user id domain value.
+     * @return a <code>String</code> value
+     */
     public String getCreatedByUserId();
 
+    /**
+     * Sets this Note created by user id value.
+     * @param createdByUserId a <code>String</code> value
+     */
     public void setCreatedByUserId(String createdByUserId);
 
+    /**
+     * Gets this Note user id type value.
+     * @return a <code>String</code> value
+     */
     public String getUserIdType();
 
+    /**
+     * Sets this Note user id type value.
+     * @param userIdType a <code>String</code> value
+     */
     public void setUserIdType(String userIdType);
 
+    /**
+     * Gets this Note sequence number value.
+     * @return a <code>String</code> value
+     */
     public Long getSequenceNum();
 
+    /**
+     * Sets this Note sequence number value.
+     * @param sequenceNum a <code>Long</code> value
+     */
     public void setSequenceNum(Long sequenceNum);
 
     /**

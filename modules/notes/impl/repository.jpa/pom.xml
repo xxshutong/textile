@@ -38,7 +38,7 @@
                 <artifactId>openjpa-maven-plugin</artifactId>
                 <version>2.2.0</version>
                 <configuration>
-                    <includes>**/*.class</includes>
+                    <includes>**/NoteJPA.class</includes>
                     <excludes>**/*PK.class</excludes>
                     <addDefaultConstructor>true</addDefaultConstructor>
                     <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
@@ -58,7 +58,8 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Private-Package>org.opentaps.notes.repository.impl,org.opentaps.notes.domain.impl</Private-Package>
+                      <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+                      <Private-Package>org.opentaps.notes.repository.impl,org.opentaps.notes.domain.impl</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

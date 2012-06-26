@@ -17,13 +17,15 @@
 package org.opentaps.notes.repository.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.domain.NoteFactory;
+import org.opentaps.notes.domain.impl.NoteJPA;
 import org.opentaps.notes.repository.NoteRepository;
 
 /**
@@ -32,6 +34,7 @@ import org.opentaps.notes.repository.NoteRepository;
 public class NoteRepositoryImpl implements NoteRepository {
 
     private volatile EntityManager em;
+    private volatile NoteFactory factory;
 
     public void setEntityManager(EntityManager em) {
         if (this.em == null) {
@@ -43,12 +46,22 @@ public class NoteRepositoryImpl implements NoteRepository {
         }
     }
 
+    public void setNoteFactory(NoteFactory factory) {
+        if (this.factory  == null) {
+            synchronized (this) {
+                if (this.factory == null) {
+                    this.factory = factory;
+                }
+            }
+        }
+    }
+
     /** {@inheritDoc} */
     public Note getNoteById(String noteId) {
         if (em == null) {
             throw new IllegalStateException();
         }
-        return em.find(Note.class, noteId);
+        return em.find(NoteJPA.class, noteId);
     }
 
     /** {@inheritDoc} */
@@ -58,7 +71,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     /** {@inheritDoc} */
     public List<Note> getNotesPaginated(Long fromSequence, Integer numberOfNotes, Integer order) {
-        StringBuilder sb = new StringBuilder("SELECT o FROM Note o");
+        StringBuilder sb = new StringBuilder("SELECT o FROM NoteJPA o");
         if (fromSequence != null) {
             sb.append(" WHERE o.sequenceNum ");
             if (order == null || order >= 0) {
@@ -74,7 +87,7 @@ public class NoteRepositoryImpl implements NoteRepository {
         } else {
             sb.append("DESC");
         }
-        TypedQuery<Note> query = em.createQuery(sb.toString(), Note.class);
+        TypedQuery<NoteJPA> query = em.createQuery(sb.toString(), NoteJPA.class);
         if (numberOfNotes == null || numberOfNotes <= 0 || numberOfNotes > 100) {
             numberOfNotes = 100;
         }
@@ -82,7 +95,8 @@ public class NoteRepositoryImpl implements NoteRepository {
             query.setParameter("sequence", fromSequence);
         }
         query.setMaxResults(numberOfNotes);
-        return query.getResultList();
+        List<Note> results = new ArrayList<Note>(query.getResultList());
+        return results;
     }
 
     /** {@inheritDoc} */

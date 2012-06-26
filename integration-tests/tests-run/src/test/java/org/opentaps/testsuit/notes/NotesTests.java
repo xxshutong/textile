@@ -58,11 +58,16 @@ public class NotesTests extends RemoteTestCase {
 
         Form formData = new Form();
         formData.add(new Parameter(Note.Fields.noteText.getName(), TEXT));
-        formData.add(new Parameter(FIELD_PREFIX + ATTR1, ATTR2));
-        formData.add(new Parameter(FIELD_PREFIX + ATTR3, ATTR4));
-        formData.add(new Parameter(FIELD_PREFIX + ATTR5, ATTR6));
-        formData.add(new Parameter(FIELD_PREFIX + ATTR7, ATTR8));
-        formData.add(new Parameter(FIELD_PREFIX + ATTR9, ATTR10));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR1, ATTR1 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR2, ATTR2 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR3, ATTR3 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR4, ATTR4 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR5, ATTR5 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR6, ATTR6 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR7, ATTR7 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR8, ATTR8 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR9, ATTR9 + " value"));
+        formData.add(new Parameter(FIELD_PREFIX + ATTR10, ATTR10 + " value"));
 
         Representation response = postURI.post(formData);
         long contentLength = response.getSize();
@@ -88,11 +93,16 @@ public class NotesTests extends RemoteTestCase {
         assertNotNull(note);
 
         assertEquals("Checking text property", TEXT, note.getString("noteText"));
-        assertEquals("Checking attribute1 property", ATTR2, note.get(FIELD_PREFIX + ATTR1));
-        assertEquals("Checking attribute1 property", ATTR4, note.get(FIELD_PREFIX + ATTR3));
-        assertEquals("Checking attribute1 property", ATTR6, note.get(FIELD_PREFIX + ATTR5));
-        assertEquals("Checking attribute1 property", ATTR8, note.get(FIELD_PREFIX + ATTR7));
-        assertEquals("Checking attribute1 property", ATTR10, note.get(FIELD_PREFIX + ATTR9));
+        assertEquals("Checking attribute1 property", ATTR1 + " value", note.get(FIELD_PREFIX + ATTR1));
+        assertEquals("Checking attribute1 property", ATTR2 + " value", note.get(FIELD_PREFIX + ATTR2));
+        assertEquals("Checking attribute1 property", ATTR3 + " value", note.get(FIELD_PREFIX + ATTR3));
+        assertEquals("Checking attribute1 property", ATTR4 + " value", note.get(FIELD_PREFIX + ATTR4));
+        assertEquals("Checking attribute1 property", ATTR5 + " value", note.get(FIELD_PREFIX + ATTR5));
+        assertEquals("Checking attribute1 property", ATTR6 + " value", note.get(FIELD_PREFIX + ATTR6));
+        assertEquals("Checking attribute1 property", ATTR7 + " value", note.get(FIELD_PREFIX + ATTR7));
+        assertEquals("Checking attribute1 property", ATTR8 + " value", note.get(FIELD_PREFIX + ATTR8));
+        assertEquals("Checking attribute1 property", ATTR9 + " value", note.get(FIELD_PREFIX + ATTR9));
+        assertEquals("Checking attribute1 property", ATTR10 + " value", note.get(FIELD_PREFIX + ATTR10));
 
         /*
          * 3. Test that validation is working, the following should fail.

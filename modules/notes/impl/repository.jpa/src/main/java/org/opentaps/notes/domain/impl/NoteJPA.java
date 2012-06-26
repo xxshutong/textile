@@ -30,18 +30,31 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.opentaps.notes.domain.Note;
 
 
 /**
- * Represents a Note.
- * This class has all the markups for openJPA persistence, but it can also be used as POJO under another persistence context.
+ * Represents a Note with openJPA persistence.
  */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "NOTE_DATA")
 public class NoteJPA implements Note, Serializable {
+
+    /** Set containing the base field names of a Note. */
+    public static final Set<String> FIELD_NAMES = new TreeSet<String>();;
+    static {
+        for (Fields field : Fields.values()) {
+            FIELD_NAMES.add(field.getName());
+        }
+    }
+
+    /** {@inheritDoc} */
+    public boolean isBaseField(String fieldName) {
+        return FIELD_NAMES.contains(fieldName);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid-type4-hex")
@@ -89,136 +102,105 @@ public class NoteJPA implements Note, Serializable {
     @Column(name = "ATTRIBUTE_10")
     private String attribute10;
 
+    @Column(name = "VALUE_1")
+    private String value1;
+    @Column(name = "VALUE_2")
+    private String value2;
+    @Column(name = "VALUE_3")
+    private String value3;
+    @Column(name = "VALUE_4")
+    private String value4;
+    @Column(name = "VALUE_5")
+    private String value5;
+    @Column(name = "VALUE_6")
+    private String value6;
+    @Column(name = "VALUE_7")
+    private String value7;
+    @Column(name = "VALUE_8")
+    private String value8;
+    @Column(name = "VALUE_9")
+    private String value9;
+    @Column(name = "VALUE_10")
+    private String value10;
+
     // in a NoSQL DB like the mongo implementation we can store as many custom fields as needed, on JPA implementations
-    // we can only store them in the attributes fields eg: attribute1 = key, attribute2 = value, etc ...
+    // we can only store 10 such attribute -> value pairs
+    @Transient
     private Map<String, String> customFields = new HashMap<String, String>();
 
-    public NoteJPA() {}
+    /**
+     * Default constructor.
+     */
+    public NoteJPA() { }
 
+    /** {@inheritDoc} */
     public String getNoteId() {
         return noteId;
     }
 
+    /** {@inheritDoc} */
     public void setNoteId(String noteId) {
         this.noteId = noteId;
     }
 
+    /** {@inheritDoc} */
     public String getNoteText() {
         return noteText;
     }
 
+    /** {@inheritDoc} */
     public void setNoteText(String noteText) {
         this.noteText = noteText;
     }
 
+    /** {@inheritDoc} */
     public String getClientDomain() {
         return clientDomain;
     }
 
+    /** {@inheritDoc} */
     public void setClientDomain(String clientDomain) {
         this.clientDomain = clientDomain;
     }
 
+    /** {@inheritDoc} */
     public Timestamp getDateTimeCreated() {
         return dateTimeCreated;
     }
 
+    /** {@inheritDoc} */
     public void setDateTimeCreated(Timestamp dateTimeCreated) {
         this.dateTimeCreated = dateTimeCreated;
     }
 
+    /** {@inheritDoc} */
     public String getCreatedByUserId() {
         return createdByUserId;
     }
 
+    /** {@inheritDoc} */
     public void setCreatedByUserId(String createdByUserId) {
         this.createdByUserId = createdByUserId;
     }
 
+    /** {@inheritDoc} */
     public String getUserIdType() {
         return userIdType;
     }
 
+    /** {@inheritDoc} */
     public void setUserIdType(String userIdType) {
         this.userIdType = userIdType;
     }
 
+    /** {@inheritDoc} */
     public Long getSequenceNum() {
         return sequenceNum;
     }
 
+    /** {@inheritDoc} */
     public void setSequenceNum(Long sequenceNum) {
         this.sequenceNum = sequenceNum;
-    }
-
-    private String getAttribute1() {
-        return attribute1;
-    }
-    private void setAttribute1(String attribute1) {
-        this.attribute1 = attribute1;
-    }
-
-    private String getAttribute2() {
-        return attribute2;
-    }
-    private void setAttribute2(String attribute2) {
-        this.attribute2 = attribute2;
-    }
-
-    private String getAttribute3() {
-        return attribute3;
-    }
-    private void setAttribute3(String attribute3) {
-        this.attribute3 = attribute3;
-    }
-
-    private String getAttribute4() {
-        return attribute4;
-    }
-    private void setAttribute4(String attribute4) {
-        this.attribute4 = attribute4;
-    }
-
-    private String getAttribute5() {
-        return attribute5;
-    }
-    private void setAttribute5(String attribute5) {
-        this.attribute5 = attribute5;
-    }
-
-    private String getAttribute6() {
-        return attribute6;
-    }
-    private void setAttribute6(String attribute6) {
-        this.attribute6 = attribute6;
-    }
-
-    private String getAttribute7() {
-        return attribute7;
-    }
-    private void setAttribute7(String attribute7) {
-        this.attribute7 = attribute7;
-    }
-
-    private String getAttribute8() {
-        return attribute8;
-    }
-    private void setAttribute8(String attribute8) {
-        this.attribute8 = attribute8;
-    }
-
-    private String getAttribute9() {
-        return attribute9;
-    }
-    private void setAttribute9(String attribute9) {
-        this.attribute9 = attribute9;
-    }
-
-    private String getAttribute10() {
-        return attribute10;
-    }
-    private void setAttribute10(String attribute10) {
-        this.attribute10 = attribute10;
     }
 
     /**
@@ -235,20 +217,35 @@ public class NoteJPA implements Note, Serializable {
             return customFields.get(fieldName);
         } else {
             // lookup the attributes
-            if (fieldName.equals(getAttribute1())) {
-                return getAttribute2();
+            if (fieldName.equals(attribute1)) {
+                return value1;
             }
-            if (fieldName.equals(getAttribute3())) {
-                return getAttribute4();
+            if (fieldName.equals(attribute2)) {
+                return value2;
             }
-            if (fieldName.equals(getAttribute5())) {
-                return getAttribute6();
+            if (fieldName.equals(attribute3)) {
+                return value3;
             }
-            if (fieldName.equals(getAttribute7())) {
-                return getAttribute8();
+            if (fieldName.equals(attribute4)) {
+                return value4;
             }
-            if (fieldName.equals(getAttribute9())) {
-                return getAttribute10();
+            if (fieldName.equals(attribute5)) {
+                return value5;
+            }
+            if (fieldName.equals(attribute6)) {
+                return value6;
+            }
+            if (fieldName.equals(attribute7)) {
+                return value7;
+            }
+            if (fieldName.equals(attribute8)) {
+                return value8;
+            }
+            if (fieldName.equals(attribute9)) {
+                return value9;
+            }
+            if (fieldName.equals(attribute10)) {
+                return value10;
             }
         }
 
@@ -267,50 +264,95 @@ public class NoteJPA implements Note, Serializable {
 
         customFields.put(fieldName, value);
         // lookup if the field is defined in the attributes
-        if (fieldName.equals(getAttribute1())) {
-            setAttribute2(value);
+        if (fieldName.equals(attribute1)) {
+            value1 = value;
             return;
         }
-        if (fieldName.equals(getAttribute3())) {
-            setAttribute4(value);
+        if (fieldName.equals(attribute2)) {
+            value2 = value;
             return;
         }
-        if (fieldName.equals(getAttribute5())) {
-            setAttribute6(value);
+        if (fieldName.equals(attribute3)) {
+            value3 = value;
             return;
         }
-        if (fieldName.equals(getAttribute7())) {
-            setAttribute8(value);
+        if (fieldName.equals(attribute4)) {
+            value4 = value;
             return;
         }
-        if (fieldName.equals(getAttribute9())) {
-            setAttribute10(value);
+        if (fieldName.equals(attribute5)) {
+            value5 = value;
+            return;
+        }
+        if (fieldName.equals(attribute6)) {
+            value6 = value;
+            return;
+        }
+        if (fieldName.equals(attribute7)) {
+            value7 = value;
+            return;
+        }
+        if (fieldName.equals(attribute8)) {
+            value8 = value;
+            return;
+        }
+        if (fieldName.equals(attribute9)) {
+            value9 = value;
+            return;
+        }
+        if (fieldName.equals(attribute10)) {
+            value10 = value;
             return;
         }
         // else set on the first null pair
-        if (getAttribute1() == null) {
-            setAttribute1(fieldName);
-            setAttribute2(value);
+        if (attribute1 == null) {
+            attribute1 = fieldName;
+            value1 = value;
             return;
         }
-        if (getAttribute3() == null) {
-            setAttribute3(fieldName);
-            setAttribute4(value);
+        if (attribute2 == null) {
+            attribute2 = fieldName;
+            value2 = value;
             return;
         }
-        if (getAttribute5() == null) {
-            setAttribute5(fieldName);
-            setAttribute6(value);
+        if (attribute3 == null) {
+            attribute3 = fieldName;
+            value3 = value;
             return;
         }
-        if (getAttribute7() == null) {
-            setAttribute7(fieldName);
-            setAttribute8(value);
+        if (attribute4 == null) {
+            attribute4 = fieldName;
+            value4 = value;
             return;
         }
-        if (getAttribute9() == null) {
-            setAttribute9(fieldName);
-            setAttribute10(value);
+        if (attribute5 == null) {
+            attribute5 = fieldName;
+            value5 = value;
+            return;
+        }
+        if (attribute6 == null) {
+            attribute6 = fieldName;
+            value6 = value;
+            return;
+        }
+        if (attribute7 == null) {
+            attribute7 = fieldName;
+            value7 = value;
+            return;
+        }
+        if (attribute8 == null) {
+            attribute8 = fieldName;
+            value8 = value;
+            return;
+        }
+        if (attribute9 == null) {
+            attribute9 = fieldName;
+            value9 = value;
+            return;
+        }
+        if (attribute10 == null) {
+            attribute10 = fieldName;
+            value10 = value;
             return;
         }
     }
@@ -321,20 +363,35 @@ public class NoteJPA implements Note, Serializable {
      */
     public Set<String> getAttributeNames() {
         Set<String> fieldNames = new TreeSet<String>(customFields.keySet());
-        if (getAttribute1() != null) {
-            fieldNames.add(getAttribute1());
+        if (attribute1 != null) {
+            fieldNames.add(attribute1);
         }
-        if (getAttribute3() != null) {
-            fieldNames.add(getAttribute3());
+        if (attribute2 != null) {
+            fieldNames.add(attribute2);
         }
-        if (getAttribute5() != null) {
-            fieldNames.add(getAttribute5());
+        if (attribute3 != null) {
+            fieldNames.add(attribute3);
         }
-        if (getAttribute7() != null) {
-            fieldNames.add(getAttribute7());
+        if (attribute4 != null) {
+            fieldNames.add(attribute4);
         }
-        if (getAttribute9() != null) {
-            fieldNames.add(getAttribute9());
+        if (attribute5 != null) {
+            fieldNames.add(attribute5);
+        }
+        if (attribute6 != null) {
+            fieldNames.add(attribute6);
+        }
+        if (attribute7 != null) {
+            fieldNames.add(attribute7);
+        }
+        if (attribute8 != null) {
+            fieldNames.add(attribute8);
+        }
+        if (attribute9 != null) {
+            fieldNames.add(attribute9);
+        }
+        if (attribute10 != null) {
+            fieldNames.add(attribute10);
         }
         return fieldNames;
     }
