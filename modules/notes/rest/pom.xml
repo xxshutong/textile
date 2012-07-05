@@ -134,6 +134,12 @@
       <artifactId>openjpa</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.opentaps</groupId>
+      <artifactId>socials.facebook</artifactId>
+      <version>1.0.0-SNAPSHOT</version>                  
+    </dependency>
+
   </dependencies>
 
 </project>

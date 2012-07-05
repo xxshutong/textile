@@ -50,12 +50,15 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
+import org.opentaps.socials.facebook.api.FacebookService;
+
 /**
  * The Notes REST implementation.
  */
 public class NoteResource extends ServerResource {
 
     private static final String CUSTOM_FIELD_PREFIX = "note_field_";
+    private static final String OPENTAPS_FACEBOOK_PAGE_ID = "285070770315";
 
     /**
      * Handle GET requests.
@@ -203,6 +206,15 @@ public class NoteResource extends ServerResource {
                     String postOnMyWall = form.getFirstValue("postOnMyWall");
                     if ("Y".equalsIgnoreCase(postOnMyWall)) {
                         postNoteOnMyWall(user, noteText);
+
+                        // post note on to opentaps wall
+                        FacebookService facebookService = (FacebookService) context.lookup("osgi:service/org.opentaps.socials.facebook.api.FacebookService");
+                        if (facebookService != null) {
+                            String result = facebookService.postMessageOnUserWall(noteText, OPENTAPS_FACEBOOK_PAGE_ID, user.getAccessToken());
+                            if (result != null && result.contains("error")) {
+                                Log.logError("Error post note on to opentaps wall " + result);
+                            }
+                        }
                     }
                 }
             } else {
