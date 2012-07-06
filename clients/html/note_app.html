@@ -1098,6 +1098,7 @@ function userLoggedIn() {
 }
 
 function onLoadPage() {
+    clearLocalStorage();
     var userKey = getQueryVariable("userKey");
     document.getElementById("userKey").value = userKey;
 
