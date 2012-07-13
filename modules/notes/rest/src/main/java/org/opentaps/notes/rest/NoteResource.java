@@ -50,8 +50,6 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
-import org.opentaps.socials.facebook.api.FacebookService;
-
 /**
  * The Notes REST implementation.
  */
@@ -205,16 +203,9 @@ public class NoteResource extends ServerResource {
                 if (user != null) {
                     String postOnMyWall = form.getFirstValue("postOnMyWall");
                     if ("Y".equalsIgnoreCase(postOnMyWall)) {
-                        postNoteOnMyWall(user, noteText);
-
+                        postNoteOnUserWall(user.getId(), user.getAccessToken(), noteText);
                         // post note on to opentaps wall
-                        FacebookService facebookService = (FacebookService) context.lookup("osgi:service/org.opentaps.socials.facebook.api.FacebookService");
-                        if (facebookService != null) {
-                            String result = facebookService.postMessageOnUserWall(noteText, OPENTAPS_FACEBOOK_PAGE_ID, user.getAccessToken());
-                            if (result != null && result.contains("error")) {
-                                Log.logError("Error post note on to opentaps wall " + result);
-                            }
-                        }
+                        postNoteOnUserWall(OPENTAPS_FACEBOOK_PAGE_ID, user.getAccessToken(), noteText);
                     }
                 }
             } else {
@@ -321,10 +312,10 @@ public class NoteResource extends ServerResource {
      * @param noteText a <code>String</code>
      * @return a <code>Representation</code>
      */
-    private Representation postNoteOnMyWall(FacebookUser user, String noteText) {
-        Reference ref = new Reference(FacebookResource.FB_GRAPH_API_URL + user.getId() + "/" + FacebookResource.FB_FEED_CALL);
+    private Representation postNoteOnUserWall(String userId, String accessToken ,String noteText) {
+        Reference ref = new Reference(FacebookResource.FB_GRAPH_API_URL + userId + "/" + FacebookResource.FB_FEED_CALL);
         Form form = new Form();
-        form.add("access_token", user.getAccessToken());
+        form.add("access_token", accessToken);
         form.add("message", noteText);
         Representation input = form.getWebRepresentation();
 
