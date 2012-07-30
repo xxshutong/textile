@@ -38,6 +38,7 @@
         <module>rest_ru</module>
         <module>rest_fr</module>
         <module>eba</module>
+        <module>notesconv</module>
     </modules>
 
 </project>
