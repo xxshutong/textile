@@ -33,6 +33,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.security.NoteUser;
+import org.osgi.service.useradmin.User;
 
 
 /**
@@ -174,23 +176,14 @@ public class NoteJPA implements Note, Serializable {
     }
 
     /** {@inheritDoc} */
-    public String getCreatedByUserId() {
-        return createdByUserId;
+    public User getCreatedByUser() {
+        return new NoteUser(createdByUserId, userIdType);
     }
 
     /** {@inheritDoc} */
-    public void setCreatedByUserId(String createdByUserId) {
-        this.createdByUserId = createdByUserId;
-    }
-
-    /** {@inheritDoc} */
-    public String getUserIdType() {
-        return userIdType;
-    }
-
-    /** {@inheritDoc} */
-    public void setUserIdType(String userIdType) {
-        this.userIdType = userIdType;
+    public void setCreatedByUser(User createdByUser) {
+        this.createdByUserId = ((NoteUser) createdByUser).getUserId();
+        this.userIdType = ((NoteUser) createdByUser).getUserType();
     }
 
     /** {@inheritDoc} */

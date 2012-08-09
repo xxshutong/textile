@@ -101,8 +101,7 @@ public class CreateNoteServiceImpl implements CreateNoteService {
         Note note = factory.newInstance();
         note.setNoteText(input.getText());
         note.setAttributes(input.getAttributes());
-        note.setCreatedByUserId(input.getCreatedByUserId());
-        note.setUserIdType(input.getUserIdType());
+        note.setCreatedByUser(input.getCreatedByUser());
         note.setClientDomain(input.getClientDomain());
 
         if (security != null) {

@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.security.NoteUser;
+import org.osgi.service.useradmin.User;
 
 
 /**
@@ -107,13 +109,14 @@ public class NoteMongo implements Note, Serializable {
     }
 
     /** {@inheritDoc} */
-    public String getCreatedByUserId() {
-        return createdByUserId;
+    public User getCreatedByUser() {
+        return new NoteUser(createdByUserId, userIdType);
     }
 
     /** {@inheritDoc} */
-    public void setCreatedByUserId(String createdByUserId) {
-        this.createdByUserId = createdByUserId;
+    public void setCreatedByUser(User createdByUser) {
+        this.createdByUserId = ((NoteUser) createdByUser).getUserId();
+        this.userIdType = ((NoteUser) createdByUser).getUserType();
     }
 
     /** {@inheritDoc} */

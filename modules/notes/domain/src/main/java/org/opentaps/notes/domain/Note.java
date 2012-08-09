@@ -21,7 +21,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
+
 import org.opentaps.validation.contraints.NotEmpty;
+import org.osgi.service.useradmin.User;
 
 /**
  * Represents a Note.
@@ -32,8 +34,7 @@ public interface Note {
     public static enum Fields {
             noteId("noteId"),
             noteText("noteText"),
-            createdByUserId("createdByUserId"),
-            userIdType("userIdType"),
+            createdByUser("createdByUser"),
             sequenceNum("sequenceNum"),
             clientDomain("clientDomain"),
             dateTimeCreated("dateTimeCreated");
@@ -100,28 +101,16 @@ public interface Note {
     public void setDateTimeCreated(Timestamp dateTimeCreated);
 
     /**
-     * Gets this Note created by user id domain value.
+     * Gets this Note created by user value.
      * @return a <code>String</code> value
      */
-    public String getCreatedByUserId();
+    public User getCreatedByUser();
 
     /**
-     * Sets this Note created by user id value.
+     * Sets this Note created by user value.
      * @param createdByUserId a <code>String</code> value
      */
-    public void setCreatedByUserId(String createdByUserId);
-
-    /**
-     * Gets this Note user id type value.
-     * @return a <code>String</code> value
-     */
-    public String getUserIdType();
-
-    /**
-     * Sets this Note user id type value.
-     * @param userIdType a <code>String</code> value
-     */
-    public void setUserIdType(String userIdType);
+    public void setCreatedByUser(User user);
 
     /**
      * Gets this Note sequence number value.

@@ -19,6 +19,7 @@ package org.opentaps.notes.security.impl2;
 import org.opentaps.core.log.Log;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.security.NoteSecurity;
+import org.opentaps.notes.security.NoteUser;
 
 public class NoteSecurityImpl implements NoteSecurity {
 
@@ -27,14 +28,14 @@ public class NoteSecurityImpl implements NoteSecurity {
     @Override
     public boolean hasPermission(Note note, Operation permissionId) {
         Log.logInfo("This is the alternate security implementation.  I will not let anonymous users do anything.");
-        if (note.getCreatedByUserId() == null) {
+        if (note.getCreatedByUser() == null) {
             errorMessage = "Sorry, but anonymous users are not allowed.";
             return false;
         } else {
-            Log.logInfo("I hereby give permission to user [" + note.getCreatedByUserId() + "] from [" + note.getUserIdType() + "].");
+            NoteUser user = (NoteUser) note.getCreatedByUser();
+            Log.logInfo("I hereby give permission to user [" + user.getName() + "] from [" + user.getUserType() + "].");
             return true;    
         }
-        
     }
     
     public String getErrorMessage() {
