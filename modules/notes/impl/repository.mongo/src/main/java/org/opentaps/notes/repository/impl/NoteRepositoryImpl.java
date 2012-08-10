@@ -28,11 +28,15 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+
+import org.apache.commons.validator.GenericValidator;
 import org.bson.types.ObjectId;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.domain.NoteFactory;
 import org.opentaps.notes.domain.impl.NoteMongo;
 import org.opentaps.notes.repository.NoteRepository;
+import org.opentaps.notes.security.NoteUser;
+import org.osgi.service.useradmin.User;
 
 
 /**
@@ -182,8 +186,10 @@ public class NoteRepositoryImpl implements NoteRepository {
         Note note = factory.newInstance();
         note.setNoteId(noteDoc.get(NoteMongo.MONGO_ID_FIELD).toString());
         note.setNoteText((String) noteDoc.get(Note.Fields.noteText.getName()));
-        note.setCreatedByUserId((String) noteDoc.get(Note.Fields.createdByUserId.getName()));
-        note.setUserIdType((String) noteDoc.get(Note.Fields.userIdType.getName()));
+        String userId = (String) noteDoc.get("createdByUserId");
+        if (!GenericValidator.isBlankOrNull(userId)) {
+            note.setCreatedByUser(new NoteUser(userId, (String) noteDoc.get("userIdType")));
+        }
         note.setClientDomain((String) noteDoc.get(Note.Fields.clientDomain.getName()));
         note.setSequenceNum((Long) noteDoc.get(Note.Fields.sequenceNum.getName()));
         Date dateTimeCreated = (Date) noteDoc.get(Note.Fields.dateTimeCreated.getName());
@@ -207,9 +213,13 @@ public class NoteRepositoryImpl implements NoteRepository {
         BasicDBObject noteDoc = (BasicDBObject) BasicDBObjectBuilder.start()
             .add(Note.Fields.noteId.getName(), note.getNoteId())
             .add(Note.Fields.noteText.getName(), note.getNoteText())
-            .add(Note.Fields.createdByUserId.getName(), note.getCreatedByUserId())
-            .add(Note.Fields.userIdType.getName(), note.getUserIdType())
             .add(Note.Fields.clientDomain.getName(), note.getClientDomain()).get();
+
+        User user = note.getCreatedByUser();
+        if (user != null) {
+            noteDoc.append("createdByUserId", user.getProperties().get(NoteUser.PROP_USER_ID));
+            noteDoc.append("userIdType", user.getProperties().get(NoteUser.PROP_USER_TYPE));
+        }
 
         // look for custom fields
         for (String field : note.getAttributeNames()) {

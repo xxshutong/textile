@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.opentaps.core.service.ServiceInput;
+import org.opentaps.notes.security.NoteUser;
 import org.opentaps.validation.contraints.NotEmpty;
 
 public class CreateNoteServiceInput implements ServiceInput {
@@ -27,16 +28,13 @@ public class CreateNoteServiceInput implements ServiceInput {
     @NotEmpty
     private String text;
     private Map<String, String> customFields = new HashMap<String, String>();
-    private String createdByUserId;
-    private String userIdType;
     private String clientDomain;
+    private NoteUser user;
 
     public String getText() { return text; }
     public void setText(String text) { this.text = text; }
-    public String getCreatedByUserId() { return createdByUserId; }
-    public void setCreatedByUserId(String createdByUserId) { this.createdByUserId = createdByUserId; }
-    public String getUserIdType() { return userIdType; }
-    public void setUserIdType(String userIdType) { this.userIdType = userIdType; }
+    public NoteUser getCreatedByUser() { return user; };
+    public void setCreatedByUser(NoteUser user) { this.user = user; }
     public String getClientDomain() { return clientDomain; }
     public void setClientDomain(String clientDomain) { this.clientDomain = clientDomain; }
     public String getAttribute(String fieldName) { return customFields.get(fieldName); }

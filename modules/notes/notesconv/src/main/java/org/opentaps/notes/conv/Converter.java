@@ -81,11 +81,11 @@ public class Converter {
                 
                 String createdByUserId = rs.getString("created_by_user_id");
                 if (createdByUserId != null)
-                    noteDoc.put(Note.Fields.createdByUserId.getName(), createdByUserId);
+                    noteDoc.put("createdByUserId", createdByUserId);
 
                 String userIdType = rs.getString("user_id_type");
                 if (userIdType != null)
-                    noteDoc.put(Note.Fields.userIdType.getName(), userIdType);
+                    noteDoc.put("userIdType", userIdType);
 
                 String clientDomain = rs.getString("client_domain");
                 if (clientDomain != null)

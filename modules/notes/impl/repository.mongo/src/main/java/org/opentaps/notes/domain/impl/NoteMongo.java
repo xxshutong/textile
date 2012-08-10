@@ -23,7 +23,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.validator.GenericValidator;
 import org.opentaps.notes.domain.Note;
+import org.opentaps.notes.security.NoteUser;
+import org.osgi.service.useradmin.User;
 
 
 /**
@@ -107,13 +110,16 @@ public class NoteMongo implements Note, Serializable {
     }
 
     /** {@inheritDoc} */
-    public String getCreatedByUserId() {
-        return createdByUserId;
+    public User getCreatedByUser() {
+        return !GenericValidator.isBlankOrNull(createdByUserId) ? new NoteUser(createdByUserId, userIdType) : null;
     }
 
     /** {@inheritDoc} */
-    public void setCreatedByUserId(String createdByUserId) {
-        this.createdByUserId = createdByUserId;
+    public void setCreatedByUser(User createdByUser) {
+        if (createdByUser != null) {
+            this.createdByUserId = ((NoteUser) createdByUser).getUserId();
+            this.userIdType = ((NoteUser) createdByUser).getUserType();
+        }
     }
 
     /** {@inheritDoc} */

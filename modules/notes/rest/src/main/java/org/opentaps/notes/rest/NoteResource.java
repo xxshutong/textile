@@ -28,6 +28,7 @@ import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.rest.locale.Messages;
+import org.opentaps.notes.security.NoteUser;
 import org.opentaps.notes.services.CreateNoteService;
 import org.opentaps.notes.services.CreateNoteServiceInput;
 import org.opentaps.notes.services.GetNoteByIdService;
@@ -152,9 +153,8 @@ public class NoteResource extends ServerResource {
         String repString = getEmptyJSON();
         String successMessage = "";
         String errorMessage = "";
-        String createdByUserId = null;
-        String userIdType = null;
-        FacebookUser user = null;
+        FacebookUser fbUser = null;
+        NoteUser user = null;
 
         JSONUtil.setResponseHttpHeader(getResponse(), "Access-Control-Allow-Origin", "*");
 
@@ -162,11 +162,9 @@ public class NoteResource extends ServerResource {
         String userKey = form.getFirstValue("userKey");
 
         if (!GenericValidator.isBlankOrNull(userKey)) {
-            user = userCache.getUser(userKey);
-
-            if (user != null) {
-                createdByUserId = user.getId();
-                userIdType = user.getUserIdType();
+            fbUser = userCache.getUser(userKey);
+            if (fbUser != null) {
+                user = new NoteUser(fbUser.getId(), fbUser.getUserIdType());
             }
         }
 
@@ -185,8 +183,7 @@ public class NoteResource extends ServerResource {
                     createNoteServiceInput.setAttribute(fieldName, value);
                 }
             }
-            createNoteServiceInput.setCreatedByUserId(createdByUserId);
-            createNoteServiceInput.setUserIdType(userIdType);
+            createNoteServiceInput.setCreatedByUser(user);
             Reference ref = getRequest().getReferrerRef();
             if (ref != null) {
                 createNoteServiceInput.setClientDomain(ref.getHostDomain());
@@ -200,12 +197,12 @@ public class NoteResource extends ServerResource {
                 Log.logDebug(successMessage);
                 repString = getNoteIdJSON(noteId);
 
-                if (user != null) {
+                if (fbUser != null) {
                     String postOnMyWall = form.getFirstValue("postOnMyWall");
                     if ("Y".equalsIgnoreCase(postOnMyWall)) {
-                        postNoteOnUserWall(user.getId(), user.getAccessToken(), noteText);
+                        postNoteOnUserWall(fbUser.getId(), fbUser.getAccessToken(), noteText);
                         // post note on to opentaps wall
-                        postNoteOnUserWall(OPENTAPS_FACEBOOK_PAGE_ID, user.getAccessToken(), noteText);
+                        postNoteOnUserWall(OPENTAPS_FACEBOOK_PAGE_ID, fbUser.getAccessToken(), noteText);
                     }
                 }
             } else {
@@ -255,9 +252,14 @@ public class NoteResource extends ServerResource {
             .key(Note.Fields.noteId.getName()).value(note.getNoteId())
             .key(Note.Fields.noteText.getName()).value(note.getNoteText())
             .key(Note.Fields.sequenceNum.getName()).value(note.getSequenceNum())
-            .key(Note.Fields.dateTimeCreated.getName()).value(note.getDateTimeCreated())
-            .key(Note.Fields.createdByUserId.getName()).value(note.getCreatedByUserId())
-            .key(Note.Fields.userIdType.getName()).value(note.getUserIdType());
+            .key(Note.Fields.dateTimeCreated.getName()).value(note.getDateTimeCreated());
+
+        // add user data if exist
+        NoteUser user = (NoteUser) note.getCreatedByUser();
+        if (user != null) {
+            noteBuilder.key("createdByUserId").value(user.getUserId());
+            noteBuilder.key("userIdType").value(user.getUserType());
+        }
 
         for (String field : note.getAttributeNames()) {
             noteBuilder.key(CUSTOM_FIELD_PREFIX + field).value(note.getAttribute(field));
