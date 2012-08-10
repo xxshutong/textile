@@ -20,7 +20,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -30,6 +34,7 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
 import org.apache.commons.validator.GenericValidator;
+import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
 import org.opentaps.notes.domain.Note;
 import org.opentaps.notes.domain.NoteFactory;
@@ -186,9 +191,20 @@ public class NoteRepositoryImpl implements NoteRepository {
         Note note = factory.newInstance();
         note.setNoteId(noteDoc.get(NoteMongo.MONGO_ID_FIELD).toString());
         note.setNoteText((String) noteDoc.get(Note.Fields.noteText.getName()));
-        String userId = (String) noteDoc.get("createdByUserId");
-        if (!GenericValidator.isBlankOrNull(userId)) {
-            note.setCreatedByUser(new NoteUser(userId, (String) noteDoc.get("userIdType")));
+        if (noteDoc.containsField("createdByUserId")) {
+            String userId = (String) noteDoc.get("createdByUserId");
+            if (!GenericValidator.isBlankOrNull(userId)) {
+                note.setCreatedByUser(new NoteUser(userId, (String) noteDoc.get("userIdType")));
+            }
+        } else if (noteDoc.containsField(Note.Fields.createdByUser.getName())) {
+            BasicDBObject userDoc = (BasicDBObject) noteDoc.get(Note.Fields.createdByUser.getName());
+            if (userDoc != null) {
+                User user = new NoteUser();
+                Set<Entry<String, Object>> entries = userDoc.entrySet();
+                for (Entry<String, Object> entry : entries) {
+                    user.getProperties().put(entry.getKey(), entry.getValue());
+                }
+            }
         }
         note.setClientDomain((String) noteDoc.get(Note.Fields.clientDomain.getName()));
         note.setSequenceNum((Long) noteDoc.get(Note.Fields.sequenceNum.getName()));
@@ -217,8 +233,17 @@ public class NoteRepositoryImpl implements NoteRepository {
 
         User user = note.getCreatedByUser();
         if (user != null) {
-            noteDoc.append("createdByUserId", user.getProperties().get(NoteUser.PROP_USER_ID));
-            noteDoc.append("userIdType", user.getProperties().get(NoteUser.PROP_USER_TYPE));
+          BasicDBObject userDoc = (BasicDBObject) BasicDBObjectBuilder.start().get();
+          @SuppressWarnings("unchecked")
+          Dictionary<String, Object> props = user.getProperties();
+          if (props != null && !props.isEmpty()) {
+              Enumeration<String> keys = props.keys();
+              while (keys.hasMoreElements()) {
+                  String key = keys.nextElement();
+                  userDoc.append(key, props.get(key));
+              }
+          }
+          noteDoc.append(Note.Fields.createdByUser.getName(), userDoc);
         }
 
         // look for custom fields

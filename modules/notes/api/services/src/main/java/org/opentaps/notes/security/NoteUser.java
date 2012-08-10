@@ -23,10 +23,14 @@ import org.osgi.service.useradmin.User;
 
 
 public class NoteUser implements User {
-    public static final String PROP_USER_ID = "ID";
-    public static final String PROP_USER_TYPE = "USER_TYPE";
+    public static final String PROP_USER_ID = "id";
+    public static final String PROP_USER_TYPE = "userType";
 
     Dictionary<String, Object> props;
+
+    public NoteUser() {
+        props = new Hashtable<String, Object>();
+    }
 
     public NoteUser(String userId, String type) {
         if (userId == null) {
@@ -40,7 +44,7 @@ public class NoteUser implements User {
 
     @Override
     public String getName() {
-        return null;
+        return getUserId();
     }
 
     @Override
@@ -50,7 +54,7 @@ public class NoteUser implements User {
 
     @Override
     public Dictionary<String, Object> getProperties() {
-        return null;
+        return props;
     }
 
     @Override
