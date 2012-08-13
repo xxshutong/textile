@@ -462,7 +462,8 @@ function onUserLoaded(user) {
 }
 
 function getUserForNote(note) {
-    return getUser(note.createdByUserId, note.userIdType);
+    var createdBy = note.createdByUser;
+    return getUser(createdBy.id, note.userType);
 }
 
 function getUser(userId, type) {
@@ -603,17 +604,17 @@ function formatDate(d) {
 function createNoteElement(note) {
 
     var user;
-    if (note.createdByUserId && note.createdByUserId != "") {
-       user = getUserForNote(note);
-       // if the user is not loaded yet, plug a callback so it will know to update this note
-       if (user.loading) {
-           user.onLoadCbs.push(function(u) {
-               if (u.name) {
-                   var userNameEl = document.getElementById(note.noteId + "_userName");
-                   userNameEl.innerHTML = u.name;
-               }
-           });
-       }
+    if (note.createdByUser && note.createdByUser != null) {
+        user = getUserForNote(note);
+        // if the user is not loaded yet, plug a callback so it will know to update this note
+        if (user.loading) {
+            user.onLoadCbs.push(function(u) {
+                if (u.name) {
+                    var userNameEl = document.getElementById(note.noteId + "_userName");
+                    userNameEl.innerHTML = u.name;
+                }
+            });
+        }
     }
 
     var dateCreated = formatDate(parseDate(note.dateTimeCreated));
