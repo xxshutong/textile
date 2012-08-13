@@ -17,12 +17,14 @@
 package org.opentaps.notes.rest;
 
 import java.util.List;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONBuilder;
 import net.sf.json.util.JSONStringer;
+
 import org.apache.commons.validator.GenericValidator;
 import org.opentaps.core.log.Log;
 import org.opentaps.core.service.ServiceException;
@@ -257,8 +259,9 @@ public class NoteResource extends ServerResource {
         // add user data if exist
         NoteUser user = (NoteUser) note.getCreatedByUser();
         if (user != null) {
-            noteBuilder.key("createdByUserId").value(user.getUserId());
-            noteBuilder.key("userIdType").value(user.getUserType());
+            noteBuilder.key(Note.Fields.createdByUser.getName()).value(
+                    JSONSerializer.toJSON(user.getProperties())
+                    );
         }
 
         for (String field : note.getAttributeNames()) {
