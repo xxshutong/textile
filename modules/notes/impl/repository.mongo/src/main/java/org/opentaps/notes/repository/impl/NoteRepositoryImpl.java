@@ -204,6 +204,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 for (Entry<String, Object> entry : entries) {
                     user.getProperties().put(entry.getKey(), entry.getValue());
                 }
+                note.setCreatedByUser(user);
             }
         }
         note.setClientDomain((String) noteDoc.get(Note.Fields.clientDomain.getName()));
